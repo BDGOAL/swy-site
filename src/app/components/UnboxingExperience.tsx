@@ -40,7 +40,7 @@ import {
   textureImagesFromRawMetafields,
   type RawTextureMetafield,
 } from "../lib/textureMetafield";
-import { PdpTextureGallerySection } from "./PdpTextureGallerySection";
+import { PdpTextureGallerySection, PdpTextureFigure } from "./PdpTextureGallerySection";
 
 type ShopifyImage = { url: string; altText?: string | null };
 type ShopifyVariant = {
@@ -1016,6 +1016,18 @@ export function UnboxingExperience() {
                 >
                   {pdpProductDescription}
                 </p>
+              </div>
+            ) : null}
+
+            {textureLeadImage?.url ? (
+              <div
+                className={`md:hidden w-full ${pdpProductDescription ? "mt-6" : "mt-10"}`}
+              >
+                <PdpTextureFigure
+                  url={textureLeadImage.url}
+                  alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                  imgClassName="block w-full max-h-[min(48vh,20rem)] object-contain object-center sm:max-h-[min(52vh,24rem)]"
+                />
               </div>
             ) : null}
 
