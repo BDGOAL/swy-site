@@ -621,32 +621,18 @@ export function UnboxingExperience() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight" style={{ fontFamily: "var(--font-sans)" }}>
               {displayName}
             </h1>
-            {heroDescriptor.trim() && (
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
-                {heroDescriptor}
-              </p>
-            )}
-            {shortStory.trim() && (
-              <p className="mt-5 max-w-2xl text-sm sm:text-base leading-relaxed text-[#F2F0ED]/66" style={{ fontFamily: "var(--font-sans)" }}>
-                {shortStory}
-              </p>
-            )}
 
             {!!priceDisplay && (
               <p className="mt-10 text-2xl text-[#F2F0ED]/88" style={{ fontFamily: "var(--font-mono)" }}>
                 {priceDisplay}
               </p>
             )}
-            {(product.size || (product.volumeOptions?.length ?? 0) > 0) && (
-              <p
-                className="mt-3 max-w-xl text-[11px] uppercase tracking-[0.18em] text-[#F2F0ED]/48"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                <span className="text-[#F2F0ED]/40">{t(siteCopy.product.volumeLabel)}</span>
-                {product.size ? ` · ${product.size}` : ""}
-                {product.volumeOptions?.length ? ` · ${product.volumeOptions.join(" · ")}` : ""}
-              </p>
-            )}
+            <p
+              className="mt-3 max-w-xl text-[11px] tracking-[0.06em] text-[#F2F0ED]/52"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {t(siteCopy.product.volumeLabel)} · {t(siteCopy.product.capacityValue)}
+            </p>
 
             {variants.length > 1 && (
               <div className="mt-8">
@@ -688,6 +674,27 @@ export function UnboxingExperience() {
               </p>
             )}
 
+            {(heroDescriptor.trim() || shortStory.trim()) && (
+              <div className="mt-10 space-y-5 border-t border-white/10 pt-10">
+                {heroDescriptor.trim() ? (
+                  <p
+                    className="max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/72 sm:text-sm"
+                    style={{ fontFamily: "var(--font-sans)" }}
+                  >
+                    {heroDescriptor}
+                  </p>
+                ) : null}
+                {shortStory.trim() ? (
+                  <p
+                    className="max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/58 sm:text-[13px]"
+                    style={{ fontFamily: "var(--font-sans)" }}
+                  >
+                    {shortStory}
+                  </p>
+                ) : null}
+              </div>
+            )}
+
             {!!descriptionBlurb && (
               <div className="mt-8 border-t border-white/10 pt-8">
                 <p
@@ -702,7 +709,36 @@ export function UnboxingExperience() {
         </div>
       </section>
 
-      {/* 2) Scent impression */}
+      {/* 2) Narrative (The narrative / 敘事) */}
+      {hasNarrativeText && (
+        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
+              {t(siteCopy.product.narrative)}
+            </h2>
+            {meta?.storyImage?.url && (
+              <div className="mb-10 overflow-hidden border border-white/10 bg-black/20">
+                <div className="aspect-[864/1184] w-full max-h-[min(520px,70vh)]">
+                  <img
+                    src={meta.storyImage.url}
+                    alt={meta.storyImage.altText || displayName}
+                    className="h-full w-full object-cover object-center"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            )}
+            <p
+              className="max-w-3xl text-base leading-[1.75] text-[#F2F0ED]/72 sm:text-[17px]"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {narrativeBody}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* 3) Scent impression (氣息之間) */}
       {hasImpressionLayer && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
@@ -772,7 +808,7 @@ export function UnboxingExperience() {
         </section>
       )}
 
-      {/* 3) Accords & structured notes */}
+      {/* 4) Accords & structured notes */}
       {hasAccordsNotesLayer && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
@@ -912,35 +948,6 @@ export function UnboxingExperience() {
                 <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/76">{meta.pairingNote}</p>
               </div>
             )}
-          </div>
-        </section>
-      )}
-
-      {/* 4) Narrative */}
-      {hasNarrativeText && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.narrative)}
-            </h2>
-            {meta?.storyImage?.url && (
-              <div className="mb-10 overflow-hidden border border-white/10 bg-black/20">
-                <div className="aspect-[864/1184] w-full max-h-[min(520px,70vh)]">
-                  <img
-                    src={meta.storyImage.url}
-                    alt={meta.storyImage.altText || displayName}
-                    className="h-full w-full object-cover object-center"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            )}
-            <p
-              className="max-w-3xl text-base leading-[1.75] text-[#F2F0ED]/72 sm:text-[17px]"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              {narrativeBody}
-            </p>
           </div>
         </section>
       )}

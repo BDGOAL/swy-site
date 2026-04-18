@@ -90,7 +90,7 @@ export function NavigationArchive() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t, locale, localizePath } = useLanguage();
-  const { openCart, cartCount } = useShopify();
+  const { openCart, cartCount, isCartOpen } = useShopify();
   const {
     items: searchItems,
     isOpen: searchOpen,
@@ -295,7 +295,19 @@ export function NavigationArchive() {
         />
       ) : null}
 
-      <div className="fixed top-0 left-0 right-0 z-[80]">
+      <div
+        className="fixed top-0 left-0 right-0 z-[80]"
+        style={
+          isCartOpen
+            ? {
+                opacity: 0,
+                visibility: "hidden",
+                pointerEvents: "none",
+                transition: "opacity 200ms ease, visibility 0s linear 200ms",
+              }
+            : undefined
+        }
+      >
       <div
         style={{
           opacity: reveal,

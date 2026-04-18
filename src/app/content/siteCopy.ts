@@ -184,7 +184,8 @@ export const siteCopy = {
     storyEyebrow: { en: "Story", zh: "故事" } satisfies Bilingual,
     detailsEyebrow: { en: "Details", zh: "細節" } satisfies Bilingual,
     selectVariant: { en: "Edition", zh: "版本" } satisfies Bilingual,
-    volumeLabel: { en: "Size", zh: "容量" } satisfies Bilingual,
+    volumeLabel: { en: "Capacity", zh: "容量" } satisfies Bilingual,
+    capacityValue: { en: "30ml", zh: "30毫升" } satisfies Bilingual,
     quantityLabel: { en: "Quantity", zh: "數量" } satisfies Bilingual,
     addToCart: { en: "Add to cart", zh: "加入購物車" } satisfies Bilingual,
     adding: { en: "Adding…", zh: "加入中…" } satisfies Bilingual,
@@ -209,6 +210,7 @@ export const siteCopy = {
     relatedCard: { en: "Related Scent", zh: "相關香氣" } satisfies Bilingual,
     explore: { en: "Explore", zh: "探索" } satisfies Bilingual,
     floatingCart: { en: "Cart", zh: "購物車" } satisfies Bilingual,
+    cartDrawerClose: { en: "Close", zh: "關閉" } satisfies Bilingual,
     fallback: {
       description: { en: "Description coming soon.", zh: "更多內容即將補上。" } satisfies Bilingual,
       imageAlt: { en: "Product image", zh: "產品圖片" } satisfies Bilingual,

@@ -1,7 +1,6 @@
 import { RouterProvider } from 'react-router';
 import { router } from './routes';
-import { ShopifyProvider, useShopify } from './context/ShopifyContext';
-import { ShoppingCart } from './components/ShoppingCart';
+import { ShopifyProvider } from './context/ShopifyContext';
 import { ShopifyConnectionTest } from './components/ShopifyConnectionTest';
 import { Component, ErrorInfo, ReactNode } from 'react';
 
@@ -71,16 +70,8 @@ export default function App() {
 
 // App content that uses Shopify context
 function AppContent() {
-  const { isCartOpen, closeCart } = useShopify();
-  
   return (
     <>
-      {/* Shopping Cart Sidebar */}
-      <ShoppingCart 
-        isOpen={isCartOpen} 
-        onClose={closeCart} 
-      />
-
       {/* Shopify Connection Test (开发环境) */}
       {import.meta.env.DEV && (
         <div id="shopify-test">

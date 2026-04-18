@@ -25,7 +25,6 @@ export interface Product {
   wearMoment?: Bilingual;
   intensity?: Bilingual;
   lasting?: Bilingual;
-  volumeOptions?: string[];
   price?: number;
   currency?: string;
   shopifyHandle?: string;
@@ -35,7 +34,6 @@ export interface Product {
   relatedSlugs?: string[];
   featured?: boolean;
   illustration: "crow" | "rose" | "library" | "cigar";
-  size: string;
   mood: "light" | "dark";
   backgroundColor: string;
   sleeveColor: string;
@@ -122,14 +120,12 @@ export const products: Product[] = [
       ["橙花", "Orange"],
       ["小蒼蘭", "鈴蘭", "Freesia", "Lily of the Valley"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "the-last-snow",
     shopifyVariantId: "gid://shopify/ProductVariant/44985797837000",
     relatedSlugs: ["the-first-rose", "morning-after-quit"],
     illustration: "library",
-    size: "40mm × 60mm",
     mood: "light",
     backgroundColor: "#F2F0ED",
     sleeveColor: "#FFFFFF",
@@ -174,14 +170,12 @@ export const products: Product[] = [
       ["水蜜桃", "佛手柑", "牡丹", "Peach", "Bergamot", "Peony"],
       ["玫瑰", "茉莉", "紫羅蘭", "Rose", "Jasmine", "Violet"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "the-first-rose",
     shopifyVariantId: "gid://shopify/ProductVariant/44985798164680",
     relatedSlugs: ["the-last-snow", "night-was-mine"],
     illustration: "rose",
-    size: "40mm × 60mm",
     mood: "light",
     backgroundColor: "#F2E8E8",
     sleeveColor: "#F8F2F2",
@@ -226,14 +220,12 @@ export const products: Product[] = [
       ["檸檬", "佛手柑", "小豆蔻", "Lemon", "Bergamot", "Cardamom"],
       ["鼠尾草", "茉莉", "薰衣草", "丁香", "Sage", "Jasmine", "Lavender", "Clove"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "no-worries",
     shopifyVariantId: "gid://shopify/ProductVariant/44985799999688",
     relatedSlugs: ["old-library", "morning-after-quit"],
     illustration: "library",
-    size: "40mm × 60mm",
     mood: "light",
     backgroundColor: "#F5F2E8",
     sleeveColor: "#FAF8ED",
@@ -278,14 +270,12 @@ export const products: Product[] = [
       ["橙花", "佛手柑", "迷迭香", "Orange", "Bergamot", "Rosemary"],
       ["沉香", "天竺葵", "Oud", "Geranium"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "old-library",
     shopifyVariantId: "gid://shopify/ProductVariant/44985803047112",
     relatedSlugs: ["no-worries", "the-last-snow"],
     illustration: "library",
-    size: "40mm × 60mm",
     mood: "light",
     backgroundColor: "#EDE8D8",
     sleeveColor: "#F5F0E0",
@@ -330,14 +320,12 @@ export const products: Product[] = [
       ["羅勒", "黑胡椒", "Basil", "Black Pepper"],
       ["薰衣草", "百里香", "Lavender", "Thyme"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "mens-garage",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805111496",
     relatedSlugs: ["im-rich", "night-was-mine"],
     illustration: "cigar",
-    size: "40mm × 60mm",
     mood: "dark",
     backgroundColor: "#3A3530",
     sleeveColor: "#4A4540",
@@ -382,14 +370,12 @@ export const products: Product[] = [
       ["小豆蔻", "胡椒", "Cardamom", "Pepper"],
       ["玫瑰葉", "金色橙花", "金屬醛", "Rose Leaf", "Golden Neroli", "Metallic Aldehyde"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "im-rich",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805177032",
     relatedSlugs: ["night-was-mine", "mens-garage"],
     illustration: "cigar",
-    size: "40mm × 60mm",
     mood: "dark",
     backgroundColor: "#2A2520",
     sleeveColor: "#3A3530",
@@ -434,14 +420,12 @@ export const products: Product[] = [
       ["佛手柑", "柑橘", "紫丁香", "Bergamot", "Mandarin", "Lilac"],
       ["白亞麻", "山楂花", "White Linen", "Hawthorn"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "morning-after-quit",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805701320",
     relatedSlugs: ["no-worries", "the-first-rose"],
     illustration: "library",
-    size: "40mm × 60mm",
     mood: "light",
     backgroundColor: "#F0F5F8",
     sleeveColor: "#F8FAFC",
@@ -486,14 +470,12 @@ export const products: Product[] = [
       ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
       ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"]
     ),
-    volumeOptions: ["40mm × 60mm"],
     price: 128,
     currency: "HKD",
     shopifyHandle: "night-was-mine",
     shopifyVariantId: "gid://shopify/ProductVariant/44985806356680",
     relatedSlugs: ["im-rich", "mens-garage"],
     illustration: "cigar",
-    size: "40mm × 60mm",
     mood: "dark",
     backgroundColor: "#1A1520",
     sleeveColor: "#2A2530",

@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ShoppingBag, Minus, Plus } from 'lucide-react';
 import { useShopify } from '../context/ShopifyContext';
-import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
+import { siteCopy } from '../content/siteCopy';
+import { useState, useEffect } from 'react';
 
 interface ShoppingCartProps {
   isOpen: boolean;
@@ -9,11 +11,12 @@ interface ShoppingCartProps {
 }
 
 export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
-  const { 
+  const { t } = useLanguage();
+  const {
     cart,
     cartCount,
     checkoutUrl,
-    removeFromCart, 
+    removeFromCart,
     updateQuantity,
     isConfigured,
   } = useShopify();
@@ -21,21 +24,37 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
   const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
   // Calculate subtotal
   const subtotal = cart.reduce((total, item) => {
-    return total + (parseFloat(item.price) * item.quantity);
+    return total + parseFloat(item.price) * item.quantity;
   }, 0);
 
   const handleCheckout = () => {
     if (checkoutUrl) {
-      // Redirect to Shopify checkout
       window.location.href = checkoutUrl;
     } else if (!isConfigured) {
       alert('Shopify is not configured. Please complete setup to enable checkout.');
     } else {
       setIsCreatingCheckout(true);
       setCheckoutError(null);
-      // Simulate creating checkout
       setTimeout(() => {
         setIsCreatingCheckout(false);
         setCheckoutError('Failed to create checkout. Please try again.');
@@ -47,63 +66,68 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 z-[70]"
+            className="fixed inset-0 z-[110] bg-black/80"
             style={{
               backdropFilter: 'blur(8px)',
             }}
+            aria-hidden
           />
 
-          {/* Cart Sidebar */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-screen w-full max-w-md bg-[#0A0A0A] z-[70] flex flex-col"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-drawer-title"
+            className="fixed right-0 top-0 z-[115] flex h-screen w-full max-w-md flex-col bg-[#0A0A0A] shadow-[0_0_80px_rgba(0,0,0,0.65)]"
             style={{
               border: '0.5px solid rgba(242,240,237,0.15)',
             }}
           >
-            {/* Header */}
-            <div 
-              className="flex items-center justify-between px-6 py-5"
+            <div
+              className="flex items-center justify-between gap-3 px-6 py-5"
               style={{
                 borderBottom: '0.5px solid rgba(242,240,237,0.15)',
               }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <ShoppingBag size={18} color="#F2F0ED" opacity={0.6} />
-                <h2 
-                  className="text-sm tracking-[0.3em] uppercase"
+                <h2
+                  id="cart-drawer-title"
+                  className="truncate text-sm tracking-[0.3em] uppercase"
                   style={{
                     fontFamily: 'var(--font-sans)',
                     color: '#F2F0ED',
                   }}
                 >
-                  Cart ({cartCount})
+                  {t(siteCopy.product.floatingCart)} ({cartCount})
                 </h2>
               </div>
-              
+
               <button
+                type="button"
                 onClick={onClose}
-                className="p-2 hover:opacity-60 transition-opacity"
+                className="inline-flex shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
+                style={{ fontFamily: 'var(--font-sans)' }}
+                aria-label={t(siteCopy.product.cartDrawerClose)}
               >
-                <X size={20} color="#F2F0ED" opacity={0.6} />
+                <X size={16} strokeWidth={1.75} className="opacity-80" aria-hidden />
+                {t(siteCopy.product.cartDrawerClose)}
               </button>
             </div>
 
-            {/* Cart Items */}
             <div className="flex-1 overflow-y-auto px-6 py-6">
               {cart.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full opacity-40">
+                <div className="flex h-full flex-col items-center justify-center opacity-40">
                   <ShoppingBag size={48} color="#F2F0ED" opacity={0.3} />
-                  <p 
+                  <p
                     className="mt-4 text-[10px] tracking-wider"
                     style={{
                       fontFamily: 'var(--font-sans)',
@@ -128,11 +152,10 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                         paddingBottom: '1.5rem',
                       }}
                     >
-                      {/* Product Image */}
-                      <div 
-                        className="w-20 h-20 bg-cover bg-center flex-shrink-0"
+                      <div
+                        className="h-20 w-20 flex-shrink-0 bg-cover bg-center"
                         style={{
-                          backgroundImage: item.image 
+                          backgroundImage: item.image
                             ? `url(${item.image})`
                             : 'none',
                           backgroundColor: 'rgba(242,240,237,0.05)',
@@ -140,10 +163,9 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                         }}
                       />
 
-                      {/* Product Details */}
-                      <div className="flex-1 min-w-0">
-                        <h3 
-                          className="text-[11px] tracking-wider mb-2"
+                      <div className="min-w-0 flex-1">
+                        <h3
+                          className="mb-2 text-[11px] tracking-wider"
                           style={{
                             fontFamily: 'var(--font-sans)',
                             fontWeight: 900,
@@ -152,28 +174,30 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                         >
                           {item.title}
                         </h3>
-                        
-                        <p 
-                          className="text-[9px] tracking-wider opacity-50 mb-3"
+
+                        <p
+                          className="mb-3 text-[9px] tracking-wider opacity-50"
                           style={{
                             fontFamily: 'var(--font-sans)',
                             color: '#F2F0ED',
                           }}
                         >
-                          40mm × 60mm
+                          {t(siteCopy.product.capacityValue)}
                         </p>
 
-                        {/* Quantity Controls */}
                         <div className="flex items-center gap-3">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="w-6 h-6 flex items-center justify-center border border-[#F2F0ED]/20 hover:border-[#F2F0ED]/40 transition-colors"
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
+                            className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
                           >
                             <Minus size={12} color="#F2F0ED" />
                           </button>
 
-                          <span 
-                            className="text-[10px] tracking-wider w-6 text-center"
+                          <span
+                            className="w-6 text-center text-[10px] tracking-wider"
                             style={{
                               fontFamily: 'var(--font-sans)',
                               color: '#F2F0ED',
@@ -183,15 +207,19 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                           </span>
 
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-6 h-6 flex items-center justify-center border border-[#F2F0ED]/20 hover:border-[#F2F0ED]/40 transition-colors"
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
+                            className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
                           >
                             <Plus size={12} color="#F2F0ED" />
                           </button>
 
                           <button
+                            type="button"
                             onClick={() => removeFromCart(item.id)}
-                            className="ml-auto text-[8px] tracking-wider opacity-40 hover:opacity-100 transition-opacity"
+                            className="ml-auto text-[8px] tracking-wider opacity-40 transition-opacity hover:opacity-100"
                             style={{
                               fontFamily: 'var(--font-sans)',
                               color: '#F2F0ED',
@@ -202,9 +230,8 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                         </div>
                       </div>
 
-                      {/* Price */}
-                      <div className="text-right flex-shrink-0">
-                        <p 
+                      <div className="flex-shrink-0 text-right">
+                        <p
                           className="text-[11px] tracking-wider"
                           style={{
                             fontFamily: 'var(--font-sans)',
@@ -220,18 +247,16 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
               )}
             </div>
 
-            {/* Footer */}
             {cart.length > 0 && (
-              <div 
+              <div
                 className="px-6 py-5"
                 style={{
                   borderTop: '0.5px solid rgba(242,240,237,0.15)',
                 }}
               >
-                {/* Subtotal */}
-                <div className="flex items-center justify-between mb-5">
-                  <span 
-                    className="text-[10px] tracking-[0.3em] uppercase opacity-60"
+                <div className="mb-5 flex items-center justify-between">
+                  <span
+                    className="text-[10px] uppercase tracking-[0.3em] opacity-60"
                     style={{
                       fontFamily: 'var(--font-sans)',
                       color: '#F2F0ED',
@@ -239,21 +264,21 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                   >
                     Subtotal
                   </span>
-                  <span 
+                  <span
                     className="text-sm tracking-wider"
                     style={{
                       fontFamily: 'var(--font-sans)',
                       color: '#F2F0ED',
                     }}
                   >
-                    ${parseFloat(subtotal).toFixed(2)}
+                    ${parseFloat(String(subtotal)).toFixed(2)}
                   </span>
                 </div>
 
-                {/* Checkout Button */}
                 <button
+                  type="button"
                   onClick={handleCheckout}
-                  className="w-full py-4 flex items-center justify-center border border-[#F2F0ED] hover:bg-[#F2F0ED] hover:text-[#0A0A0A] transition-all duration-300 group"
+                  className="group flex w-full items-center justify-center border border-[#F2F0ED] py-4 transition-all duration-300 hover:bg-[#F2F0ED] hover:text-[#0A0A0A]"
                   style={{
                     fontFamily: 'var(--font-sans)',
                     fontSize: '10px',
@@ -261,12 +286,14 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                     color: '#F2F0ED',
                   }}
                 >
-                  {isCreatingCheckout ? 'CREATING CHECKOUT...' : 'PROCEED TO CHECKOUT'}
+                  {isCreatingCheckout
+                    ? 'CREATING CHECKOUT...'
+                    : 'PROCEED TO CHECKOUT'}
                 </button>
 
                 {checkoutError && (
-                  <p 
-                    className="text-[8px] tracking-wider opacity-30 mt-3 text-center"
+                  <p
+                    className="mt-3 text-center text-[8px] tracking-wider opacity-30"
                     style={{
                       fontFamily: 'var(--font-sans)',
                       color: '#F2F0ED',
@@ -276,8 +303,8 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                   </p>
                 )}
 
-                <p 
-                  className="text-[8px] tracking-wider opacity-30 mt-3 text-center"
+                <p
+                  className="mt-3 text-center text-[8px] tracking-wider opacity-30"
                   style={{
                     fontFamily: 'var(--font-sans)',
                     color: '#F2F0ED',
