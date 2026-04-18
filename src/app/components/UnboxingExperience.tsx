@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
+import { motion } from "motion/react";
 import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
+import type { Product } from "../data/products";
 import { productShopifyBodyEnglish } from "../data/productShopifyBody";
 import { productPdpStoryBodyEn, productPdpStoryIntroEn } from "../data/productPdpStoryEn";
 import { productImageFallbacks } from "../data/productImageFallbacks";
@@ -40,6 +42,9 @@ import {
   textureImagesFromRawMetafields,
   type RawTextureMetafield,
 } from "../lib/textureMetafield";
+import { useTextureScrollScene } from "../hooks/useTextureScrollScene";
+import { PdpTextureScrollScene } from "./PdpTextureScrollScene";
+import { usePrefersReducedMotion } from "../utils/editorialLandingMotion";
 
 type ShopifyImage = { url: string; altText?: string | null };
 type ShopifyVariant = {
@@ -83,6 +88,40 @@ type ShopifyProductPayload = {
   variants: ShopifyVariant[];
   metafields: ProductMetafields;
 };
+
+/** Same criteria as PDP `hasImpressionLayer` — used before early return for scroll hook `enabled`. */
+function productHasImpressionBlock(
+  product: Product,
+  locale: Locale,
+  meta: ProductMetafields | undefined
+): boolean {
+  const impressionText = productImpression(product, locale);
+  const wearMomentText = pdpLocaleString(
+    meta?.wearWhen,
+    locale,
+    productWearMoment(product, locale)
+  );
+  const moodTagsDisplay = meta?.moodKeywords?.length
+    ? coalesceMetaStringList(meta.moodKeywords, locale, productMoodTags(product, locale))
+    : productMoodTags(product, locale);
+  const localIntensity = productIntensity(product, locale);
+  const localLasting = productLasting(product, locale);
+  const longevityDisplay = pdpLocaleString(
+    meta?.longevity,
+    locale,
+    productLasting(product, locale)
+  );
+  const sillageDisplay = pdpLocaleString(meta?.sillage, locale, "");
+  return Boolean(
+    impressionText ||
+      wearMomentText ||
+      moodTagsDisplay.length ||
+      localIntensity ||
+      localLasting ||
+      longevityDisplay ||
+      sillageDisplay
+  );
+}
 
 function parseList(value?: string | null): string[] {
   if (!value) return [];
@@ -227,6 +266,11 @@ export function UnboxingExperience() {
     intro?: string;
     body?: string;
   } | null>(null);
+
+  const reduceMotion = usePrefersReducedMotion();
+  const textureTrackRef = useRef<HTMLDivElement>(null);
+  const textureOriginRef = useRef<HTMLDivElement>(null);
+  const textureDockRef = useRef<HTMLDivElement>(null);
 
   const product = products.find((p) => p.id === id);
 
@@ -695,6 +739,22 @@ export function UnboxingExperience() {
     };
   }, [isConfigured, product?.id, locale]);
 
+  const metaForScroll = shopifyProduct?.metafields;
+  const textureMotionEnabled =
+    !reduceMotion &&
+    Boolean(
+      product &&
+        metaForScroll?.textureImages?.[0]?.url &&
+        productHasImpressionBlock(product, locale, metaForScroll)
+    );
+
+  const textureScene = useTextureScrollScene({
+    enabled: textureMotionEnabled,
+    trackRef: textureTrackRef,
+    originRef: textureOriginRef,
+    dockRef: textureDockRef,
+  });
+
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
@@ -1043,15 +1103,38 @@ export function UnboxingExperience() {
             ) : null}
 
             {textureLeadImage?.url ? (
-              <PdpTextureLeadImage
-                url={textureLeadImage.url}
-                alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
-                className={pdpProductDescription ? "mt-6" : "mt-10"}
-              />
+              textureMotionEnabled ? (
+                <PdpTextureScrollScene
+                  url={textureLeadImage.url}
+                  alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                  narrativeClassName={pdpProductDescription ? "mt-6" : "mt-10"}
+                  originRef={textureOriginRef}
+                  scene={textureScene}
+                  enabled={textureMotionEnabled}
+                />
+              ) : (
+                <PdpTextureLeadImage
+                  url={textureLeadImage.url}
+                  alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                  className={pdpProductDescription ? "mt-6" : "mt-10"}
+                />
+              )
             ) : null}
           </div>
         </div>
       </section>
+
+      {textureLeadImage?.url && hasImpressionLayer ? (
+        <div
+          ref={textureTrackRef}
+          className={
+            textureMotionEnabled
+              ? "mx-auto min-h-[min(110vh,56rem)] w-full max-w-6xl"
+              : "h-px w-full max-w-6xl shrink-0 overflow-hidden opacity-0"
+          }
+          aria-hidden
+        />
+      ) : null}
 
       {/* 2) Scent impression (氣息之間) */}
       {hasImpressionLayer && (
@@ -1060,6 +1143,21 @@ export function UnboxingExperience() {
             <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.scentCharacter)}
             </h2>
+            {textureMotionEnabled && textureLeadImage?.url ? (
+              <motion.div
+                ref={textureDockRef}
+                style={{ opacity: textureScene.dockOpacity }}
+                className="mb-10 max-w-3xl overflow-hidden border border-white/12 bg-black/25"
+              >
+                <img
+                  src={textureLeadImage.url}
+                  alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                  className="max-h-[min(22rem,44vh)] w-full object-cover object-center md:max-h-[min(26rem,50vh)]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </motion.div>
+            ) : null}
             <div className="grid gap-8 lg:grid-cols-2">
               {impressionText && (
                 <div className="border border-white/10 bg-black/20 p-5">
