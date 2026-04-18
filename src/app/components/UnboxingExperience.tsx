@@ -35,6 +35,11 @@ import {
 import type { Locale } from "../lib/i18n";
 import { ROUTES } from "../constants/routes";
 import { LocalizedLink } from "./LocalizedLink";
+import {
+  textureImagesFromLegacyGraphqlFields,
+  textureImagesFromRawMetafields,
+  type RawTextureMetafield,
+} from "../lib/textureMetafield";
 
 type ShopifyImage = { url: string; altText?: string | null };
 type ShopifyVariant = {
@@ -177,40 +182,10 @@ function truncateText(value: string, maxChars: number): string {
   return `${text.slice(0, maxChars).trim()}...`;
 }
 
-/** Normalize Shopify list.file_reference / single file metafields (MediaImage, GenericFile, etc.). */
-function coerceTextureNodeToImage(node: unknown): ShopifyImage | null {
-  if (!node || typeof node !== "object") return null;
-  const o = node as Record<string, unknown>;
-  const image = o.image as { url?: string; altText?: string | null } | undefined;
-  if (image?.url) {
-    return { url: image.url, altText: (image.altText as string | undefined) ?? undefined };
+function debugTextureLog(label: string, payload: unknown) {
+  if (import.meta.env.DEV && import.meta.env.VITE_DEBUG_TEXTURE === "1") {
+    console.log(`[PDP texture] ${label}`, payload);
   }
-  const directUrl = o.url;
-  if (typeof directUrl === "string" && directUrl.trim()) {
-    return { url: directUrl.trim(), altText: undefined };
-  }
-  const preview = o.previewImage as { url?: string } | undefined;
-  if (preview?.url) {
-    return { url: preview.url, altText: undefined };
-  }
-  return null;
-}
-
-function textureImagesFromGraphqlProduct(raw: {
-  textureImages?: { references?: { nodes?: unknown[] } };
-  textureImageSingle?: { reference?: unknown };
-}): ShopifyImage[] {
-  const nodes = raw.textureImages?.references?.nodes ?? [];
-  const out: ShopifyImage[] = [];
-  for (const n of nodes) {
-    const img = coerceTextureNodeToImage(n);
-    if (img?.url) out.push(img);
-  }
-  if (out.length === 0) {
-    const single = coerceTextureNodeToImage(raw.textureImageSingle?.reference);
-    if (single?.url) out.push(single);
-  }
-  return out;
 }
 
 function PdpTextureLeadImage({
@@ -222,8 +197,6 @@ function PdpTextureLeadImage({
   alt: string;
   className?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) return null;
   return (
     <div className={`max-w-md ${className}`.trim()}>
       <div className="overflow-hidden border border-white/12 bg-black/25">
@@ -232,7 +205,7 @@ function PdpTextureLeadImage({
           alt={alt}
           className="max-h-[min(18rem,36vh)] w-full object-cover object-center"
           loading="lazy"
-          onError={() => setFailed(true)}
+          decoding="async"
         />
       </div>
     </div>
@@ -322,11 +295,54 @@ export function UnboxingExperience() {
                       }
                     }
                   }
-                  textureImages: metafield(namespace: "custom", key: "texture_images") {
+                  textureMetafields: metafields(
+                    identifiers: [
+                      { namespace: "custom", key: "texture_images" },
+                      { namespace: "custom", key: "texture-images" },
+                      { namespace: "custom", key: "texture_image" }
+                    ]
+                  ) {
+                    namespace
+                    key
+                    type
+                    value
+                    reference {
+                      __typename
+                      ... on MediaImage {
+                        image {
+                          url
+                          altText
+                        }
+                        previewImage {
+                          url
+                          altText
+                        }
+                      }
+                      ... on GenericFile {
+                        url
+                        previewImage {
+                          url
+                        }
+                      }
+                      ... on Video {
+                        previewImage {
+                          url
+                          altText
+                        }
+                      }
+                    }
                     references(first: 20) {
                       nodes {
+                        __typename
                         ... on MediaImage {
-                          image { url altText }
+                          image {
+                            url
+                            altText
+                          }
+                          previewImage {
+                            url
+                            altText
+                          }
                         }
                         ... on GenericFile {
                           url
@@ -334,18 +350,67 @@ export function UnboxingExperience() {
                             url
                           }
                         }
+                        ... on Video {
+                          previewImage {
+                            url
+                            altText
+                          }
+                        }
+                      }
+                    }
+                  }
+                  textureImages: metafield(namespace: "custom", key: "texture_images") {
+                    references(first: 20) {
+                      nodes {
+                        __typename
+                        ... on MediaImage {
+                          image {
+                            url
+                            altText
+                          }
+                          previewImage {
+                            url
+                            altText
+                          }
+                        }
+                        ... on GenericFile {
+                          url
+                          previewImage {
+                            url
+                          }
+                        }
+                        ... on Video {
+                          previewImage {
+                            url
+                            altText
+                          }
+                        }
                       }
                     }
                   }
                   textureImageSingle: metafield(namespace: "custom", key: "texture_image") {
                     reference {
+                      __typename
                       ... on MediaImage {
-                        image { url altText }
+                        image {
+                          url
+                          altText
+                        }
+                        previewImage {
+                          url
+                          altText
+                        }
                       }
                       ... on GenericFile {
                         url
                         previewImage {
                           url
+                        }
+                      }
+                      ... on Video {
+                        previewImage {
+                          url
+                          altText
                         }
                       }
                     }
@@ -395,16 +460,32 @@ export function UnboxingExperience() {
           }
         );
 
-        if (!response.ok) return;
+        if (!response.ok) {
+          debugTextureLog("HTTP not OK", { status: response.status, statusText: response.statusText });
+          return;
+        }
         const data = await response.json();
-        if (!data?.data?.node?.product) return;
+        if (data.errors?.length) {
+          debugTextureLog("GraphQL errors (full response may be partial)", data.errors);
+        }
+        if (!data?.data?.node?.product) {
+          debugTextureLog("No product on node", data);
+          return;
+        }
 
         const raw = data.data.node.product;
         const relatedNodes = raw.relatedScents?.references?.nodes || [];
-        const textureImagesParsed = textureImagesFromGraphqlProduct({
-          textureImages: raw.textureImages,
-          textureImageSingle: raw.textureImageSingle,
-        });
+        const textureMetafieldsRaw = raw.textureMetafields as RawTextureMetafield[] | undefined;
+        let textureImagesParsed = textureImagesFromRawMetafields(textureMetafieldsRaw);
+        if (textureImagesParsed.length === 0) {
+          textureImagesParsed = textureImagesFromLegacyGraphqlFields({
+            textureImages: raw.textureImages,
+            textureImageSingle: raw.textureImageSingle,
+          });
+        }
+        debugTextureLog("raw textureMetafields", textureMetafieldsRaw);
+        debugTextureLog("parsed textureImages array", textureImagesParsed);
+        debugTextureLog("lead texture URL", textureImagesParsed[0]?.url ?? "(none)");
         const payload: ShopifyProductPayload = {
           id: raw.id,
           handle: raw.handle,
@@ -442,7 +523,8 @@ export function UnboxingExperience() {
         if (!cancelled) {
           setShopifyProduct(payload);
         }
-      } catch {
+      } catch (e) {
+        debugTextureLog("Product fetch threw", e);
         // keep fallback data path
       } finally {
         if (!cancelled) {
