@@ -179,14 +179,24 @@ export function LandingPage() {
   const reduce = reduceMotion;
   const showQuote = quoteFrameVisible;
   const showSupporting =
-    quoteFrameVisible && heroP100 >= (reduce ? 22 : 30);
-  const showLogo = heroP100 < (reduce ? 12 : 16);
+    quoteFrameVisible &&
+    heroP100 >= (reduce ? 22 : desktopHero ? 27 : 30);
+  const showLogo =
+    heroP100 < (reduce ? 12 : desktopHero ? 19 : 16);
   const veilO = Math.min(0.18, (heroP100 / 100) * 0.22);
   const cueO = showQuote ? 0.22 : Math.max(0.18, 1 - (heroP100 / 100) * 0.78);
   const fadeMs = reduce ? 0 : 380;
 
-  const nextSectionY = useTransform(scrollY, [520, 980], [64, 0]);
-  const nextSectionOpacity = useTransform(scrollY, [480, 900], [0, 1]);
+  const nextSectionY = useTransform(
+    scrollY,
+    desktopHero ? [380, 1280] : [520, 980],
+    desktopHero ? [36, 0] : [64, 0]
+  );
+  const nextSectionOpacity = useTransform(
+    scrollY,
+    desktopHero ? [340, 1180] : [480, 900],
+    [0, 1]
+  );
   const mobileOverlayLiftVh = 0;
   const v3 = desktopHero && !reduce;
 
