@@ -3,7 +3,8 @@ import { X, ShoppingBag, Minus, Plus } from 'lucide-react';
 import { useShopify } from '../context/ShopifyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { siteCopy } from '../content/siteCopy';
-import { useState, useEffect } from 'react';
+import { formatShopifyMoney } from '../lib/productLocale';
+import { useState, useEffect, useMemo } from 'react';
 
 interface ShoppingCartProps {
   isOpen: boolean;
@@ -11,9 +12,10 @@ interface ShoppingCartProps {
 }
 
 export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const {
     cart,
+    cartSubtotal,
     cartCount,
     checkoutUrl,
     removeFromCart,
@@ -42,10 +44,17 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
-  // Calculate subtotal
-  const subtotal = cart.reduce((total, item) => {
-    return total + parseFloat(item.price) * item.quantity;
-  }, 0);
+  const subtotalDisplay = useMemo(() => {
+    if (cartSubtotal?.amount != null && cartSubtotal.currencyCode) {
+      return formatShopifyMoney(cartSubtotal.amount, cartSubtotal.currencyCode, locale);
+    }
+    if (!cart.length) return '';
+    const cur = cart[0]?.lineTotal.currencyCode;
+    if (!cur) return '';
+    const sum = cart.reduce((acc, item) => acc + Number(item.lineTotal.amount), 0);
+    if (cart.some((i) => i.lineTotal.currencyCode !== cur)) return '';
+    return formatShopifyMoney(String(sum), cur, locale);
+  }, [cart, cartSubtotal, locale]);
 
   const handleCheckout = () => {
     if (checkoutUrl) {
@@ -141,7 +150,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                 <div className="space-y-6">
                   {cart.map((item) => (
                     <motion.div
-                      key={item.id}
+                      key={item.lineId}
                       layout
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -152,16 +161,16 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                         paddingBottom: '1.5rem',
                       }}
                     >
-                      <div
-                        className="h-20 w-20 flex-shrink-0 bg-cover bg-center"
-                        style={{
-                          backgroundImage: item.image
-                            ? `url(${item.image})`
-                            : 'none',
-                          backgroundColor: 'rgba(242,240,237,0.05)',
-                          filter: 'grayscale(100%)',
-                        }}
-                      />
+                      <div className="h-20 w-20 flex-shrink-0 overflow-hidden bg-[rgba(242,240,237,0.05)]">
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title}
+                            className="h-full w-full object-cover object-center grayscale"
+                            loading="lazy"
+                          />
+                        ) : null}
+                      </div>
 
                       <div className="min-w-0 flex-1">
                         <h3
@@ -189,7 +198,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                           <button
                             type="button"
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
+                              updateQuantity(item.lineId, item.quantity - 1)
                             }
                             className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
                           >
@@ -209,7 +218,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                           <button
                             type="button"
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
+                              updateQuantity(item.lineId, item.quantity + 1)
                             }
                             className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
                           >
@@ -218,7 +227,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
 
                           <button
                             type="button"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => removeFromCart(item.lineId)}
                             className="ml-auto text-[8px] tracking-wider opacity-40 transition-opacity hover:opacity-100"
                             style={{
                               fontFamily: 'var(--font-sans)',
@@ -231,6 +240,21 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                       </div>
 
                       <div className="flex-shrink-0 text-right">
+                        {item.hasLineDiscount ? (
+                          <p
+                            className="mb-0.5 text-[10px] tracking-wider line-through opacity-45"
+                            style={{
+                              fontFamily: 'var(--font-sans)',
+                              color: '#F2F0ED',
+                            }}
+                          >
+                            {formatShopifyMoney(
+                              item.lineSubtotal.amount,
+                              item.lineSubtotal.currencyCode,
+                              locale
+                            )}
+                          </p>
+                        ) : null}
                         <p
                           className="text-[11px] tracking-wider"
                           style={{
@@ -238,7 +262,11 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                             color: '#F2F0ED',
                           }}
                         >
-                          ${(parseFloat(item.price) * item.quantity).toFixed(2)}
+                          {formatShopifyMoney(
+                            item.lineTotal.amount,
+                            item.lineTotal.currencyCode,
+                            locale
+                          )}
                         </p>
                       </div>
                     </motion.div>
@@ -271,7 +299,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                       color: '#F2F0ED',
                     }}
                   >
-                    ${parseFloat(String(subtotal)).toFixed(2)}
+                    {subtotalDisplay || '—'}
                   </span>
                 </div>
 

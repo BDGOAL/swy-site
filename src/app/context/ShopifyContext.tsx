@@ -1,25 +1,23 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { shopifyConfig, isShopifyConfigured } from '../config/shopify';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { shopifyConfig, isShopifyConfigured, storefrontInContextDirective } from "../config/shopify";
+import {
+  STOREFRONT_CART_SELECTION,
+  normalizeStorefrontCart,
+  type NormalizedCartItem,
+  type ShopifyMoney,
+} from "../lib/shopifyCart";
 
-// Shopify Cart Line Item
-export interface CartItem {
-  id: string;
-  variantId: string;
-  productId: string;
-  title: string;
-  quantity: number;
-  price: string;
-  image?: string;
-}
+export type CartItem = NormalizedCartItem;
 
 interface ShopifyContextType {
   cart: CartItem[];
+  cartSubtotal: ShopifyMoney | null;
   cartCount: number;
   isCartOpen: boolean;
   checkoutUrl: string | null;
   addToCart: (variantId: string, productId: string, quantity?: number) => Promise<void>;
-  removeFromCart: (itemId: string) => void;
-  updateQuantity: (itemId: string, quantity: number) => void;
+  removeFromCart: (lineId: string) => Promise<void>;
+  updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -28,10 +26,12 @@ interface ShopifyContextType {
 
 const ShopifyContext = createContext<ShopifyContextType | undefined>(undefined);
 
+const CART_ID_STORAGE = "swy-checkout-id";
+
 export const useShopify = () => {
   const context = useContext(ShopifyContext);
   if (!context) {
-    throw new Error('useShopify must be used within ShopifyProvider');
+    throw new Error("useShopify must be used within ShopifyProvider");
   }
   return context;
 };
@@ -40,236 +40,265 @@ interface ShopifyProviderProps {
   children: ReactNode;
 }
 
+async function storefrontGraphql<T = unknown>(query: string, variables?: Record<string, unknown>): Promise<T> {
+  const response = await fetch(`https://${shopifyConfig.storeDomain}/api/${shopifyConfig.apiVersion}/graphql.json`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": shopifyConfig.storefrontAccessToken,
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  if (!response.ok) {
+    throw new Error(`Storefront API ${response.status}`);
+  }
+  return response.json() as Promise<T>;
+}
+
 export function ShopifyProvider({ children }: ShopifyProviderProps) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartSubtotal, setCartSubtotal] = useState<ShopifyMoney | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
-  const [checkoutId, setCheckoutId] = useState<string | null>(null);
+  const [cartId, setCartId] = useState<string | null>(() =>
+    typeof window !== "undefined" ? localStorage.getItem(CART_ID_STORAGE) : null
+  );
   const isConfigured = isShopifyConfigured();
 
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('swy-cart');
-    const savedCheckoutId = localStorage.getItem('swy-checkout-id');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-    if (savedCheckoutId) {
-      setCheckoutId(savedCheckoutId);
-    }
+  const applyNormalizedCart = useCallback((raw: Parameters<typeof normalizeStorefrontCart>[0]) => {
+    const normalized = normalizeStorefrontCart(raw);
+    if (!normalized) return;
+    setCart(normalized.lines);
+    setCartSubtotal(normalized.subtotal);
+    setCheckoutUrl(normalized.checkoutUrl);
+    setCartId(normalized.cartId);
+    localStorage.setItem(CART_ID_STORAGE, normalized.cartId);
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  const clearServerCartState = useCallback(() => {
+    setCart([]);
+    setCartSubtotal(null);
+    setCheckoutUrl(null);
+    setCartId(null);
+    localStorage.removeItem(CART_ID_STORAGE);
+  }, []);
+
+  /** Hydrate drawer from persisted Shopify cart id (no local mock lines). */
   useEffect(() => {
-    localStorage.setItem('swy-cart', JSON.stringify(cart));
-  }, [cart]);
+    if (!isConfigured) return;
+    const savedId = localStorage.getItem(CART_ID_STORAGE);
+    if (!savedId) return;
+
+    const query = `
+      query CartHydrate($id: ID!) ${storefrontInContextDirective()} {
+        cart(id: $id) {
+          ${STOREFRONT_CART_SELECTION}
+        }
+      }
+    `;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await storefrontGraphql<{ data?: { cart?: unknown }; errors?: unknown }>(query, { id: savedId });
+        if (cancelled) return;
+        if (data.errors) {
+          clearServerCartState();
+          return;
+        }
+        const c = data.data?.cart;
+        if (!c) {
+          clearServerCartState();
+          return;
+        }
+        applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+      } catch {
+        if (!cancelled) clearServerCartState();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isConfigured, applyNormalizedCart, clearServerCartState]);
+
+  /** Drop legacy local-only cart JSON; Shopify cart id is the only persistence. */
+  useEffect(() => {
+    localStorage.removeItem("swy-cart");
+  }, []);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  // Create Shopify Checkout
-  const createCheckout = async (items: CartItem[]) => {
-    if (!isConfigured) {
-      console.warn('Shopify not configured. Using mock checkout.');
-      return null;
-    }
-
-    try {
-      const lineItems = items.map(item => ({
-        merchandiseId: item.variantId,
-        quantity: item.quantity,
-      }));
-
-      console.log('🛒 Creating cart with items:', lineItems);
-
-      // ✅ Updated to use cartCreate (new Storefront API)
-      const query = `
-        mutation cartCreate($input: CartInput!) {
-          cartCreate(input: $input) {
-            cart {
-              id
-              checkoutUrl
-              lines(first: 250) {
-                edges {
-                  node {
-                    id
-                    quantity
-                    merchandise {
-                      ... on ProductVariant {
-                        id
-                        title
-                        priceV2 {
-                          amount
-                          currencyCode
-                        }
-                        image {
-                          url
-                        }
-                        product {
-                          title
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            userErrors {
-              message
-              field
-            }
+  const cartCreate = async (lines: { merchandiseId: string; quantity: number }[]) => {
+    const query = `
+      mutation cartCreate($input: CartInput!) ${storefrontInContextDirective()} {
+        cartCreate(input: $input) {
+          cart {
+            ${STOREFRONT_CART_SELECTION}
+          }
+          userErrors {
+            field
+            message
           }
         }
-      `;
-
-      const response = await fetch(
-        `https://${shopifyConfig.storeDomain}/api/${shopifyConfig.apiVersion}/graphql.json`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': shopifyConfig.storefrontAccessToken,
-          },
-          body: JSON.stringify({
-            query,
-            variables: {
-              input: {
-                lines: lineItems,
-              },
-            },
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        console.error('❌ Cart API response not OK:', response.status, response.statusText);
-        throw new Error(`API request failed: ${response.status}`);
       }
+    `;
+    const data = await storefrontGraphql<{
+      data?: { cartCreate?: { cart?: unknown; userErrors?: { message: string }[] } };
+      errors?: { message: string }[];
+    }>(query, { input: { lines } });
 
-      const data = await response.json();
-      console.log('📦 Cart API response:', data);
-      console.log('📦 Full response JSON:', JSON.stringify(data, null, 2));
-
-      // Check for GraphQL errors at root level
-      if (data.errors) {
-        console.error('❌ GraphQL errors:', data.errors);
-        console.error('❌ Full errors JSON:', JSON.stringify(data.errors, null, 2));
-        const errorMessages = data.errors.map((e: any) => e.message).join(', ');
-        alert(`GraphQL error: ${errorMessages}`);
-        return null;
-      }
-
-      // Check for user errors
-      if (data.data?.cartCreate?.userErrors?.length > 0) {
-        const errors = data.data.cartCreate.userErrors;
-        console.error('❌ Cart user errors:', errors);
-        alert(`Cart error: ${errors.map((e: any) => e.message).join(', ')}`);
-        return null;
-      }
-      
-      if (data.data?.cartCreate?.cart) {
-        const cart = data.data.cartCreate.cart;
-        console.log('✅ Cart created successfully:', cart.checkoutUrl);
-        setCheckoutId(cart.id);
-        setCheckoutUrl(cart.checkoutUrl);
-        localStorage.setItem('swy-checkout-id', cart.id);
-        return cart.checkoutUrl;
-      } else {
-        console.error('❌ No cart in response:', data);
-        alert('Failed to create cart. Please check console for details.');
-        return null;
-      }
-    } catch (error) {
-      console.error('❌ Failed to create cart:', error);
-      alert(`Cart creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (data.errors?.length) {
+      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
+      return;
     }
-    
-    return null;
+    const errs = data.data?.cartCreate?.userErrors;
+    if (errs?.length) {
+      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const c = data.data?.cartCreate?.cart;
+    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
   };
 
-  // Add item to cart
-  const addToCart = async (variantId: string, productId: string, quantity: number = 1) => {
-    // Find product from data
-    const { products } = await import('../data/products');
-    const product = products.find(p => p.id === productId);
-    
-    if (!product) {
-      console.error('Product not found:', productId);
+  const cartLinesAdd = async (lines: { merchandiseId: string; quantity: number }[]) => {
+    if (!cartId) return;
+    const query = `
+      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) ${storefrontInContextDirective()} {
+        cartLinesAdd(cartId: $cartId, lines: $lines) {
+          cart {
+            ${STOREFRONT_CART_SELECTION}
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+    const data = await storefrontGraphql<{
+      data?: { cartLinesAdd?: { cart?: unknown; userErrors?: { message: string }[] } };
+      errors?: { message: string }[];
+    }>(query, { cartId, lines });
+
+    if (data.errors?.length) {
+      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const errs = data.data?.cartLinesAdd?.userErrors;
+    if (errs?.length) {
+      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const c = data.data?.cartLinesAdd?.cart;
+    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+  };
+
+  const cartLinesUpdate = async (lines: { id: string; quantity: number }[]) => {
+    if (!cartId) return;
+    const query = `
+      mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) ${storefrontInContextDirective()} {
+        cartLinesUpdate(cartId: $cartId, lines: $lines) {
+          cart {
+            ${STOREFRONT_CART_SELECTION}
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+    const data = await storefrontGraphql<{
+      data?: { cartLinesUpdate?: { cart?: unknown; userErrors?: { message: string }[] } };
+      errors?: { message: string }[];
+    }>(query, { cartId, lines });
+
+    if (data.errors?.length) {
+      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const errs = data.data?.cartLinesUpdate?.userErrors;
+    if (errs?.length) {
+      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const c = data.data?.cartLinesUpdate?.cart;
+    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+  };
+
+  const cartLinesRemove = async (lineIds: string[]) => {
+    if (!cartId) return;
+    const query = `
+      mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) ${storefrontInContextDirective()} {
+        cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+          cart {
+            ${STOREFRONT_CART_SELECTION}
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+    const data = await storefrontGraphql<{
+      data?: { cartLinesRemove?: { cart?: unknown; userErrors?: { message: string }[] } };
+      errors?: { message: string }[];
+    }>(query, { cartId, lineIds });
+
+    if (data.errors?.length) {
+      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const errs = data.data?.cartLinesRemove?.userErrors;
+    if (errs?.length) {
+      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
+      return;
+    }
+    const c = data.data?.cartLinesRemove?.cart;
+    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+  };
+
+  const addToCart = async (variantId: string, _productId: string, quantity: number = 1) => {
+    if (!isConfigured) {
+      console.warn("Shopify not configured.");
       return;
     }
 
-    const { productImageFallbacks } = await import('../data/productImageFallbacks');
-
-    const existingItem = cart.find(item => item.variantId === variantId);
-    
-    if (existingItem) {
-      // Update quantity if item already exists
-      updateQuantity(existingItem.id, existingItem.quantity + quantity);
+    const existing = cart.find((item) => item.variantId === variantId);
+    if (existing) {
+      await cartLinesUpdate([{ id: existing.lineId, quantity: existing.quantity + quantity }]);
+    } else if (!cartId) {
+      await cartCreate([{ merchandiseId: variantId, quantity }]);
     } else {
-      // Add new item
-      const newItem: CartItem = {
-        id: `${Date.now()}-${variantId}`,
-        variantId,
-        productId,
-        title: product.name,
-        quantity,
-        price: product.price || '0.00',
-        image: productImageFallbacks[productId],
-      };
-      
-      const newCart = [...cart, newItem];
-      setCart(newCart);
-      
-      // Create/update checkout
-      if (isConfigured) {
-        await createCheckout(newCart);
-      }
+      await cartLinesAdd([{ merchandiseId: variantId, quantity }]);
     }
-    
-    // Open cart sidebar
+
     setIsCartOpen(true);
   };
 
-  // Remove item from cart
-  const removeFromCart = (itemId: string) => {
-    const newCart = cart.filter(item => item.id !== itemId);
-    setCart(newCart);
-    
-    if (isConfigured && newCart.length > 0) {
-      createCheckout(newCart);
-    } else {
-      setCheckoutUrl(null);
-      setCheckoutId(null);
-      localStorage.removeItem('swy-checkout-id');
-    }
-  };
-
-  // Update item quantity
-  const updateQuantity = (itemId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(itemId);
+  const removeFromCart = async (lineId: string) => {
+    if (!isConfigured || !cartId) {
+      setCart((c) => c.filter((item) => item.lineId !== lineId));
       return;
     }
-    
-    const newCart = cart.map(item =>
-      item.id === itemId ? { ...item, quantity } : item
-    );
-    setCart(newCart);
-    
-    if (isConfigured) {
-      createCheckout(newCart);
+    await cartLinesRemove([lineId]);
+  };
+
+  const updateQuantity = async (lineId: string, quantity: number) => {
+    if (quantity <= 0) {
+      await removeFromCart(lineId);
+      return;
     }
+    if (!isConfigured || !cartId) return;
+    await cartLinesUpdate([{ id: lineId, quantity }]);
   };
 
-  // Clear cart
   const clearCart = () => {
-    setCart([]);
-    setCheckoutUrl(null);
-    setCheckoutId(null);
-    localStorage.removeItem('swy-cart');
-    localStorage.removeItem('swy-checkout-id');
+    clearServerCartState();
   };
 
-  // Cart sidebar controls
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
@@ -277,6 +306,7 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     <ShopifyContext.Provider
       value={{
         cart,
+        cartSubtotal,
         cartCount,
         isCartOpen,
         checkoutUrl,
