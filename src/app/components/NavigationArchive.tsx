@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useMemo, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { AnimatePresence, motion } from 'motion/react';
 import { Menu, Search, ShoppingBag, X } from 'lucide-react';
 import { useShopify } from '../context/ShopifyContext';
 import { useCollectionSearch } from '../context/CollectionSearchContext';
@@ -99,7 +100,7 @@ export function NavigationArchive() {
     closeSearch,
     setQuery: setSearchQuery,
   } = useCollectionSearch();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   /** 0 = full brand presence (hero entry), 1 = quietest framing (immersed in collection) */
   const [navRecess, setNavRecess] = useState(0);
@@ -108,8 +109,35 @@ export function NavigationArchive() {
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    setMenuOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onBp = () => {
+      if (mq.matches) setIsMobileMenuOpen(false);
+    };
+    mq.addEventListener('change', onBp);
+    return () => mq.removeEventListener('change', onBp);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const updateRecess = () => {
@@ -221,8 +249,8 @@ export function NavigationArchive() {
     });
   };
 
-  const recess = menuOpen ? Math.min(navRecess, 0.22) : navRecess;
-  const reveal = menuOpen ? 1 : navReveal;
+  const recess = isMobileMenuOpen ? Math.min(navRecess, 0.22) : navRecess;
+  const reveal = isMobileMenuOpen ? 1 : navReveal;
 
   const navBgAlpha = lerp(0.22, 0.035, recess);
   const navBlurPx = lerp(7.5, 2.25, recess);
@@ -249,7 +277,7 @@ export function NavigationArchive() {
       closeSearch();
       return;
     }
-    setMenuOpen(false);
+    setIsMobileMenuOpen(false);
     if (location.pathname !== '/') {
       navigate(localizePath(toLandingHash('archive')));
       window.setTimeout(() => openSearch(), 450);
@@ -296,7 +324,13 @@ export function NavigationArchive() {
       ) : null}
 
       <div
-        className="fixed top-0 left-0 right-0 z-[80]"
+        className={`fixed top-0 left-0 right-0 z-[80] ${
+          isMobileMenuOpen && !isCartOpen
+            ? 'max-lg:pointer-events-none max-lg:invisible max-lg:opacity-0 max-lg:[transition:opacity_200ms_ease,visibility_0s_linear_200ms]'
+            : !isCartOpen
+              ? 'transition-[opacity,visibility] duration-200'
+              : ''
+        }`}
         style={
           isCartOpen
             ? {
@@ -419,16 +453,16 @@ export function NavigationArchive() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setMenuOpen((prev) => !prev)}
+                  onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                   className="pointer-events-auto inline-flex rounded border p-2 lg:hidden"
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
                   }}
-                  aria-expanded={menuOpen}
-                  aria-label={menuOpen ? t(siteCopy.nav.menuClose) : t(siteCopy.nav.menuToggle)}
+                  aria-expanded={isMobileMenuOpen}
+                  aria-label={isMobileMenuOpen ? t(siteCopy.nav.menuClose) : t(siteCopy.nav.menuToggle)}
                 >
-                  {menuOpen ? <X size={15} /> : <Menu size={15} />}
+                  {isMobileMenuOpen ? <X size={15} /> : <Menu size={15} />}
                 </button>
               </div>
             </div>
@@ -529,39 +563,101 @@ export function NavigationArchive() {
       ) : null}
       </div>
 
-      {menuOpen && (
-        <div className="fixed inset-0 z-[79] bg-black/88 px-6 pt-24 lg:hidden">
-          <div className="space-y-5">
-            {navLinks.map((link) =>
-              link.to === ROUTES.collection ? (
-                <CollectionLink
-                  key={link.label}
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-base uppercase tracking-[0.2em] text-[#F2F0ED]/80"
+      <AnimatePresence>
+        {isMobileMenuOpen ? (
+          <>
+            <motion.div
+              key="mobile-menu-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 z-[102] bg-black/80 lg:hidden"
+              style={{ backdropFilter: 'blur(8px)' }}
+              aria-hidden
+            />
+
+            <motion.div
+              key="mobile-menu-panel"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-drawer-title"
+              className="fixed right-0 top-0 z-[105] flex h-[100dvh] w-full max-w-md flex-col bg-[#0A0A0A] shadow-[0_0_80px_rgba(0,0,0,0.65)] lg:hidden"
+              style={{
+                border: '0.5px solid rgba(242,240,237,0.15)',
+              }}
+            >
+              <div
+                className="flex items-center justify-between gap-3 px-6 py-5"
+                style={{
+                  borderBottom: '0.5px solid rgba(242,240,237,0.15)',
+                }}
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <Menu size={18} color="#F2F0ED" opacity={0.6} aria-hidden />
+                  <h2
+                    id="mobile-menu-drawer-title"
+                    className="truncate text-sm tracking-[0.3em] uppercase"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      color: '#F2F0ED',
+                    }}
+                  >
+                    {t(siteCopy.nav.menuDrawerTitle)}
+                  </h2>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="inline-flex shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
                   style={{ fontFamily: 'var(--font-sans)' }}
+                  aria-label={t(siteCopy.product.cartDrawerClose)}
                 >
-                  {link.label}
-                </CollectionLink>
-              ) : (
-                <LocalizedLink
-                  key={link.label}
-                  to={link.to}
-                  onClick={(e) => {
-                    setMenuOpen(false);
-                    if (link.landingSectionId) {
-                      onLandingSectionNav(link.landingSectionId)(e);
-                    }
-                  }}
-                  className="block text-base uppercase tracking-[0.2em] text-[#F2F0ED]/80"
-                  style={{ fontFamily: 'var(--font-sans)' }}
-                >
-                  {link.label}
-                </LocalizedLink>
-              )
-            )}
-          </div>
-        </div>
-      )}
+                  <X size={16} strokeWidth={1.75} className="opacity-80" aria-hidden />
+                  {t(siteCopy.product.cartDrawerClose)}
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-6 py-8">
+                <nav className="flex flex-col gap-5" aria-label={t(siteCopy.nav.primaryAria)}>
+                  {navLinks.map((link) =>
+                    link.to === ROUTES.collection ? (
+                      <CollectionLink
+                        key={link.label}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block text-base uppercase tracking-[0.2em] text-[#F2F0ED]/80 transition hover:text-[#F2F0ED]"
+                        style={{ fontFamily: 'var(--font-sans)' }}
+                      >
+                        {link.label}
+                      </CollectionLink>
+                    ) : (
+                      <LocalizedLink
+                        key={link.label}
+                        to={link.to}
+                        onClick={(e) => {
+                          setIsMobileMenuOpen(false);
+                          if (link.landingSectionId) {
+                            onLandingSectionNav(link.landingSectionId)(e);
+                          }
+                        }}
+                        className="block text-base uppercase tracking-[0.2em] text-[#F2F0ED]/80 transition hover:text-[#F2F0ED]"
+                        style={{ fontFamily: 'var(--font-sans)' }}
+                      >
+                        {link.label}
+                      </LocalizedLink>
+                    )
+                  )}
+                </nav>
+              </div>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }

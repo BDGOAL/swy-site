@@ -219,7 +219,7 @@
   html {
     font-size: var(--font-size);
     background-color: #0A0A0A;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -12,6 +12,8 @@ export const siteCopy = {
     utilitiesAria: { en: "Site utilities", zh: "網站工具" } satisfies Bilingual,
     menuToggle: { en: "Open menu", zh: "打開選單" } satisfies Bilingual,
     menuClose: { en: "Close menu", zh: "關閉選單" } satisfies Bilingual,
+    /** Mobile drawer title (uppercase styling at call site). */
+    menuDrawerTitle: { en: "Menu", zh: "選單" } satisfies Bilingual,
     cart: { en: "Cart", zh: "購物車" } satisfies Bilingual,
     shop: { en: "Shop", zh: "選香" } satisfies Bilingual,
     collection: { en: "Collection", zh: "選集" } satisfies Bilingual,

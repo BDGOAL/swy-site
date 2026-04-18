@@ -34,8 +34,7 @@ function useLandingHashAlign() {
       const top = el.getBoundingClientRect().top;
       if (top >= margin - 10 && top <= margin + 28) return;
 
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+      el.scrollIntoView({ block: "start", behavior: "auto" });
     };
 
     const raf = requestAnimationFrame(() => {
@@ -188,7 +187,7 @@ export function LandingPage() {
 
   const nextSectionY = useTransform(scrollY, [520, 980], [64, 0]);
   const nextSectionOpacity = useTransform(scrollY, [480, 900], [0, 1]);
-  const mobileOverlayLiftVh = narrow ? 10 : 0;
+  const mobileOverlayLiftVh = 0;
   const v3 = desktopHero && !reduce;
 
   return (
