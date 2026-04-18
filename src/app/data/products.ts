@@ -25,6 +25,8 @@ export interface Product {
   wearMoment?: Bilingual;
   intensity?: Bilingual;
   lasting?: Bilingual;
+  /** Local EN/ZH pairing line when Shopify `pairing_note` is missing or unusable for the active locale. */
+  pairingSuggestion?: Bilingual;
   price?: number;
   currency?: string;
   shopifyHandle?: string;
@@ -161,6 +163,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Romantic clarity", zh: "清亮的浪漫" },
     lasting: { en: "Gentle through the day", zh: "整日輕柔相伴" },
+    pairingSuggestion: {
+      en: "Layer with The Old Library to lend the rose a hush of paper, ink, and time—depth without dimming its blush.",
+      zh: "可與 The Old Library 疊擦，為玫瑰加上一層紙頁、墨水與時間的厚度。",
+    },
     notes: nl(
       ["水蜜桃", "佛手柑", "牡丹", "Peach", "Bergamot", "Peony"],
       ["玫瑰", "茉莉", "紫羅蘭", "Rose", "Jasmine", "Violet"],

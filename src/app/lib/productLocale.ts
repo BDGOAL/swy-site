@@ -58,6 +58,30 @@ export function coalesceMetaStringList(
   return metaList;
 }
 
+/**
+ * Single-line PDP detail fields: English UI must not show CJK from Shopify (e.g. pairing with embedded Latin brand names).
+ * Falls back to `fallback` when the metafield is empty or wrong script for the locale.
+ */
+export function pdpLocaleString(
+  value: string | undefined | null,
+  locale: Locale,
+  fallback: string
+): string {
+  const m = value?.trim() ?? "";
+  const fb = fallback.trim();
+  if (!m) return fb;
+  if (locale === "en") {
+    if (HAN.test(m)) return fb;
+    return m;
+  }
+  if (!HAN.test(m) && /[a-zA-Z]{2,}/.test(m) && fb && HAN.test(fb)) return fb;
+  return m;
+}
+
+export function productPairingSuggestion(p: Product, locale: Locale): string {
+  return pick(p.pairingSuggestion, locale);
+}
+
 function pick(b: Bilingual | undefined, locale: Locale): string {
   if (!b) return "";
   return b[locale];
@@ -187,3 +211,10 @@ export const productTheme = productScentFamily;
 
 /** @deprecated Use productLongStory */
 export const productStory = productLongStory;
+
+/** Collapse Shopify HTML description to plain text for display. */
+export function stripHtmlToText(html: string): string {
+  if (!html?.trim()) return "";
+  const withoutTags = html.replace(/<[^>]+>/g, " ");
+  return withoutTags.replace(/\s+/g, " ").trim();
+}

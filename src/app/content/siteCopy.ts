@@ -159,7 +159,7 @@ export const siteCopy = {
   },
   product: {
     notFound: { en: "Product not found", zh: "找不到此香氣" } satisfies Bilingual,
-    scentNarrativeEyebrow: { en: "Scent Story", zh: "香氣故事" } satisfies Bilingual,
+    scentNarrativeEyebrow: { en: "Hong Kong story", zh: "香港故事" } satisfies Bilingual,
     productType: { en: "Eau de Parfum", zh: "淡香精" } satisfies Bilingual,
     variantSoldOut: { en: "(Sold out)", zh: "（售罄）" } satisfies Bilingual,
     defaultVariant: { en: "Default", zh: "標準" } satisfies Bilingual,

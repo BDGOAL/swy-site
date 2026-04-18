@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
+import { productShopifyBodyEnglish } from "../data/productShopifyBody";
 import { productImageFallbacks } from "../data/productImageFallbacks";
 import { BOTTLE_IMAGE } from "../data/bottleImage";
 import { useShopify } from "../context/ShopifyContext";
@@ -25,6 +26,9 @@ import {
   shopifyStorefrontLanguageCode,
   coalesceMetaText,
   coalesceMetaStringList,
+  pdpLocaleString,
+  productPairingSuggestion,
+  stripHtmlToText,
 } from "../lib/productLocale";
 import type { Locale } from "../lib/i18n";
 import { ROUTES } from "../constants/routes";
@@ -518,17 +522,19 @@ export function UnboxingExperience() {
   const displayName = product.name;
 
   const hasShopifyStorySource = Boolean(isConfigured && shopifyProduct && meta);
-  const pdpStoryIntro = hasShopifyStorySource
-    ? coalesceMetaText(meta?.storyIntro, locale, "").trim()
-    : "";
-  const pdpStoryBody = hasShopifyStorySource
-    ? coalesceMetaText(meta?.storyBody, locale, "").trim()
-    : "";
+  /** Shopify metafields only — no local descriptor / shortStory / longStory. */
+  const pdpStoryIntro = hasShopifyStorySource ? (meta?.storyIntro ?? "").trim() : "";
+  const pdpStoryBody = hasShopifyStorySource ? (meta?.storyBody ?? "").trim() : "";
 
-  const descriptionBlurb =
-    shopifyProduct?.description && locale === "en" && !pdpStoryBody
-      ? shopifyProduct.description
+  const shopifyDescriptionZh = stripHtmlToText(shopifyProduct?.description ?? "");
+  const pdpProductDescription =
+    isConfigured && shopifyProduct
+      ? locale === "en"
+        ? productShopifyBodyEnglish(product.id)
+        : shopifyDescriptionZh
       : "";
+
+  const storyEditorialImageUrl = meta?.storyImage?.url ?? "";
 
   const topNotes = meta?.topNotes?.length
     ? coalesceMetaStringList(meta.topNotes, locale, productNotesTop(product, locale))
@@ -542,7 +548,7 @@ export function UnboxingExperience() {
   const hasNotes = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
 
   const localAccords = productAccords(product, locale);
-  const scentFamilyLabel = coalesceMetaText(
+  const scentFamilyLabel = pdpLocaleString(
     meta?.scentFamily,
     locale,
     productScentFamily(product, locale)
@@ -551,16 +557,24 @@ export function UnboxingExperience() {
     ? coalesceMetaStringList(meta.moodKeywords, locale, productMoodTags(product, locale))
     : productMoodTags(product, locale);
   const impressionText = productImpression(product, locale);
-  const wearMomentText = coalesceMetaText(
+  const wearMomentText = pdpLocaleString(
     meta?.wearWhen,
     locale,
     productWearMoment(product, locale)
   );
   const localIntensity = productIntensity(product, locale);
   const localLasting = productLasting(product, locale);
-  const longevityDisplay = coalesceMetaText(meta?.longevity, locale, "");
-  const sillageDisplay = coalesceMetaText(meta?.sillage, locale, "");
-  const pairingDisplay = coalesceMetaText(meta?.pairingNote, locale, "");
+  const longevityDisplay = pdpLocaleString(
+    meta?.longevity,
+    locale,
+    productLasting(product, locale)
+  );
+  const sillageDisplay = pdpLocaleString(meta?.sillage, locale, "");
+  const pairingDisplay = pdpLocaleString(
+    meta?.pairingNote,
+    locale,
+    productPairingSuggestion(product, locale)
+  );
 
   const hasImpressionLayer = Boolean(
     impressionText ||
@@ -615,8 +629,6 @@ export function UnboxingExperience() {
     .filter((x): x is { related: RelatedScent; localId: string } => Boolean(x.localId));
 
   const hasTextureGrid = Boolean(meta?.textureImages?.length);
-  const narrativeTitleDisplay = coalesceMetaText(meta?.storyTitle, locale, "").trim();
-  const hasNarrativeEditorial = Boolean(meta?.storyImage?.url || narrativeTitleDisplay);
   const showVisualSection = hasTextureGrid;
 
   const priceDisplay =
@@ -690,15 +702,35 @@ export function UnboxingExperience() {
           </div>
 
           <div className="lg:pt-2">
-            <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.scentNarrativeEyebrow)}
-            </p>
-            <p className="mb-2 text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.productType)}
-            </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight" style={{ fontFamily: "var(--font-sans)" }}>
               {displayName}
             </h1>
+
+            <div className="mt-5 space-y-1.5">
+              <p className="text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
+                {t(siteCopy.product.scentNarrativeEyebrow)}
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
+                {t(siteCopy.product.productType)}
+              </p>
+            </div>
+
+            {pdpStoryIntro ? (
+              <p
+                className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {pdpStoryIntro}
+              </p>
+            ) : null}
+            {pdpStoryBody ? (
+              <p
+                className="mt-5 max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/62 sm:text-[13px]"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {pdpStoryBody}
+              </p>
+            ) : null}
 
             {!!priceDisplay && (
               <p className="mt-10 text-2xl text-[#F2F0ED]/88" style={{ fontFamily: "var(--font-mono)" }}>
@@ -752,73 +784,40 @@ export function UnboxingExperience() {
               </p>
             )}
 
-            {hasShopifyStorySource && (pdpStoryIntro || pdpStoryBody) ? (
-              <div className="mt-10 space-y-5 border-t border-white/10 pt-10">
-                {pdpStoryIntro ? (
-                  <p
-                    className="max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/72 sm:text-sm"
-                    style={{ fontFamily: "var(--font-sans)" }}
-                  >
-                    {pdpStoryIntro}
-                  </p>
-                ) : null}
-                {pdpStoryBody ? (
-                  <p
-                    className="max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/58 sm:text-[13px]"
-                    style={{ fontFamily: "var(--font-sans)" }}
-                  >
-                    {pdpStoryBody}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
-
-            {!!descriptionBlurb && (
-              <div className="mt-8 border-t border-white/10 pt-8">
+            {pdpProductDescription ? (
+              <div className="mt-10 border-t border-white/10 pt-10">
                 <p
-                  className="max-w-[52ch] text-sm leading-relaxed text-[#F2F0ED]/68"
+                  className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  {descriptionBlurb}
+                  {t(siteCopy.product.detailsEyebrow)}
+                </p>
+                <p
+                  className="max-w-[52ch] text-sm leading-[1.75] text-[#F2F0ED]/70"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {pdpProductDescription}
                 </p>
               </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 2) Narrative (The narrative / 敘事) — editorial title + image only; story text lives under add to cart from Shopify */}
-      {hasNarrativeEditorial && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.narrative)}
-            </h2>
-            {narrativeTitleDisplay ? (
-              <p
-                className="mb-10 max-w-3xl text-sm leading-relaxed text-[#F2F0ED]/68 sm:text-base"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                {narrativeTitleDisplay}
-              </p>
             ) : null}
-            {meta?.storyImage?.url ? (
-              <div className="overflow-hidden border border-white/10 bg-black/20">
-                <div className="aspect-[864/1184] w-full max-h-[min(520px,70vh)]">
+
+            {storyEditorialImageUrl ? (
+              <div className="mt-10 max-w-xl">
+                <div className="overflow-hidden border border-white/12 bg-black/25">
                   <img
-                    src={meta.storyImage.url}
-                    alt={meta.storyImage.altText || displayName}
-                    className="h-full w-full object-cover object-center"
+                    src={storyEditorialImageUrl}
+                    alt={meta?.storyImage?.altText || displayName}
+                    className="max-h-[min(22rem,42vh)] w-full object-cover object-center"
                     loading="lazy"
                   />
                 </div>
               </div>
             ) : null}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* 3) Scent impression (氣息之間) */}
+      {/* 2) Scent impression (氣息之間) */}
       {hasImpressionLayer && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
@@ -888,7 +887,7 @@ export function UnboxingExperience() {
         </section>
       )}
 
-      {/* 4) Accords & structured notes */}
+      {/* 3) Accords & structured notes */}
       {hasAccordsNotesLayer && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
@@ -1032,7 +1031,7 @@ export function UnboxingExperience() {
         </section>
       )}
 
-      {/* 5) Visual storytelling (textures; orphaned story image when no long narrative) */}
+      {/* 4) Visual storytelling (textures) */}
       {showVisualSection && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
@@ -1057,7 +1056,7 @@ export function UnboxingExperience() {
         </section>
       )}
 
-      {/* 6) Related scents / continuation section */}
+      {/* 5) Related scents / continuation section */}
       {!!relatedScentsResolved.length && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
