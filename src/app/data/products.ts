@@ -113,6 +113,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Soft luminosity", zh: "柔光內斂" },
     lasting: { en: "Close to the skin, into the evening", zh: "貼膚而行，直至夜色" },
+    pairingSuggestion: {
+      en: "Layer with The Morning After I Quit to add linen daylight against the snow-cool top notes.",
+      zh: "可與 The Morning After I Quit 疊擦，為清冽前調添一層晨光與亞麻般的舒張感。",
+    },
     notes: nl(
       ["橙花", "Orange"],
       ["小蒼蘭", "鈴蘭", "Freesia", "Lily of the Valley"],
@@ -217,6 +221,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Sunlit ease", zh: "陽光般的鬆弛" },
     lasting: { en: "Steady, familiar", zh: "穩定而熟悉" },
+    pairingSuggestion: {
+      en: "Layer with The Old Library to deepen the citrus with paper, ink, and quiet oak.",
+      zh: "可與 The Old Library 疊擦，以紙頁、墨水與沉靜橡木拉長柑橘的餘韻。",
+    },
     notes: nl(
       ["檸檬", "佛手柑", "小豆蔻", "Lemon", "Bergamot", "Cardamom"],
       ["鼠尾草", "茉莉", "薰衣草", "丁香", "Sage", "Jasmine", "Lavender", "Clove"],
@@ -267,6 +275,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Scholarly calm", zh: "書齋般的沉靜" },
     lasting: { en: "Measured, enduring", zh: "節制而持久" },
+    pairingSuggestion: {
+      en: "Layer with It means no worries to brighten the stacks with lemon and quiet kitchen warmth.",
+      zh: "可與 It means no worries 疊擦，為書架沉香添一層檸檬與廚房餘溫般的明亮。",
+    },
     notes: nl(
       ["橙花", "佛手柑", "迷迭香", "Orange", "Bergamot", "Rosemary"],
       ["沉香", "天竺葵", "Oud", "Geranium"],
@@ -317,6 +329,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Grounded", zh: "穩健內斂" },
     lasting: { en: "Deep into the night", zh: "深入夜色" },
+    pairingSuggestion: {
+      en: "Layer with I'm Rich to sharpen the workshop air with cool metal and quiet conviction.",
+      zh: "可與 I'm Rich 疊擦，為工坊木質添一層冷冽金屬與篤定自持。",
+    },
     notes: nl(
       ["羅勒", "黑胡椒", "Basil", "Black Pepper"],
       ["薰衣草", "百里香", "Lavender", "Thyme"],
@@ -367,6 +383,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Assertive", zh: "鮮明有力" },
     lasting: { en: "Commanding trail", zh: "餘韻鮮明" },
+    pairingSuggestion: {
+      en: "Layer with The Men's Garage to ground metallic brightness in leather and seasoned wood.",
+      zh: "可與 The Men's Garage 疊擦，讓冷冽金屬光澤落入皮革與木質的沉穩懷抱。",
+    },
     notes: nl(
       ["小豆蔻", "胡椒", "Cardamom", "Pepper"],
       ["玫瑰葉", "金色橙花", "金屬醛", "Rose Leaf", "Golden Neroli", "Metallic Aldehyde"],
@@ -417,6 +437,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Airy", zh: "輕盈通透" },
     lasting: { en: "Fresh through noon", zh: "清新至午後" },
+    pairingSuggestion: {
+      en: "Layer with It means no worries to echo the same unhurried citrus-and-linen relief.",
+      zh: "可與 It means no worries 疊擦，延續同樣從容的柑橘與亞麻氣息。",
+    },
     notes: nl(
       ["佛手柑", "柑橘", "紫丁香", "Bergamot", "Mandarin", "Lilac"],
       ["白亞麻", "山楂花", "White Linen", "Hawthorn"],
@@ -467,6 +491,10 @@ export const products: Product[] = [
     },
     intensity: { en: "Magnetic", zh: "磁性鮮明" },
     lasting: { en: "Late hours", zh: "徹夜不散" },
+    pairingSuggestion: {
+      en: "Layer with I'm Rich to lift the smoke with cool metal and self-possessed clarity.",
+      zh: "可與 I'm Rich 疊擦，以冷冽金屬光提煉煙草與蘭姆的夜色層次。",
+    },
     notes: nl(
       ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
       ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"],

@@ -4,6 +4,12 @@ import type { Bilingual, Locale } from "./i18n";
 /** Han script — used to detect locale mismatch vs Shopify metafield strings. */
 const HAN = /\p{Script=Han}/u;
 
+/** True if the string contains Han characters (e.g. Chinese copy on an English PDP). */
+export function textContainsHan(value: string | undefined | null): boolean {
+  if (!value?.trim()) return false;
+  return HAN.test(value);
+}
+
 /** Storefront API `LanguageCode` for `@inContext(language: …)`. */
 export function shopifyStorefrontLanguageCode(
   locale: Locale

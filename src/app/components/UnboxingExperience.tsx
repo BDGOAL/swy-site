@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
 import { productShopifyBodyEnglish } from "../data/productShopifyBody";
+import { productPdpStoryBodyEn, productPdpStoryIntroEn } from "../data/productPdpStoryEn";
 import { productImageFallbacks } from "../data/productImageFallbacks";
 import { BOTTLE_IMAGE } from "../data/bottleImage";
 import { useShopify } from "../context/ShopifyContext";
@@ -29,6 +30,7 @@ import {
   pdpLocaleString,
   productPairingSuggestion,
   stripHtmlToText,
+  textContainsHan,
 } from "../lib/productLocale";
 import type { Locale } from "../lib/i18n";
 import { ROUTES } from "../constants/routes";
@@ -185,6 +187,11 @@ export function UnboxingExperience() {
   const [selectedVariantId, setSelectedVariantId] = useState<string>("");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [fallbackRelatedScents, setFallbackRelatedScents] = useState<RelatedScent[]>([]);
+  /** Shop-default-language story metafields (fills Chinese when @inContext omits them). */
+  const [storyMetafieldsShopDefault, setStoryMetafieldsShopDefault] = useState<{
+    intro?: string;
+    body?: string;
+  } | null>(null);
 
   const product = products.find((p) => p.id === id);
 
@@ -369,6 +376,56 @@ export function UnboxingExperience() {
   }, [isConfigured, product?.shopifyVariantId, locale]);
 
   useEffect(() => {
+    if (!isConfigured || !shopifyProduct?.id) {
+      setStoryMetafieldsShopDefault(null);
+      return;
+    }
+    let cancelled = false;
+    const fetchStoryDefaults = async () => {
+      try {
+        const query = `
+          query ProductStoryShopDefault($id: ID!) {
+            node(id: $id) {
+              ... on Product {
+                storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
+                storyBody: metafield(namespace: "custom", key: "story_body") { value }
+              }
+            }
+          }
+        `;
+        const response = await fetch(
+          `https://${shopifyConfig.storeDomain}/api/${shopifyConfig.apiVersion}/graphql.json`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Shopify-Storefront-Access-Token": shopifyConfig.storefrontAccessToken,
+            },
+            body: JSON.stringify({
+              query,
+              variables: { id: shopifyProduct.id },
+            }),
+          }
+        );
+        if (!response.ok) return;
+        const data = await response.json();
+        const node = data?.data?.node;
+        if (!node || cancelled) return;
+        setStoryMetafieldsShopDefault({
+          intro: node.storyIntro?.value ?? undefined,
+          body: node.storyBody?.value ?? undefined,
+        });
+      } catch {
+        if (!cancelled) setStoryMetafieldsShopDefault(null);
+      }
+    };
+    fetchStoryDefaults();
+    return () => {
+      cancelled = true;
+    };
+  }, [isConfigured, shopifyProduct?.id]);
+
+  useEffect(() => {
     const defaultVariantId =
       shopifyProduct?.variants?.[0]?.id || product?.shopifyVariantId || "";
     setSelectedVariantId(defaultVariantId);
@@ -522,9 +579,31 @@ export function UnboxingExperience() {
   const displayName = product.name;
 
   const hasShopifyStorySource = Boolean(isConfigured && shopifyProduct && meta);
-  /** Shopify metafields only — no local descriptor / shortStory / longStory. */
-  const pdpStoryIntro = hasShopifyStorySource ? (meta?.storyIntro ?? "").trim() : "";
-  const pdpStoryBody = hasShopifyStorySource ? (meta?.storyBody ?? "").trim() : "";
+  /** Merged: in-context metafields + shop-default fetch (restores Chinese when EN context omits). */
+  const storyIntroMerged = (
+    (meta?.storyIntro ?? storyMetafieldsShopDefault?.intro ?? "") as string
+  ).trim();
+  const storyBodyMerged = (
+    (meta?.storyBody ?? storyMetafieldsShopDefault?.body ?? "") as string
+  ).trim();
+
+  const pdpStoryIntroDisplay =
+    !hasShopifyStorySource
+      ? ""
+      : locale === "zh"
+        ? storyIntroMerged
+        : storyIntroMerged && !textContainsHan(storyIntroMerged)
+          ? storyIntroMerged
+          : productPdpStoryIntroEn(product.id);
+
+  const pdpStoryBodyDisplay =
+    !hasShopifyStorySource
+      ? ""
+      : locale === "zh"
+        ? storyBodyMerged
+        : storyBodyMerged && !textContainsHan(storyBodyMerged)
+          ? storyBodyMerged
+          : productPdpStoryBodyEn(product.id);
 
   const shopifyDescriptionZh = stripHtmlToText(shopifyProduct?.description ?? "");
   const pdpProductDescription =
@@ -534,7 +613,9 @@ export function UnboxingExperience() {
         : shopifyDescriptionZh
       : "";
 
-  const storyEditorialImageUrl = meta?.storyImage?.url ?? "";
+  const textureImagesList = meta?.textureImages ?? [];
+  const textureLeadImage = textureImagesList[0] ?? null;
+  const textureImagesRemaining = textureImagesList.slice(1);
 
   const topNotes = meta?.topNotes?.length
     ? coalesceMetaStringList(meta.topNotes, locale, productNotesTop(product, locale))
@@ -570,7 +651,7 @@ export function UnboxingExperience() {
     productLasting(product, locale)
   );
   const sillageDisplay = pdpLocaleString(meta?.sillage, locale, "");
-  const pairingDisplay = pdpLocaleString(
+  const pairingForPdp = pdpLocaleString(
     meta?.pairingNote,
     locale,
     productPairingSuggestion(product, locale)
@@ -586,8 +667,8 @@ export function UnboxingExperience() {
       sillageDisplay
   );
 
-  const hasAccordsNotesLayer = Boolean(
-    localAccords.length || hasNotes || scentFamilyLabel || pairingDisplay
+  const hasFragranceProfileLayer = Boolean(
+    localAccords.length || hasNotes || scentFamilyLabel
   );
 
   const relatedFromSlugs: RelatedScent[] = (product.relatedSlugs ?? [])
@@ -628,8 +709,7 @@ export function UnboxingExperience() {
     }))
     .filter((x): x is { related: RelatedScent; localId: string } => Boolean(x.localId));
 
-  const hasTextureGrid = Boolean(meta?.textureImages?.length);
-  const showVisualSection = hasTextureGrid;
+  const showTextureGallerySection = textureImagesRemaining.length > 0;
 
   const priceDisplay =
     selectedVariant?.price?.amount != null &&
@@ -702,33 +782,30 @@ export function UnboxingExperience() {
           </div>
 
           <div className="lg:pt-2">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight" style={{ fontFamily: "var(--font-sans)" }}>
+            <p className="text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
+              {t(siteCopy.product.productType)}
+            </p>
+            <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl leading-tight" style={{ fontFamily: "var(--font-sans)" }}>
               {displayName}
             </h1>
+            <p className="mt-5 text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
+              {t(siteCopy.product.scentNarrativeEyebrow)}
+            </p>
 
-            <div className="mt-5 space-y-1.5">
-              <p className="text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
-                {t(siteCopy.product.scentNarrativeEyebrow)}
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
-                {t(siteCopy.product.productType)}
-              </p>
-            </div>
-
-            {pdpStoryIntro ? (
+            {pdpStoryIntroDisplay ? (
               <p
-                className="mt-8 max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
+                className="mt-5 max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
-                {pdpStoryIntro}
+                {pdpStoryIntroDisplay}
               </p>
             ) : null}
-            {pdpStoryBody ? (
+            {pdpStoryBodyDisplay ? (
               <p
                 className="mt-5 max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/62 sm:text-[13px]"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
-                {pdpStoryBody}
+                {pdpStoryBodyDisplay}
               </p>
             ) : null}
 
@@ -790,7 +867,7 @@ export function UnboxingExperience() {
                   className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  {t(siteCopy.product.detailsEyebrow)}
+                  {t(siteCopy.product.narrative)}
                 </p>
                 <p
                   className="max-w-[52ch] text-sm leading-[1.75] text-[#F2F0ED]/70"
@@ -801,13 +878,13 @@ export function UnboxingExperience() {
               </div>
             ) : null}
 
-            {storyEditorialImageUrl ? (
-              <div className="mt-10 max-w-xl">
+            {textureLeadImage?.url ? (
+              <div className="mt-10 max-w-md">
                 <div className="overflow-hidden border border-white/12 bg-black/25">
                   <img
-                    src={storyEditorialImageUrl}
-                    alt={meta?.storyImage?.altText || displayName}
-                    className="max-h-[min(22rem,42vh)] w-full object-cover object-center"
+                    src={textureLeadImage.url}
+                    alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                    className="max-h-[min(18rem,36vh)] w-full object-cover object-center"
                     loading="lazy"
                   />
                 </div>
@@ -855,7 +932,7 @@ export function UnboxingExperience() {
               </div>
             )}
 
-            {(localIntensity || localLasting || meta?.longevity || meta?.sillage) && (
+            {(localIntensity || localLasting || longevityDisplay || sillageDisplay) && (
               <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {localIntensity && (
                   <div className="border border-white/10 bg-black/20 p-4">
@@ -887,8 +964,24 @@ export function UnboxingExperience() {
         </section>
       )}
 
+      {/* Pairing suggestion — own band so English PDP never loses it when accords are empty */}
+      {!!pairingForPdp && (
+        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="mb-6 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
+              {t(siteCopy.product.pairing)}
+            </h2>
+            <div className="max-w-3xl border border-white/10 bg-black/20 p-5">
+              <p className="text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
+                {pairingForPdp}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 3) Accords & structured notes */}
-      {hasAccordsNotesLayer && (
+      {hasFragranceProfileLayer && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
             <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
@@ -1021,25 +1114,19 @@ export function UnboxingExperience() {
               </>
             )}
 
-            {pairingDisplay ? (
-              <div className="mt-10 border border-white/10 bg-black/20 p-5">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
-                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/76">{pairingDisplay}</p>
-              </div>
-            ) : null}
           </div>
         </section>
       )}
 
       {/* 4) Visual storytelling (textures) */}
-      {showVisualSection && (
+      {showTextureGallerySection && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
             <h2 className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.visualStorytelling)}
             </h2>
             <div className="grid gap-4 md:grid-cols-3">
-              {meta?.textureImages?.map((image) => (
+              {textureImagesRemaining.map((image) => (
                 <div key={image.url} className="overflow-hidden border border-white/10 bg-black/20">
                   <div className="aspect-[864/1184] w-full">
                     <img
