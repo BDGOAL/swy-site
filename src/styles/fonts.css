@@ -1,0 +1,23 @@
+/* SWY Brand Typography - Using Google Fonts (Reliable CDN) */
+
+/* Traditional Chinese support - @import must be first */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap');
+
+/* ✅ Montserrat - Professional Avenir Alternative (Guaranteed to work) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap');
+
+/* ❌ Local Avenir fonts removed due to format errors */
+/* Avenir fonts were causing "OTS parsing error: invalid sfntVersion" */
+/* Using Montserrat as primary font instead */
+
+:root {
+  /* ✅ Primary: Montserrat (reliable Google Font, similar to Avenir) */
+  --font-primary: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-secondary: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Traditional Chinese support */
+  --font-serif: 'Noto Serif TC', serif;
+  
+  /* Legacy support */
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}

@@ -1,0 +1,87 @@
+/* SWY Brand Guideline - Typography & Colors */
+/* Official brand implementation - March 2026 */
+
+@layer base {
+  body {
+    font-family: var(--font-secondary);
+    font-weight: var(--font-weight-normal);
+  }
+}
+
+/* Typography Classes - Following Brand Guideline */
+.swy-heading-black {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.swy-heading-regular {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.03em;
+}
+
+.swy-body-text {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: 0.02em;
+}
+
+.swy-label-text {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.625rem; /* 10px */
+}
+
+/* Brand Color Utilities */
+.swy-bg-bleached-silk {
+  background-color: var(--swy-bleached-silk);
+}
+
+.swy-bg-watermark {
+  background-color: var(--swy-watermark);
+}
+
+.swy-bg-anthracite {
+  background-color: var(--swy-anthracite);
+}
+
+.swy-bg-jet-black {
+  background-color: var(--swy-jet-black);
+}
+
+.swy-text-bleached-silk {
+  color: var(--swy-bleached-silk);
+}
+
+.swy-text-watermark {
+  color: var(--swy-watermark);
+}
+
+.swy-text-anthracite {
+  color: var(--swy-anthracite);
+}
+
+.swy-text-jet-black {
+  color: var(--swy-jet-black);
+}
+
+/* Border utilities */
+.swy-border-bleached-silk {
+  border-color: var(--swy-bleached-silk);
+}
+
+.swy-border-watermark {
+  border-color: var(--swy-watermark);
+}
+
+.swy-border-anthracite {
+  border-color: var(--swy-anthracite);
+}
+
+.swy-border-jet-black {
+  border-color: var(--swy-jet-black);
+}

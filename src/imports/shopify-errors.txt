@@ -1,0 +1,1150 @@
+/store/your-store/products?selectedView=all:1 The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.
+main-0d0e05549473.js:17  POST https://error-analytics-sessions-production.shopifysvc.com/ net::ERR_BLOCKED_BY_CLIENT
+sendSession @ main-0d0e05549473.js:17
+startSession @ main-0d0e05549473.js:17
+o.startSession @ main-0d0e05549473.js:12
+createClient @ main-0d0e05549473.js:18
+(anonymous) @ main-0d0e05549473.js:18
+context-slice-metrics-400e4147578f.js:13  POST https://otlp-http-production.shopifysvc.com/v1/metrics net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onForceFlush @ context-slice-metrics-400e4147578f.js:13
+await in onForceFlush
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+forceFlush @ context-slice-metrics-400e4147578f.js:1
+forceFlush @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+forceFlush @ context-slice-metrics-400e4147578f.js:13
+h @ context-slice-metrics-400e4147578f.js:14
+(anonymous) @ context-slice-metrics-400e4147578f.js:14
+record @ context-slice-metrics-400e4147578f.js:14
+record @ context-slice-metrics-400e4147578f.js:14
+recordAdminLoadedMetric @ main-0d0e05549473.js:4
+await in recordAdminLoadedMetric
+He @ main-0d0e05549473.js:4
+(anonymous) @ main-0d0e05549473.js:4
+_load @ common-f4fd5f840dc3.js:17
+(anonymous) @ common-f4fd5f840dc3.js:17
+ensure @ common-f4fd5f840dc3.js:17
+await in ensure
+Su @ main-0d0e05549473.js:19
+Mu @ main-0d0e05549473.js:19
+(anonymous) @ main-0d0e05549473.js:19
+Promise.then
+(anonymous) @ main-0d0e05549473.js:19
+main-0d0e05549473.js:2 using deprecated parameters for the initialization function; pass a single object instead
+console.warn @ main-0d0e05549473.js:2
+console.warn @ main-0d0e05549473.js:2
+eA @ loaders-common-784fe77f8f08.js:21
+s @ loaders-common-784fe77f8f08.js:21
+oa @ createReportifyContext-d12149104ad4.js:76
+A @ context-slice-reportify-7a4a99edfe36.js:2
+await in A
+reportify @ main-0d0e05549473.js:19
+await in reportify
+_load @ common-f4fd5f840dc3.js:17
+(anonymous) @ common-f4fd5f840dc3.js:17
+ensure @ common-f4fd5f840dc3.js:17
+await in ensure
+(anonymous) @ admin-context-router-1411d7d4557a.js:2
+await in (anonymous)
+(anonymous) @ common-f4fd5f840dc3.js:77
+ix @ common-f4fd5f840dc3.js:77
+ZS @ common-f4fd5f840dc3.js:77
+Ld @ common-f4fd5f840dc3.js:77
+(anonymous) @ common-f4fd5f840dc3.js:77
+Vm @ common-f4fd5f840dc3.js:77
+Qt @ common-f4fd5f840dc3.js:76
+mt @ common-f4fd5f840dc3.js:76
+ut @ common-f4fd5f840dc3.js:76
+ZJ @ common-f4fd5f840dc3.js:79
+Nn @ router-9ffc5e30df83.js:23
+Vc @ router-9ffc5e30df83.js:23
+(anonymous) @ admin-context-router-1411d7d4557a.js:2
+(anonymous) @ admin-context-router-1411d7d4557a.js:2
+Promise.then
+(anonymous) @ admin-context-router-1411d7d4557a.js:2
+router @ main-0d0e05549473.js:19
+await in router
+_load @ common-f4fd5f840dc3.js:17
+(anonymous) @ common-f4fd5f840dc3.js:17
+ensure @ common-f4fd5f840dc3.js:17
+await in ensure
+Su @ main-0d0e05549473.js:19
+Mu @ main-0d0e05549473.js:19
+(anonymous) @ main-0d0e05549473.js:19
+Promise.then
+(anonymous) @ main-0d0e05549473.js:19
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/unstable/produce_batch net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+produceBatch @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produceBatch @ common-f4fd5f840dc3.js:89
+f @ main-0d0e05549473.js:19
+sendAllBufferedEvents @ index-464adc0fca99.js:19
+(anonymous) @ index-464adc0fca99.js:19
+s @ router-9ffc5e30df83.js:2
+D @ router-9ffc5e30df83.js:2
+O @ router-9ffc5e30df83.js:2
+setTimeout
+u @ router-9ffc5e30df83.js:2
+F @ router-9ffc5e30df83.js:2
+produce @ index-464adc0fca99.js:19
+s @ index-464adc0fca99.js:19
+(anonymous) @ common-f4fd5f840dc3.js:82
+notifyListeners @ common-f4fd5f840dc3.js:82
+n.status.requestIdleCallback.timeout @ common-f4fd5f840dc3.js:82
+requestIdleCallback
+flushQueue @ common-f4fd5f840dc3.js:82
+start @ common-f4fd5f840dc3.js:82
+(anonymous) @ index-464adc0fca99.js:20
+Promise.then
+Iv @ index-464adc0fca99.js:20
+Vw @ index-464adc0fca99.js:184
+m @ context-slice-extensibility-c99ff9b4d116.js:2
+await in m
+(anonymous) @ main-0d0e05549473.js:19
+await in (anonymous)
+(anonymous) @ common-f4fd5f840dc3.js:17
+extensibility @ main-0d0e05549473.js:19
+_load @ common-f4fd5f840dc3.js:17
+(anonymous) @ common-f4fd5f840dc3.js:17
+ensure @ common-f4fd5f840dc3.js:17
+await in ensure
+Su @ main-0d0e05549473.js:19
+Mu @ main-0d0e05549473.js:19
+(anonymous) @ main-0d0e05549473.js:19
+Promise.then
+(anonymous) @ main-0d0e05549473.js:19
+main-0d0e05549473.js:2 polaris:  <s-choice-list>​…​</s-choice-list>​slot#shadow-root (open)#adopted-style-sheet:host{display:contents}:host,:host *,:host ::after,:host ::before{box-sizing:border-box}:host>*{-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"calt"0,normal;text-rendering:optimizeLegibility;font-size:var(--s-global-font-size-26021, 1rem);line-height:var(--s-global-line-height-26021, 1.5rem);letter-spacing:var(--s-global-letter-spacing-26021, -0.00833em);font-family:var(--s-global-font-family-26021, 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif);font-weight:var(--s-global-font-weight-26021, 450);font-variant:normal;color:var(--s-global-color-26021, rgba(48, 48, 48, 1));text-shadow:none;text-transform:none;font-style:normal;text-align:start;text-align-last:auto;text-indent:0}@media (min-width:48rem),(pointer:fine){:host>*{font-size:var(--s-global-font-size-26021, 0.8125rem);line-height:var(--s-global-line-height-26021, 1.25rem);letter-spacing:var(--s-global-letter-spacing-26021,
+      0rem
+    )}}#adopted-style-sheet@keyframes fade-on-checked{0%{transform:scale(0);opacity:0}}.choice-list{border:0;display:flex;flex-direction:column;margin:0;padding:0}.choice-list.disabled{color:#b5b5b5}legend{margin-block-end:.25rem;padding:0}.choice{cursor:pointer;align-items:center;display:inline-flex;gap:.5rem;padding-block:.75rem;max-inline-size:fit-content;position:relative}@media (min-width:48rem),(pointer:fine){.choice{padding-block:.25rem}}.has-details{padding-block-end:.25rem}.radio{appearance:none;margin:0;outline:0;border-radius:50%;background-color:#8a8a8a;inline-size:1.25rem;block-size:1.25rem}@media (min-width:48rem),(pointer:fine){.radio{inline-size:1rem;block-size:1rem}}.radio::after{content:"";display:block;border-radius:50%;inline-size:100%;block-size:100%;transform:scale(.9375);background:#fdfdfd;transition:opacity 100ms cubic-bezier(.19,.91,.38,1),transform 100ms cubic-bezier(.19,.91,.38,1)}.radio:checked{background-color:#303030}.radio:checked::after{animation:fade-on-checked 100ms;transform:scale(.5);opacity:1}.choice.disabled{cursor:default;color:#b5b5b5}.choice.disabled .radio{background-color:rgba(0,0,0,.08)}.choice.disabled .radio::after{background-color:transparent}.choice:focus-within .radio{background-color:#1a1a1a}:is(.choice:focus-within .radio):focus-visible{outline:.125rem solid #005bd3;outline-offset:.0625rem}.choice:hover .radio:not(:disabled,:checked){background-color:#616161}.choice:active .radio:not(:disabled,:checked){background-color:#1a1a1a}:is(.choice:active .radio:not(:disabled,:checked))::after{transform:scale(.75)}@media (forced-colors:active){.radio{border:.125rem solid transparent}.radio:checked::after{border:.125rem solid transparent}}.field-details{padding-block:.25rem;margin-inline-start:.125rem}@media (min-width:48rem),(pointer:fine){.field-details{margin-inline-start:0}}.has-details+.field-details{padding-block-start:0;padding-block-end:.25rem;margin-inline-start:1.75rem}@media (min-width:48rem),(pointer:fine){.has-details+.field-details{margin-inline-start:1.5rem}}#adopted-style-sheet.field-details{display:flex;gap:.25rem;font-size:.75rem;line-height:1rem;color:#616161}@media (min-width:48rem),(pointer:fine){.field-details{letter-spacing:0}}.field-details.field-details-error{--s-icon-color-26021:rgba(142, 11, 33, 1);color:#8e0b21}.field-details.field-details-disabled{--s-icon-color-26021:rgba(204, 204, 204, 1);color:#b5b5b5}.field-details-icon{flex-shrink:0}.display-none{display:none}<fieldset class=​"choice-list">​…​</fieldset>​flex<legend>​​</legend>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-0-describedby" value=​"today">​"Today"</label>​<div id=​"choice-0-describedby" class=​"field-details">​Compared to yesterday up to current hour​</div>​flex<slot>​…​</slot>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-1-describedby" value=​"last7days">​"Last 7 days"</label>​<div id=​"choice-1-describedby" class=​"field-details">​Compared to the previous 7 days​</div>​flex<slot>​…​</slot>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-2-describedby" value=​"last30days">​"Last 30 days"</label>​<div id=​"choice-2-describedby" class=​"field-details">​Compared to the previous 30 days​</div>​flex<slot>​…​</slot>​<div id=​"describedById" class=​"field-details display-none">​​</div>​</fieldset>​<s-choice value=​"today">​…​</s-choice>​slot<s-choice value=​"last7days">​…​</s-choice>​slot<s-choice value=​"last30days">​…​</s-choice>​slot</s-choice-list>​ - ChoiceList should have a name.
+console.warn @ main-0d0e05549473.js:2
+console.warn @ main-0d0e05549473.js:2
+_n @ render-common-f6a1df0a585a.js:91
+I_e @ render-common-f6a1df0a585a.js:192
+c @ render-common-f6a1df0a585a.js:25
+Whe @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+j$ @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+Ghe @ render-common-f6a1df0a585a.js:25
+(anonymous) @ render-common-f6a1df0a585a.js:25
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+main-0d0e05549473.js:2 polaris:  <s-choice-list>​…​</s-choice-list>​slot#shadow-root (open)#adopted-style-sheet:host{display:contents}:host,:host *,:host ::after,:host ::before{box-sizing:border-box}:host>*{-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"calt"0,normal;text-rendering:optimizeLegibility;font-size:var(--s-global-font-size-26021, 1rem);line-height:var(--s-global-line-height-26021, 1.5rem);letter-spacing:var(--s-global-letter-spacing-26021, -0.00833em);font-family:var(--s-global-font-family-26021, 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif);font-weight:var(--s-global-font-weight-26021, 450);font-variant:normal;color:var(--s-global-color-26021, rgba(48, 48, 48, 1));text-shadow:none;text-transform:none;font-style:normal;text-align:start;text-align-last:auto;text-indent:0}@media (min-width:48rem),(pointer:fine){:host>*{font-size:var(--s-global-font-size-26021, 0.8125rem);line-height:var(--s-global-line-height-26021, 1.25rem);letter-spacing:var(--s-global-letter-spacing-26021,
+      0rem
+    )}}#adopted-style-sheet@keyframes fade-on-checked{0%{transform:scale(0);opacity:0}}.choice-list{border:0;display:flex;flex-direction:column;margin:0;padding:0}.choice-list.disabled{color:#b5b5b5}legend{margin-block-end:.25rem;padding:0}.choice{cursor:pointer;align-items:center;display:inline-flex;gap:.5rem;padding-block:.75rem;max-inline-size:fit-content;position:relative}@media (min-width:48rem),(pointer:fine){.choice{padding-block:.25rem}}.has-details{padding-block-end:.25rem}.radio{appearance:none;margin:0;outline:0;border-radius:50%;background-color:#8a8a8a;inline-size:1.25rem;block-size:1.25rem}@media (min-width:48rem),(pointer:fine){.radio{inline-size:1rem;block-size:1rem}}.radio::after{content:"";display:block;border-radius:50%;inline-size:100%;block-size:100%;transform:scale(.9375);background:#fdfdfd;transition:opacity 100ms cubic-bezier(.19,.91,.38,1),transform 100ms cubic-bezier(.19,.91,.38,1)}.radio:checked{background-color:#303030}.radio:checked::after{animation:fade-on-checked 100ms;transform:scale(.5);opacity:1}.choice.disabled{cursor:default;color:#b5b5b5}.choice.disabled .radio{background-color:rgba(0,0,0,.08)}.choice.disabled .radio::after{background-color:transparent}.choice:focus-within .radio{background-color:#1a1a1a}:is(.choice:focus-within .radio):focus-visible{outline:.125rem solid #005bd3;outline-offset:.0625rem}.choice:hover .radio:not(:disabled,:checked){background-color:#616161}.choice:active .radio:not(:disabled,:checked){background-color:#1a1a1a}:is(.choice:active .radio:not(:disabled,:checked))::after{transform:scale(.75)}@media (forced-colors:active){.radio{border:.125rem solid transparent}.radio:checked::after{border:.125rem solid transparent}}.field-details{padding-block:.25rem;margin-inline-start:.125rem}@media (min-width:48rem),(pointer:fine){.field-details{margin-inline-start:0}}.has-details+.field-details{padding-block-start:0;padding-block-end:.25rem;margin-inline-start:1.75rem}@media (min-width:48rem),(pointer:fine){.has-details+.field-details{margin-inline-start:1.5rem}}#adopted-style-sheet.field-details{display:flex;gap:.25rem;font-size:.75rem;line-height:1rem;color:#616161}@media (min-width:48rem),(pointer:fine){.field-details{letter-spacing:0}}.field-details.field-details-error{--s-icon-color-26021:rgba(142, 11, 33, 1);color:#8e0b21}.field-details.field-details-disabled{--s-icon-color-26021:rgba(204, 204, 204, 1);color:#b5b5b5}.field-details-icon{flex-shrink:0}.display-none{display:none}<fieldset class=​"choice-list">​…​</fieldset>​flex<legend>​​</legend>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-0-describedby" value=​"today">​"Today"</label>​<div id=​"choice-0-describedby" class=​"field-details">​Compared to yesterday up to current hour​</div>​flex<slot>​…​</slot>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-1-describedby" value=​"last7days">​"Last 7 days"</label>​<div id=​"choice-1-describedby" class=​"field-details">​Compared to the previous 7 days​</div>​flex<slot>​…​</slot>​<label class=​"choice has-details" aria-disabled=​"false">​…​</label>​flex<input type=​"radio" class=​"radio" name aria-describedby=​"choice-2-describedby" value=​"last30days">​"Last 30 days"</label>​<div id=​"choice-2-describedby" class=​"field-details">​Compared to the previous 30 days​</div>​flex<slot>​…​</slot>​<div id=​"describedById" class=​"field-details display-none">​​</div>​</fieldset>​<s-choice value=​"today">​…​</s-choice>​slot<s-choice value=​"last7days">​…​</s-choice>​slot<s-choice value=​"last30days">​…​</s-choice>​slot</s-choice-list>​ - ChoiceList should have a label.
+console.warn @ main-0d0e05549473.js:2
+console.warn @ main-0d0e05549473.js:2
+_n @ render-common-f6a1df0a585a.js:91
+I_e @ render-common-f6a1df0a585a.js:192
+c @ render-common-f6a1df0a585a.js:25
+Whe @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+j$ @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+Ghe @ render-common-f6a1df0a585a.js:25
+(anonymous) @ render-common-f6a1df0a585a.js:25
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+(anonymous) @ render-common-f6a1df0a585a.js:603
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+onNavigation @ render-common-f6a1df0a585a.js:276
+record @ common-f4fd5f840dc3.js:17
+finish @ common-f4fd5f840dc3.js:17
+(anonymous) @ render-common-f6a1df0a585a.js:25
+(anonymous) @ render-common-f6a1df0a585a.js:25
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+(anonymous) @ render-common-f6a1df0a585a.js:603
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+(anonymous) @ render-common-f6a1df0a585a.js:280
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+(anonymous) @ render-common-f6a1df0a585a.js:280
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+(anonymous) @ render-common-f6a1df0a585a.js:603
+(anonymous) @ render-common-f6a1df0a585a.js:603
+wy @ render-common-f6a1df0a585a.js:25
+Op @ render-common-f6a1df0a585a.js:25
+dj @ render-common-f6a1df0a585a.js:25
+fd @ render-common-f6a1df0a585a.js:23
+Sie @ render-common-f6a1df0a585a.js:25
+Eu @ render-common-f6a1df0a585a.js:25
+cj @ render-common-f6a1df0a585a.js:25
+C @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+E @ render-common-f6a1df0a585a.js:10
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+main-0d0e05549473.js:2 {"stack":"Error: XHR request errored\n    at i.onerror (https://cdn.shopify.com/shopifycloud/web/assets/v1/vite/client/en/context-slice-metrics-400e4147578f.js:13:31667)","message":"XHR request errored","name":"Error"}
+console.error @ main-0d0e05549473.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+z @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+Promise.then
+r @ context-slice-metrics-400e4147578f.js:13
+_export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+_flushOneBatch @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+setTimeout
+_maybeStartTimer @ context-slice-metrics-400e4147578f.js:13
+_addToBuffer @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+emit @ context-slice-metrics-400e4147578f.js:13
+log @ context-slice-metrics-400e4147578f.js:14
+(anonymous) @ main-0d0e05549473.js:19
+console.warn @ main-0d0e05549473.js:2
+console.warn @ main-0d0e05549473.js:2
+_n @ render-common-f6a1df0a585a.js:91
+I_e @ render-common-f6a1df0a585a.js:192
+c @ render-common-f6a1df0a585a.js:25
+Whe @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+j$ @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+Ghe @ render-common-f6a1df0a585a.js:25
+(anonymous) @ render-common-f6a1df0a585a.js:25
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+context-slice-metrics-400e4147578f.js:13  POST https://otlp-http-production.shopifysvc.com/v1/logs net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+t.with @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.with @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+Wc @ context-slice-metrics-400e4147578f.js:13
+r @ context-slice-metrics-400e4147578f.js:13
+_export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+_flushOneBatch @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+setTimeout
+_maybeStartTimer @ context-slice-metrics-400e4147578f.js:13
+_addToBuffer @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+emit @ context-slice-metrics-400e4147578f.js:13
+log @ context-slice-metrics-400e4147578f.js:14
+(anonymous) @ main-0d0e05549473.js:19
+console.warn @ main-0d0e05549473.js:2
+console.warn @ main-0d0e05549473.js:2
+_n @ render-common-f6a1df0a585a.js:91
+I_e @ render-common-f6a1df0a585a.js:192
+c @ render-common-f6a1df0a585a.js:25
+Whe @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+j$ @ render-common-f6a1df0a585a.js:25
+i2 @ render-common-f6a1df0a585a.js:25
+Ghe @ render-common-f6a1df0a585a.js:25
+(anonymous) @ render-common-f6a1df0a585a.js:25
+setTimeout
+L @ render-common-f6a1df0a585a.js:10
+H @ render-common-f6a1df0a585a.js:10
+e.unstable_scheduleCallback @ render-common-f6a1df0a585a.js:10
+bj @ render-common-f6a1df0a585a.js:25
+ro @ render-common-f6a1df0a585a.js:25
+Ps @ render-common-f6a1df0a585a.js:25
+aie @ render-common-f6a1df0a585a.js:23
+(anonymous) @ common-f4fd5f840dc3.js:79
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/unstable/produce_batch net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+produceBatch @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produceBatch @ common-f4fd5f840dc3.js:89
+f @ main-0d0e05549473.js:19
+sendAllBufferedEvents @ index-464adc0fca99.js:19
+(anonymous) @ index-464adc0fca99.js:19
+s @ router-9ffc5e30df83.js:2
+D @ router-9ffc5e30df83.js:2
+O @ router-9ffc5e30df83.js:2
+setTimeout
+O @ router-9ffc5e30df83.js:2
+setTimeout
+u @ router-9ffc5e30df83.js:2
+F @ router-9ffc5e30df83.js:2
+produce @ index-464adc0fca99.js:19
+s @ index-464adc0fca99.js:19
+(anonymous) @ common-f4fd5f840dc3.js:82
+notifyListeners @ common-f4fd5f840dc3.js:82
+n.status.requestIdleCallback.timeout @ common-f4fd5f840dc3.js:82
+requestIdleCallback
+flushQueue @ common-f4fd5f840dc3.js:82
+(anonymous) @ common-f4fd5f840dc3.js:82
+setInterval
+start @ common-f4fd5f840dc3.js:82
+(anonymous) @ index-464adc0fca99.js:20
+Promise.then
+Iv @ index-464adc0fca99.js:20
+Vw @ index-464adc0fca99.js:184
+m @ context-slice-extensibility-c99ff9b4d116.js:2
+await in m
+(anonymous) @ main-0d0e05549473.js:19
+await in (anonymous)
+(anonymous) @ common-f4fd5f840dc3.js:17
+extensibility @ main-0d0e05549473.js:19
+_load @ common-f4fd5f840dc3.js:17
+(anonymous) @ common-f4fd5f840dc3.js:17
+ensure @ common-f4fd5f840dc3.js:17
+await in ensure
+Su @ main-0d0e05549473.js:19
+Mu @ main-0d0e05549473.js:19
+(anonymous) @ main-0d0e05549473.js:19
+Promise.then
+(anonymous) @ main-0d0e05549473.js:19
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/v1/produce net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+Aj @ common-f4fd5f840dc3.js:85
+produce @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produce @ common-f4fd5f840dc3.js:89
+u @ main-0d0e05549473.js:19
+emitMetrics @ main-0d0e05549473.js:4
+await in emitMetrics
+(anonymous) @ main-0d0e05549473.js:4
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/unstable/produce_batch net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+produceBatch @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produceBatch @ common-f4fd5f840dc3.js:89
+f @ main-0d0e05549473.js:19
+sendAllBufferedEvents @ index-464adc0fca99.js:19
+(anonymous) @ index-464adc0fca99.js:19
+s @ router-9ffc5e30df83.js:2
+D @ router-9ffc5e30df83.js:2
+O @ router-9ffc5e30df83.js:2
+setTimeout
+u @ router-9ffc5e30df83.js:2
+F @ router-9ffc5e30df83.js:2
+produce @ index-464adc0fca99.js:19
+s @ index-464adc0fca99.js:19
+(anonymous) @ common-f4fd5f840dc3.js:82
+notifyListeners @ common-f4fd5f840dc3.js:82
+n.status.requestIdleCallback.timeout @ common-f4fd5f840dc3.js:82
+requestIdleCallback
+flushQueue @ common-f4fd5f840dc3.js:82
+(anonymous) @ common-f4fd5f840dc3.js:82
+context-slice-metrics-400e4147578f.js:13  POST https://otlp-http-production.shopifysvc.com/v1/metrics net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onForceFlush @ context-slice-metrics-400e4147578f.js:13
+await in onForceFlush
+l @ context-slice-metrics-400e4147578f.js:13
+main-0d0e05549473.js:2 {"stack":"Error: XHR request errored\n    at i.onerror (https://cdn.shopify.com/shopifycloud/web/assets/v1/vite/client/en/context-slice-metrics-400e4147578f.js:13:31667)","message":"XHR request errored","name":"Error"}
+console.error @ main-0d0e05549473.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+z @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+Promise.then
+r @ context-slice-metrics-400e4147578f.js:13
+_export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+_flushOneBatch @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+setTimeout
+_maybeStartTimer @ context-slice-metrics-400e4147578f.js:13
+_addToBuffer @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+emit @ context-slice-metrics-400e4147578f.js:13
+log @ context-slice-metrics-400e4147578f.js:14
+emitMetrics @ main-0d0e05549473.js:4
+await in emitMetrics
+(anonymous) @ main-0d0e05549473.js:4
+context-slice-metrics-400e4147578f.js:13  POST https://otlp-http-production.shopifysvc.com/v1/logs net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+t.with @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.with @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+Wc @ context-slice-metrics-400e4147578f.js:13
+r @ context-slice-metrics-400e4147578f.js:13
+_export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+_flushOneBatch @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+setTimeout
+_maybeStartTimer @ context-slice-metrics-400e4147578f.js:13
+_addToBuffer @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onEmit @ context-slice-metrics-400e4147578f.js:13
+emit @ context-slice-metrics-400e4147578f.js:13
+log @ context-slice-metrics-400e4147578f.js:14
+emitMetrics @ main-0d0e05549473.js:4
+await in emitMetrics
+(anonymous) @ main-0d0e05549473.js:4
+index-464adc0fca99.js:164  POST https://monorail-edge.shopifysvc.com/unstable/produce_batch net::ERR_BLOCKED_BY_CLIENT
+window.fetch @ index-464adc0fca99.js:164
+produceBatch @ common-f4fd5f840dc3.js:85
+do @ common-f4fd5f840dc3.js:85
+(anonymous) @ common-f4fd5f840dc3.js:89
+produceBatch @ common-f4fd5f840dc3.js:89
+f @ main-0d0e05549473.js:19
+sendAllBufferedEvents @ index-464adc0fca99.js:19
+(anonymous) @ index-464adc0fca99.js:19
+s @ router-9ffc5e30df83.js:2
+D @ router-9ffc5e30df83.js:2
+O @ router-9ffc5e30df83.js:2
+setTimeout
+u @ router-9ffc5e30df83.js:2
+F @ router-9ffc5e30df83.js:2
+produce @ index-464adc0fca99.js:19
+s @ index-464adc0fca99.js:19
+(anonymous) @ common-f4fd5f840dc3.js:82
+notifyListeners @ common-f4fd5f840dc3.js:82
+n.status.requestIdleCallback.timeout @ common-f4fd5f840dc3.js:82
+requestIdleCallback
+flushQueue @ common-f4fd5f840dc3.js:82
+(anonymous) @ common-f4fd5f840dc3.js:82
+context-slice-metrics-400e4147578f.js:13  POST https://otlp-http-production.shopifysvc.com/v1/metrics net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+send @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+export @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+onForceFlush @ context-slice-metrics-400e4147578f.js:13
+await in onForceFlush
+l @ context-slice-metrics-400e4147578f.js:13
+setTimeout
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+forceFlush @ context-slice-metrics-400e4147578f.js:1
+forceFlush @ context-slice-metrics-400e4147578f.js:13
+(anonymous) @ context-slice-metrics-400e4147578f.js:13
+forceFlush @ context-slice-metrics-400e4147578f.js:13
+h @ context-slice-metrics-400e4147578f.js:14
+record @ context-slice-metrics-400e4147578f.js:14
+record @ context-slice-metrics-400e4147578f.js:14
+next @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+next @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+o @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+onNext @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+next @ context-slice-graphql~index-86c2e03b65d1.js:7
+bo @ context-slice-graphql~index-86c2e03b65d1.js:2
+or @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.next @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+Promise.then
+Jc @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+Promise.then
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+t.try @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.start @ context-slice-graphql~index-86c2e03b65d1.js:7
+e.request @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:2
+s.request @ context-slice-graphql~index-86c2e03b65d1.js:7
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:7
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+(anonymous) @ context-slice-graphql~index-86c2e03b65d1.js:2
+t @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.subscribe @ context-slice-graphql~index-86c2e03b65d1.js:2
+complete @ context-slice-graphql~index-86c2e03b65d1.js:2
+e.start @ context-slice-graphql~index-86c2e03b65d1.js:2
+e @ context-slice-graphql~index-86c2e03b65d1.js:2
+t.getObservableFromLink @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.getResultsFromLink @ context-slice-graphql~index-86c2e03b65d1.js:7
+v @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.fetchQueryByPolicy @ context-slice-graphql~index-86c2e03b65d1.js:7
+C @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.fetchConcastWithInfo @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.fetchQueryObservable @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.fetchQuery @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.query @ context-slice-graphql~index-86c2e03b65d1.js:7
+t.query @ context-slice-graphql~index-86c2e03b65d1.js:7
+search @ index-464adc0fca99.js:19
+(anonymous) @ common-f4fd5f840dc3.js:82
+(anonymous) @ common-f4fd5f840dc3.js:82
+search @ common-f4fd5f840dc3.js:82
+_runBatchedSearches @ common-f4fd5f840dc3.js:82
+(anonymous) @ common-f4fd5f840dc3.js:82
+Promise.then
+search @ common-f4fd5f840dc3.js:82
+(anonymous) @ loaders-common-784fe77f8f08.js:30
+Ti @ ProductsProductDetails-loader-6aeab47ad71e.js:1
+await in Ti
+$_route_products:create_loader_$ @ common-f4fd5f840dc3.js:80
+_ @ common-f4fd5f840dc3.js:80
+mee @ common-f4fd5f840dc3.js:80
+await in mee
+X @ admin-context-router-1411d7d4557a.js:2
+await in X
+prefetchLoader @ admin-context-router-1411d7d4557a.js:2
+kl @ main-0d0e05549473.js:19
+E @ main-0d0e05549473.js:19
+(anonymous) @ main-0d0e05549473.js:19
+Ta.c @ common-f4fd5f840dc3.js:17
+Po @ common-f4fd5f840dc3.js:17
+set @ common-f4fd5f840dc3.js:17
+(anonymous) @ main-0d0e05549473.js:19
+const query = `
+  {
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          variants(first: 5) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                availableForSale
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+fetch('https://your-store.myshopify.com/api/2026-01/graphql.json', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Shopify-Storefront-Access-Token': '<SHOPIFY_STOREFRONT_ACCESS_TOKEN>'
+  },
+  body: JSON.stringify({ query })
+})
+.then(r => r.json())
+.then(data => {
+  console.log('✅ 完整返回數據:');
+  console.log(JSON.stringify(data, null, 2));
+  
+  // 格式化輸出
+  if (data.data && data.data.products) {
+    console.log('\n📦 所有產品和 Variant IDs:\n');
+    data.data.products.edges.forEach(product => {
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('📦 產品:', product.node.title);
+      console.log('Product ID:', product.node.id);
+      product.node.variants.edges.forEach(variant => {
+        console.log('  ├─ Variant ID:', variant.node.id);
+        console.log('  ├─ Variant Title:', variant.node.title);
+        console.log('  ├─ Price:', variant.node.price.amount, variant.node.price.currencyCode);
+        console.log('  └─ Available:', variant.node.availableForSale);
+      });
+    });
+  }
+})
+.catch(err => console.error('❌ 錯誤:', err));
+Promise {<pending>}
+VM2775:37 ✅ 完整返回數據:
+VM2775:38 {
+  "data": {
+    "products": {
+      "edges": [
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863067216",
+            "title": "Eau De Toilette – 15:15",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163397200",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": false
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863198288",
+            "title": "Eau De Toilette – Air",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163528272",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863394896",
+            "title": "Poured Candle – A.M.",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163724880",
+                    "title": "150g",
+                    "price": {
+                      "amount": "102.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                },
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163757648",
+                    "title": "500g",
+                    "price": {
+                      "amount": "237.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                },
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32388245389392",
+                    "title": "70g",
+                    "price": {
+                      "amount": "57.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863525968",
+            "title": "Reeds Diffuser – A.M.",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163921488",
+                    "title": "150ml",
+                    "price": {
+                      "amount": "117.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": false
+                  }
+                },
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163888720",
+                    "title": "50ml",
+                    "price": {
+                      "amount": "57.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": false
+                  }
+                },
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269163954256",
+                    "title": "500ml",
+                    "price": {
+                      "amount": "267.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": false
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863591504",
+            "title": "Eau De Toilette – A.M.",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269164019792",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863689808",
+            "title": "Perfume Oil – A.M.",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269164118096",
+                    "title": "10ml",
+                    "price": {
+                      "amount": "57.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586863853648",
+            "title": "Eau De Toilette – Aura",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269164347472",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586864377936",
+            "title": "Eau De Toilette – Bedtime",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269165133904",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586865131600",
+            "title": "Eau De Toilette – Breeze",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269165887568",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Product/4586865262672",
+            "title": "Eau De Toilette – Cheers",
+            "variants": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/ProductVariant/32269166018640",
+                    "title": "60ml",
+                    "price": {
+                      "amount": "177.0",
+                      "currencyCode": "HKD"
+                    },
+                    "availableForSale": true
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "cost": {
+      "requestedQueryCost": 49
+    }
+  }
+}
+VM2775:42 
+📦 所有產品和 Variant IDs:
+
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – 15:15
+VM2775:46 Product ID: gid://shopify/Product/4586863067216
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163397200
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: false
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – Air
+VM2775:46 Product ID: gid://shopify/Product/4586863198288
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163528272
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Poured Candle – A.M.
+VM2775:46 Product ID: gid://shopify/Product/4586863394896
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163724880
+VM2775:49   ├─ Variant Title: 150g
+VM2775:50   ├─ Price: 102.0 HKD
+VM2775:51   └─ Available: true
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163757648
+VM2775:49   ├─ Variant Title: 500g
+VM2775:50   ├─ Price: 237.0 HKD
+VM2775:51   └─ Available: true
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32388245389392
+VM2775:49   ├─ Variant Title: 70g
+VM2775:50   ├─ Price: 57.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Reeds Diffuser – A.M.
+VM2775:46 Product ID: gid://shopify/Product/4586863525968
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163921488
+VM2775:49   ├─ Variant Title: 150ml
+VM2775:50   ├─ Price: 117.0 HKD
+VM2775:51   └─ Available: false
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163888720
+VM2775:49   ├─ Variant Title: 50ml
+VM2775:50   ├─ Price: 57.0 HKD
+VM2775:51   └─ Available: false
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269163954256
+VM2775:49   ├─ Variant Title: 500ml
+VM2775:50   ├─ Price: 267.0 HKD
+VM2775:51   └─ Available: false
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – A.M.
+VM2775:46 Product ID: gid://shopify/Product/4586863591504
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269164019792
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Perfume Oil – A.M.
+VM2775:46 Product ID: gid://shopify/Product/4586863689808
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269164118096
+VM2775:49   ├─ Variant Title: 10ml
+VM2775:50   ├─ Price: 57.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – Aura
+VM2775:46 Product ID: gid://shopify/Product/4586863853648
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269164347472
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – Bedtime
+VM2775:46 Product ID: gid://shopify/Product/4586864377936
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269165133904
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – Breeze
+VM2775:46 Product ID: gid://shopify/Product/4586865131600
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269165887568
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true
+VM2775:44 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+VM2775:45 📦 產品: Eau De Toilette – Cheers
+VM2775:46 Product ID: gid://shopify/Product/4586865262672
+VM2775:48   ├─ Variant ID: gid://shopify/ProductVariant/32269166018640
+VM2775:49   ├─ Variant Title: 60ml
+VM2775:50   ├─ Price: 177.0 HKD
+VM2775:51   └─ Available: true

@@ -1,0 +1,18 @@
+请按照以下步骤操作：
+
+1. 点击左侧文件树中的 "public" 文件夹
+2. 在本地下载 LOGO 图片：
+   https://raw.githubusercontent.com/BDGOAL/Swyshopify/refs/heads/main/SWY-logo_new.png
+
+3. 将下载的图片重命名为：swy-logo.png
+
+4. 在 Figma Make 界面中：
+   - 找到左侧的文件管理器
+   - 点击 "public" 文件夹
+   - 应该有一个上传文件的按钮
+   - 上传 swy-logo.png
+
+如果 Figma Make 不支持上传图片文件，那么：
+- 需要在你的本地 Git 仓库中添加这个文件
+- 然后推送到 GitHub
+- Vercel 会自动重新部署

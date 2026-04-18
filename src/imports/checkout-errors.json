@@ -1,0 +1,143 @@
+index-BEcZxfD1.js:69 🛒 Creating checkout with items: [{…}]
+index-BEcZxfD1.js:102 📦 Checkout API response: {errors: Array(3)}
+index-BEcZxfD1.js:102 📦 Full response JSON: {
+  "errors": [
+    {
+      "message": "CheckoutCreateInput isn't a defined input type (on $input)",
+      "locations": [
+        {
+          "line": 2,
+          "column": 33
+        }
+      ],
+      "path": [
+        "mutation checkoutCreate"
+      ],
+      "extensions": {
+        "code": "variableRequiresValidType",
+        "typeName": "CheckoutCreateInput",
+        "variableName": "input"
+      }
+    },
+    {
+      "message": "Field 'checkoutCreate' doesn't exist on type 'Mutation'",
+      "locations": [
+        {
+          "line": 3,
+          "column": 11
+        }
+      ],
+      "path": [
+        "mutation checkoutCreate",
+        "checkoutCreate"
+      ],
+      "extensions": {
+        "code": "undefinedField",
+        "typeName": "Mutation",
+        "fieldName": "checkoutCreate"
+      }
+    },
+    {
+      "message": "Variable $input is declared by checkoutCreate but not used",
+      "locations": [
+        {
+          "line": 2,
+          "column": 9
+        }
+      ],
+      "path": [
+        "mutation checkoutCreate"
+      ],
+      "extensions": {
+        "code": "variableNotUsed",
+        "variableName": "input"
+      }
+    }
+  ]
+}
+index-BEcZxfD1.js:102 ❌ GraphQL errors: (3) [{…}, {…}, {…}]
+v @ index-BEcZxfD1.js:102
+await in v
+x @ index-BEcZxfD1.js:102
+await in x
+Le @ index-BEcZxfD1.js:142
+R @ index-BEcZxfD1.js:37
+ie @ index-BEcZxfD1.js:37
+se @ index-BEcZxfD1.js:37
+Ef @ index-BEcZxfD1.js:37
+Sf @ index-BEcZxfD1.js:37
+(anonymous) @ index-BEcZxfD1.js:37
+Au @ index-BEcZxfD1.js:40
+ro @ index-BEcZxfD1.js:37
+Al @ index-BEcZxfD1.js:37
+gl @ index-BEcZxfD1.js:37
+Zy @ index-BEcZxfD1.js:37
+index-BEcZxfD1.js:102 ❌ Full errors JSON: [
+  {
+    "message": "CheckoutCreateInput isn't a defined input type (on $input)",
+    "locations": [
+      {
+        "line": 2,
+        "column": 33
+      }
+    ],
+    "path": [
+      "mutation checkoutCreate"
+    ],
+    "extensions": {
+      "code": "variableRequiresValidType",
+      "typeName": "CheckoutCreateInput",
+      "variableName": "input"
+    }
+  },
+  {
+    "message": "Field 'checkoutCreate' doesn't exist on type 'Mutation'",
+    "locations": [
+      {
+        "line": 3,
+        "column": 11
+      }
+    ],
+    "path": [
+      "mutation checkoutCreate",
+      "checkoutCreate"
+    ],
+    "extensions": {
+      "code": "undefinedField",
+      "typeName": "Mutation",
+      "fieldName": "checkoutCreate"
+    }
+  },
+  {
+    "message": "Variable $input is declared by checkoutCreate but not used",
+    "locations": [
+      {
+        "line": 2,
+        "column": 9
+      }
+    ],
+    "path": [
+      "mutation checkoutCreate"
+    ],
+    "extensions": {
+      "code": "variableNotUsed",
+      "variableName": "input"
+    }
+  }
+]
+v @ index-BEcZxfD1.js:102
+await in v
+x @ index-BEcZxfD1.js:102
+await in x
+Le @ index-BEcZxfD1.js:142
+R @ index-BEcZxfD1.js:37
+ie @ index-BEcZxfD1.js:37
+se @ index-BEcZxfD1.js:37
+Ef @ index-BEcZxfD1.js:37
+Sf @ index-BEcZxfD1.js:37
+(anonymous) @ index-BEcZxfD1.js:37
+Au @ index-BEcZxfD1.js:40
+ro @ index-BEcZxfD1.js:37
+Al @ index-BEcZxfD1.js:37
+gl @ index-BEcZxfD1.js:37
+Zy @ index-BEcZxfD1.js:37

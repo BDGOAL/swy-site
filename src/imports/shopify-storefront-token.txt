@@ -1,0 +1,52 @@
+🎉 完美!成功了!
+
+你現在已經獲得了真正的 Storefront API access token!
+
+✅ 你的最終配置資訊:
+SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=<SHOPIFY_STOREFRONT_ACCESS_TOKEN>
+📋 Token 詳細資訊:
+Storefront API Access Token: <SHOPIFY_STOREFRONT_ACCESS_TOKEN>
+Token 名稱: "SWY Headless Storefront"
+權限範圍 (Access Scopes):
+✅ unauthenticated_write_checkouts - 創建結帳
+✅ unauthenticated_read_checkouts - 讀取結帳資訊
+✅ unauthenticated_read_product_inventory - 讀取產品庫存
+✅ unauthenticated_read_product_listings - 讀取產品列表
+🎯 重要區別:
+Token 類型	格式	用途
+Admin API Token	shpat_xxx...	後台管理操作
+Storefront API Token	<SHOPIFY_STOREFRONT_ACCESS_TOKEN>（純數字字母）	前端店面查詢
+🚀 現在你可以:
+在你的 Headless 網站中使用這個 token
+查詢產品資料
+讀取庫存資訊
+創建購物車和結帳流程
+💡 使用範例:
+const storefrontQuery = `
+  query {
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          description
+        }
+      }
+    }
+  }
+`;
+
+fetch('https://your-store.myshopify.com/api/2026-01/graphql.json', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Shopify-Storefront-Access-Token': '<SHOPIFY_STOREFRONT_ACCESS_TOKEN>'
+  },
+  body: JSON.stringify({ query: storefrontQuery })
+});
+⚠️ 安全提醒:
+不要將這個 token 公開或提交到 Git
+使用環境變數 (.env 文件) 來儲存
+這個 Storefront API token 是長期有效的,不會像 Admin API token 那樣 24 小時過期
+恭喜你!現在你已經完全準備好開始構建你的 Headless Commerce 網站了!🎊
