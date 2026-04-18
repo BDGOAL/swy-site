@@ -1,6 +1,63 @@
 import type { Product } from "../data/products";
 import type { Bilingual, Locale } from "./i18n";
 
+/** Han script — used to detect locale mismatch vs Shopify metafield strings. */
+const HAN = /\p{Script=Han}/u;
+
+/** Storefront API `LanguageCode` for `@inContext(language: …)`. */
+export function shopifyStorefrontLanguageCode(
+  locale: Locale
+): "EN" | "ZH_TW" {
+  return locale === "zh" ? "ZH_TW" : "EN";
+}
+
+/**
+ * Prefer a Shopify metafield string when it plausibly matches the UI locale.
+ * If Shopify returns only Chinese under English (or only English under Chinese with a Chinese fallback), use `fallback`.
+ */
+export function coalesceMetaText(
+  metaValue: string | undefined | null,
+  locale: Locale,
+  fallback: string
+): string {
+  const m = metaValue?.trim() ?? "";
+  if (!m) return fallback;
+  const hasHan = HAN.test(m);
+  const hasLatin = /[a-zA-Z]{2,}/.test(m);
+  if (locale === "en") {
+    if (hasHan && !hasLatin) return fallback;
+    return m;
+  }
+  if (locale === "zh") {
+    if (!hasHan && hasLatin && fallback && HAN.test(fallback)) return fallback;
+    return m;
+  }
+  return m;
+}
+
+/** Same as `coalesceMetaText` but for a list (e.g. mood keywords, note lines). */
+export function coalesceMetaStringList(
+  metaList: string[] | undefined,
+  locale: Locale,
+  localFallback: string[]
+): string[] {
+  if (!metaList?.length) return localFallback;
+  const joined = metaList.join(" ");
+  const hasHan = HAN.test(joined);
+  const hasLatin = /[a-zA-Z]{2,}/.test(joined);
+  if (locale === "en" && hasHan && !hasLatin) return localFallback;
+  if (
+    locale === "zh" &&
+    !hasHan &&
+    hasLatin &&
+    localFallback.length &&
+    localFallback.some((s) => HAN.test(s))
+  ) {
+    return localFallback;
+  }
+  return metaList;
+}
+
 function pick(b: Bilingual | undefined, locale: Locale): string {
   if (!b) return "";
   return b[locale];
@@ -26,9 +83,6 @@ export function productLongStory(p: Product, locale: Locale): string {
 export function productScentFamily(p: Product, locale: Locale): string {
   return pick(p.scentFamily, locale);
 }
-
-/** Han script — strip from English mood chips so en UI never shows Chinese glyphs. */
-const HAN = /\p{Script=Han}/u;
 
 /** Normalize catalog mood tags to string[] — never throws; moodTags[locale] may be missing or wrong type. */
 function normalizeMoodTagList(value: unknown): string[] {

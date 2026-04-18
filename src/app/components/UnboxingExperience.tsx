@@ -10,8 +10,6 @@ import { siteCopy } from "../content/siteCopy";
 import { useLanguage } from "../context/LanguageContext";
 import {
   productDescriptor,
-  productShortStory,
-  productLongStory,
   productScentFamily,
   productMoodTags,
   productAccords,
@@ -24,6 +22,9 @@ import {
   productNotesBase,
   productPriceDisplay,
   formatShopifyMoney,
+  shopifyStorefrontLanguageCode,
+  coalesceMetaText,
+  coalesceMetaStringList,
 } from "../lib/productLocale";
 import type { Locale } from "../lib/i18n";
 import { ROUTES } from "../constants/routes";
@@ -100,14 +101,52 @@ function parseMoodKeywords(value?: string | null): string[] {
     .filter(Boolean);
 }
 
-function relatedLocalId(related: RelatedScent): string | null {
-  if (related.handle.startsWith("product/")) {
-    return related.handle.slice("product/".length) || null;
+function normalizeShopifyHandle(h: string): string {
+  return h
+    .trim()
+    .toLowerCase()
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/^product\//, "");
+}
+
+function stripLeadingThe(s: string): string {
+  return s.replace(/^the-/, "");
+}
+
+/** Map a Shopify product handle (or `product/<id>`) to our in-app `products.ts` id for routing. */
+function resolveLocalProductIdForRelated(related: RelatedScent): string | null {
+  const raw = related.handle;
+  if (raw.startsWith("product/")) {
+    const rest = normalizeShopifyHandle(raw.slice("product/".length));
+    const byRest = products.find((p) => p.id === rest || p.slug === rest);
+    if (byRest) return byRest.id;
   }
-  const match = products.find(
-    (p) => p.id === related.handle || p.slug === related.handle || p.shopifyHandle === related.handle
+  const h = normalizeShopifyHandle(raw);
+  const direct = products.find(
+    (p) =>
+      p.id.toLowerCase() === h ||
+      p.slug.toLowerCase() === h ||
+      (p.shopifyHandle && normalizeShopifyHandle(p.shopifyHandle) === h)
   );
-  return match?.id ?? null;
+  if (direct) return direct.id;
+  const hStripped = stripLeadingThe(h);
+  const fuzzy = products.find((p) => {
+    const idN = normalizeShopifyHandle(p.id);
+    const slugN = normalizeShopifyHandle(p.slug);
+    const shopN = p.shopifyHandle ? normalizeShopifyHandle(p.shopifyHandle) : "";
+    return (
+      stripLeadingThe(idN) === hStripped ||
+      stripLeadingThe(slugN) === hStripped ||
+      (shopN && stripLeadingThe(shopN) === hStripped)
+    );
+  });
+  if (fuzzy) return fuzzy.id;
+  if (related.title?.trim()) {
+    const tNorm = related.title.trim().toLowerCase();
+    const byTitle = products.find((p) => p.name.trim().toLowerCase() === tNorm);
+    if (byTitle) return byTitle.id;
+  }
+  return null;
 }
 
 function splitBilingualNote(note: string): { primary: string; secondary?: string } {
@@ -160,7 +199,8 @@ export function UnboxingExperience() {
       setIsLoadingShopifyProduct(true);
       try {
         const query = `
-          query ProductByVariantId($variantId: ID!) {
+          query ProductByVariantId($variantId: ID!, $language: LanguageCode!)
+            @inContext(language: $language) {
             node(id: $variantId) {
               ... on ProductVariant {
                 id
@@ -255,7 +295,10 @@ export function UnboxingExperience() {
             },
             body: JSON.stringify({
               query,
-              variables: { variantId: product.shopifyVariantId },
+              variables: {
+                variantId: product.shopifyVariantId,
+                language: shopifyStorefrontLanguageCode(locale),
+              },
             }),
           }
         );
@@ -319,7 +362,7 @@ export function UnboxingExperience() {
     return () => {
       cancelled = true;
     };
-  }, [isConfigured, product?.shopifyVariantId]);
+  }, [isConfigured, product?.shopifyVariantId, locale]);
 
   useEffect(() => {
     const defaultVariantId =
@@ -351,7 +394,8 @@ export function UnboxingExperience() {
     const fetchFallbackRelatedScents = async () => {
       try {
         const query = `
-          query RelatedByVariantIds($variantIds: [ID!]!) {
+          query RelatedByVariantIds($variantIds: [ID!]!, $language: LanguageCode!)
+            @inContext(language: $language) {
             nodes(ids: $variantIds) {
               ... on ProductVariant {
                 product {
@@ -384,7 +428,10 @@ export function UnboxingExperience() {
             },
             body: JSON.stringify({
               query,
-              variables: { variantIds },
+              variables: {
+                variantIds,
+                language: shopifyStorefrontLanguageCode(locale),
+              },
             }),
           }
         );
@@ -421,7 +468,7 @@ export function UnboxingExperience() {
     return () => {
       cancelled = true;
     };
-  }, [isConfigured, product?.id]);
+  }, [isConfigured, product?.id, locale]);
 
   if (!product) {
     return (
@@ -469,27 +516,51 @@ export function UnboxingExperience() {
 
   const meta = shopifyProduct?.metafields;
   const displayName = product.name;
-  const heroDescriptor = meta?.storyIntro || productDescriptor(product, locale);
-  const shortStory = productShortStory(product, locale);
-  const narrativeBody = meta?.storyBody || productLongStory(product, locale) || "";
+
+  const hasShopifyStorySource = Boolean(isConfigured && shopifyProduct && meta);
+  const pdpStoryIntro = hasShopifyStorySource
+    ? coalesceMetaText(meta?.storyIntro, locale, "").trim()
+    : "";
+  const pdpStoryBody = hasShopifyStorySource
+    ? coalesceMetaText(meta?.storyBody, locale, "").trim()
+    : "";
+
   const descriptionBlurb =
-    shopifyProduct?.description && locale === "en" && !shortStory.trim()
+    shopifyProduct?.description && locale === "en" && !pdpStoryBody
       ? shopifyProduct.description
       : "";
 
-  const topNotes = meta?.topNotes?.length ? meta.topNotes : productNotesTop(product, locale);
-  const heartNotes = meta?.heartNotes?.length ? meta.heartNotes : productNotesHeart(product, locale);
-  const baseNotes = meta?.baseNotes?.length ? meta.baseNotes : productNotesBase(product, locale);
+  const topNotes = meta?.topNotes?.length
+    ? coalesceMetaStringList(meta.topNotes, locale, productNotesTop(product, locale))
+    : productNotesTop(product, locale);
+  const heartNotes = meta?.heartNotes?.length
+    ? coalesceMetaStringList(meta.heartNotes, locale, productNotesHeart(product, locale))
+    : productNotesHeart(product, locale);
+  const baseNotes = meta?.baseNotes?.length
+    ? coalesceMetaStringList(meta.baseNotes, locale, productNotesBase(product, locale))
+    : productNotesBase(product, locale);
   const hasNotes = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
 
   const localAccords = productAccords(product, locale);
-  const scentFamilyLabel = meta?.scentFamily || productScentFamily(product, locale);
-  const moodTagsDisplay =
-    meta?.moodKeywords?.length ? meta.moodKeywords : productMoodTags(product, locale);
+  const scentFamilyLabel = coalesceMetaText(
+    meta?.scentFamily,
+    locale,
+    productScentFamily(product, locale)
+  );
+  const moodTagsDisplay = meta?.moodKeywords?.length
+    ? coalesceMetaStringList(meta.moodKeywords, locale, productMoodTags(product, locale))
+    : productMoodTags(product, locale);
   const impressionText = productImpression(product, locale);
-  const wearMomentText = meta?.wearWhen || productWearMoment(product, locale);
+  const wearMomentText = coalesceMetaText(
+    meta?.wearWhen,
+    locale,
+    productWearMoment(product, locale)
+  );
   const localIntensity = productIntensity(product, locale);
   const localLasting = productLasting(product, locale);
+  const longevityDisplay = coalesceMetaText(meta?.longevity, locale, "");
+  const sillageDisplay = coalesceMetaText(meta?.sillage, locale, "");
+  const pairingDisplay = coalesceMetaText(meta?.pairingNote, locale, "");
 
   const hasImpressionLayer = Boolean(
     impressionText ||
@@ -497,12 +568,12 @@ export function UnboxingExperience() {
       moodTagsDisplay.length ||
       localIntensity ||
       localLasting ||
-      meta?.longevity ||
-      meta?.sillage
+      longevityDisplay ||
+      sillageDisplay
   );
 
   const hasAccordsNotesLayer = Boolean(
-    localAccords.length || hasNotes || scentFamilyLabel || meta?.pairingNote
+    localAccords.length || hasNotes || scentFamilyLabel || pairingDisplay
   );
 
   const relatedFromSlugs: RelatedScent[] = (product.relatedSlugs ?? [])
@@ -536,10 +607,17 @@ export function UnboxingExperience() {
               storyImage: null,
             }));
 
+  const relatedScentsResolved = relatedScents
+    .map((related) => ({
+      related,
+      localId: resolveLocalProductIdForRelated(related),
+    }))
+    .filter((x): x is { related: RelatedScent; localId: string } => Boolean(x.localId));
+
   const hasTextureGrid = Boolean(meta?.textureImages?.length);
-  const hasNarrativeText = Boolean(narrativeBody.trim());
-  const showVisualSection =
-    hasTextureGrid || Boolean(meta?.storyImage?.url && !hasNarrativeText);
+  const narrativeTitleDisplay = coalesceMetaText(meta?.storyTitle, locale, "").trim();
+  const hasNarrativeEditorial = Boolean(meta?.storyImage?.url || narrativeTitleDisplay);
+  const showVisualSection = hasTextureGrid;
 
   const priceDisplay =
     selectedVariant?.price?.amount != null &&
@@ -674,26 +752,26 @@ export function UnboxingExperience() {
               </p>
             )}
 
-            {(heroDescriptor.trim() || shortStory.trim()) && (
+            {hasShopifyStorySource && (pdpStoryIntro || pdpStoryBody) ? (
               <div className="mt-10 space-y-5 border-t border-white/10 pt-10">
-                {heroDescriptor.trim() ? (
+                {pdpStoryIntro ? (
                   <p
                     className="max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/72 sm:text-sm"
                     style={{ fontFamily: "var(--font-sans)" }}
                   >
-                    {heroDescriptor}
+                    {pdpStoryIntro}
                   </p>
                 ) : null}
-                {shortStory.trim() ? (
+                {pdpStoryBody ? (
                   <p
                     className="max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/58 sm:text-[13px]"
                     style={{ fontFamily: "var(--font-sans)" }}
                   >
-                    {shortStory}
+                    {pdpStoryBody}
                   </p>
                 ) : null}
               </div>
-            )}
+            ) : null}
 
             {!!descriptionBlurb && (
               <div className="mt-8 border-t border-white/10 pt-8">
@@ -709,15 +787,23 @@ export function UnboxingExperience() {
         </div>
       </section>
 
-      {/* 2) Narrative (The narrative / 敘事) */}
-      {hasNarrativeText && (
+      {/* 2) Narrative (The narrative / 敘事) — editorial title + image only; story text lives under add to cart from Shopify */}
+      {hasNarrativeEditorial && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
             <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.narrative)}
             </h2>
-            {meta?.storyImage?.url && (
-              <div className="mb-10 overflow-hidden border border-white/10 bg-black/20">
+            {narrativeTitleDisplay ? (
+              <p
+                className="mb-10 max-w-3xl text-sm leading-relaxed text-[#F2F0ED]/68 sm:text-base"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {narrativeTitleDisplay}
+              </p>
+            ) : null}
+            {meta?.storyImage?.url ? (
+              <div className="overflow-hidden border border-white/10 bg-black/20">
                 <div className="aspect-[864/1184] w-full max-h-[min(520px,70vh)]">
                   <img
                     src={meta.storyImage.url}
@@ -727,13 +813,7 @@ export function UnboxingExperience() {
                   />
                 </div>
               </div>
-            )}
-            <p
-              className="max-w-3xl text-base leading-[1.75] text-[#F2F0ED]/72 sm:text-[17px]"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              {narrativeBody}
-            </p>
+            ) : null}
           </div>
         </section>
       )}
@@ -790,18 +870,18 @@ export function UnboxingExperience() {
                     <p className="mt-2 text-sm text-[#F2F0ED]/80">{localLasting}</p>
                   </div>
                 )}
-                {meta?.longevity && (
+                {longevityDisplay ? (
                   <div className="border border-white/10 bg-black/20 p-4">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.longevity)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{meta.longevity}</p>
+                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{longevityDisplay}</p>
                   </div>
-                )}
-                {meta?.sillage && (
+                ) : null}
+                {sillageDisplay ? (
                   <div className="border border-white/10 bg-black/20 p-4">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.sillage)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{meta.sillage}</p>
+                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{sillageDisplay}</p>
                   </div>
-                )}
+                ) : null}
               </div>
             )}
           </div>
@@ -942,12 +1022,12 @@ export function UnboxingExperience() {
               </>
             )}
 
-            {meta?.pairingNote && (
+            {pairingDisplay ? (
               <div className="mt-10 border border-white/10 bg-black/20 p-5">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
-                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/76">{meta.pairingNote}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/76">{pairingDisplay}</p>
               </div>
-            )}
+            ) : null}
           </div>
         </section>
       )}
@@ -960,18 +1040,6 @@ export function UnboxingExperience() {
               {t(siteCopy.product.visualStorytelling)}
             </h2>
             <div className="grid gap-4 md:grid-cols-3">
-              {meta?.storyImage?.url && !hasNarrativeText && (
-                <div className="overflow-hidden border border-white/10 bg-black/20 md:col-span-3">
-                  <div className="aspect-[864/1184] w-full max-h-[min(520px,75vh)]">
-                    <img
-                      src={meta.storyImage.url}
-                      alt={meta.storyImage.altText || displayName}
-                      className="h-full w-full object-cover object-center"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-              )}
               {meta?.textureImages?.map((image) => (
                 <div key={image.url} className="overflow-hidden border border-white/10 bg-black/20">
                   <div className="aspect-[864/1184] w-full">
@@ -990,14 +1058,14 @@ export function UnboxingExperience() {
       )}
 
       {/* 6) Related scents / continuation section */}
-      {!!relatedScents.length && (
+      {!!relatedScentsResolved.length && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
             <h3 className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.continueScentStory)}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedScents.slice(0, 3).map((related) => {
+              {relatedScentsResolved.slice(0, 3).map(({ related, localId }) => {
                 const imageUrl =
                   related.storyImage?.url ??
                   related.image?.url ??
@@ -1013,17 +1081,14 @@ export function UnboxingExperience() {
                   });
                 }
 
-                const localId = relatedLocalId(related);
-                const lp = localId ? products.find((p) => p.id === localId) : undefined;
+                const lp = products.find((p) => p.id === localId);
                 const localizedTitle = lp ? lp.name : related.title;
-                const localizedIntro = lp ? productDescriptor(lp, locale) : related.storyIntro;
-                const toPath = localId
-                  ? localizePath(ROUTES.product(localId))
-                  : localizePath(
-                      related.handle.startsWith("product/")
-                        ? `/${related.handle}`
-                        : `/product/${related.handle}`
-                    );
+                const localizedIntro = coalesceMetaText(
+                  related.storyIntro,
+                  locale,
+                  lp ? productDescriptor(lp, locale) : ""
+                );
+                const toPath = localizePath(ROUTES.product(localId));
 
                 return (
                   <LocalizedLink
