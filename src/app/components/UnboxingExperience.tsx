@@ -177,6 +177,68 @@ function truncateText(value: string, maxChars: number): string {
   return `${text.slice(0, maxChars).trim()}...`;
 }
 
+/** Normalize Shopify list.file_reference / single file metafields (MediaImage, GenericFile, etc.). */
+function coerceTextureNodeToImage(node: unknown): ShopifyImage | null {
+  if (!node || typeof node !== "object") return null;
+  const o = node as Record<string, unknown>;
+  const image = o.image as { url?: string; altText?: string | null } | undefined;
+  if (image?.url) {
+    return { url: image.url, altText: (image.altText as string | undefined) ?? undefined };
+  }
+  const directUrl = o.url;
+  if (typeof directUrl === "string" && directUrl.trim()) {
+    return { url: directUrl.trim(), altText: undefined };
+  }
+  const preview = o.previewImage as { url?: string } | undefined;
+  if (preview?.url) {
+    return { url: preview.url, altText: undefined };
+  }
+  return null;
+}
+
+function textureImagesFromGraphqlProduct(raw: {
+  textureImages?: { references?: { nodes?: unknown[] } };
+  textureImageSingle?: { reference?: unknown };
+}): ShopifyImage[] {
+  const nodes = raw.textureImages?.references?.nodes ?? [];
+  const out: ShopifyImage[] = [];
+  for (const n of nodes) {
+    const img = coerceTextureNodeToImage(n);
+    if (img?.url) out.push(img);
+  }
+  if (out.length === 0) {
+    const single = coerceTextureNodeToImage(raw.textureImageSingle?.reference);
+    if (single?.url) out.push(single);
+  }
+  return out;
+}
+
+function PdpTextureLeadImage({
+  url,
+  alt,
+  className = "",
+}: {
+  url: string;
+  alt: string;
+  className?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+  return (
+    <div className={`max-w-md ${className}`.trim()}>
+      <div className="overflow-hidden border border-white/12 bg-black/25">
+        <img
+          src={url}
+          alt={alt}
+          className="max-h-[min(18rem,36vh)] w-full object-cover object-center"
+          loading="lazy"
+          onError={() => setFailed(true)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function UnboxingExperience() {
   const { id } = useParams<{ id: string }>();
   const { t, locale, localizePath } = useLanguage();
@@ -261,10 +323,29 @@ export function UnboxingExperience() {
                     }
                   }
                   textureImages: metafield(namespace: "custom", key: "texture_images") {
-                    references(first: 8) {
+                    references(first: 20) {
                       nodes {
                         ... on MediaImage {
                           image { url altText }
+                        }
+                        ... on GenericFile {
+                          url
+                          previewImage {
+                            url
+                          }
+                        }
+                      }
+                    }
+                  }
+                  textureImageSingle: metafield(namespace: "custom", key: "texture_image") {
+                    reference {
+                      ... on MediaImage {
+                        image { url altText }
+                      }
+                      ... on GenericFile {
+                        url
+                        previewImage {
+                          url
                         }
                       }
                     }
@@ -319,8 +400,11 @@ export function UnboxingExperience() {
         if (!data?.data?.node?.product) return;
 
         const raw = data.data.node.product;
-        const textureNodes = raw.textureImages?.references?.nodes || [];
         const relatedNodes = raw.relatedScents?.references?.nodes || [];
+        const textureImagesParsed = textureImagesFromGraphqlProduct({
+          textureImages: raw.textureImages,
+          textureImageSingle: raw.textureImageSingle,
+        });
         const payload: ShopifyProductPayload = {
           id: raw.id,
           handle: raw.handle,
@@ -343,9 +427,7 @@ export function UnboxingExperience() {
             sillage: raw.sillage?.value || undefined,
             pairingNote: raw.pairingNote?.value || undefined,
             storyImage: raw.storyImage?.reference?.image || null,
-            textureImages: textureNodes
-              .map((n: any) => n?.image)
-              .filter(Boolean),
+            textureImages: textureImagesParsed,
             relatedScents: relatedNodes.map((n: any) => ({
               id: n.id,
               handle: n.handle,
@@ -667,8 +749,8 @@ export function UnboxingExperience() {
       sillageDisplay
   );
 
-  const hasFragranceProfileLayer = Boolean(
-    localAccords.length || hasNotes || scentFamilyLabel
+  const showFragranceProfileSection = Boolean(
+    localAccords.length || hasNotes || scentFamilyLabel || pairingForPdp
   );
 
   const relatedFromSlugs: RelatedScent[] = (product.relatedSlugs ?? [])
@@ -879,16 +961,11 @@ export function UnboxingExperience() {
             ) : null}
 
             {textureLeadImage?.url ? (
-              <div className="mt-10 max-w-md">
-                <div className="overflow-hidden border border-white/12 bg-black/25">
-                  <img
-                    src={textureLeadImage.url}
-                    alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
-                    className="max-h-[min(18rem,36vh)] w-full object-cover object-center"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
+              <PdpTextureLeadImage
+                url={textureLeadImage.url}
+                alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+                className={pdpProductDescription ? "mt-6" : "mt-10"}
+              />
             ) : null}
           </div>
         </div>
@@ -964,24 +1041,8 @@ export function UnboxingExperience() {
         </section>
       )}
 
-      {/* Pairing suggestion — own band so English PDP never loses it when accords are empty */}
-      {!!pairingForPdp && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-6 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.pairing)}
-            </h2>
-            <div className="max-w-3xl border border-white/10 bg-black/20 p-5">
-              <p className="text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
-                {pairingForPdp}
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* 3) Accords & structured notes */}
-      {hasFragranceProfileLayer && (
+      {showFragranceProfileSection && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
             <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
@@ -1112,6 +1173,15 @@ export function UnboxingExperience() {
                 )}
               </div>
               </>
+            )}
+
+            {!!pairingForPdp && (
+              <div className="mt-10 max-w-3xl border border-white/10 bg-black/20 p-5">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
+                  {pairingForPdp}
+                </p>
+              </div>
             )}
 
           </div>
