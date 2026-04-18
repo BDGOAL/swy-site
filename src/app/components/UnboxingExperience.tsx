@@ -40,8 +40,7 @@ import {
   textureImagesFromRawMetafields,
   type RawTextureMetafield,
 } from "../lib/textureMetafield";
-import { PdpTextureStickyZoom } from "./PdpTextureStickyZoom";
-import { usePrefersReducedMotion, useEditorialIsMobile } from "../utils/editorialLandingMotion";
+import { PdpTextureGallerySection } from "./PdpTextureGallerySection";
 
 type ShopifyImage = { url: string; altText?: string | null };
 type ShopifyVariant = {
@@ -190,30 +189,6 @@ function debugTextureLog(label: string, payload: unknown) {
   }
 }
 
-function PdpTextureLeadImage({
-  url,
-  alt,
-  className = "",
-}: {
-  url: string;
-  alt: string;
-  className?: string;
-}) {
-  return (
-    <div className={`max-w-md ${className}`.trim()}>
-      <div className="overflow-hidden border border-white/12 bg-black/25">
-        <img
-          src={url}
-          alt={alt}
-          className="max-h-[min(18rem,36vh)] w-full object-cover object-center"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
-  );
-}
-
 export function UnboxingExperience() {
   const { id } = useParams<{ id: string }>();
   const { t, locale, localizePath } = useLanguage();
@@ -229,9 +204,6 @@ export function UnboxingExperience() {
     intro?: string;
     body?: string;
   } | null>(null);
-
-  const reduceMotion = usePrefersReducedMotion();
-  const isMobilePdp = useEditorialIsMobile(768);
 
   const product = products.find((p) => p.id === id);
 
@@ -700,10 +672,6 @@ export function UnboxingExperience() {
     };
   }, [isConfigured, product?.id, locale]);
 
-  const textureUrlEarly = shopifyProduct?.metafields?.textureImages?.[0]?.url;
-  const showStickyTextureZoom =
-    !reduceMotion && !isMobilePdp && Boolean(product && textureUrlEarly);
-
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
@@ -1051,19 +1019,12 @@ export function UnboxingExperience() {
               </div>
             ) : null}
 
-            {textureLeadImage?.url && !showStickyTextureZoom ? (
-              <PdpTextureLeadImage
-                url={textureLeadImage.url}
-                alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
-                className={pdpProductDescription ? "mt-6" : "mt-10"}
-              />
-            ) : null}
           </div>
         </div>
       </section>
 
-      {textureLeadImage?.url && showStickyTextureZoom ? (
-        <PdpTextureStickyZoom
+      {textureLeadImage?.url ? (
+        <PdpTextureGallerySection
           url={textureLeadImage.url}
           alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
         />
