@@ -19,6 +19,17 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { CollectionLink } from './CollectionLink';
 import { LocalizedLink } from './LocalizedLink';
 
+/**
+ * Diagnostic: isolate which search overlay layer causes the long dark band.
+ * Set exactly one to `true` at a time to A/B test (keep others false).
+ * - Backdrop: full-screen dimmer behind the header stack (z-[78]).
+ * - Panel bg: the search panel bar under the nav.
+ * - Panel shadow: box-shadow on that panel.
+ */
+const DEBUG_DISABLE_SEARCH_BACKDROP = false;
+const DEBUG_DISABLE_SEARCH_PANEL_BG = false;
+const DEBUG_DISABLE_SEARCH_PANEL_SHADOW = false;
+
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
@@ -313,7 +324,11 @@ export function NavigationArchive() {
       {searchOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-[78] cursor-default border-0 bg-black/35 backdrop-blur-[2px]"
+          className={
+            DEBUG_DISABLE_SEARCH_BACKDROP
+              ? 'fixed inset-0 z-[78] cursor-default border-0 bg-transparent'
+              : 'fixed inset-0 z-[78] cursor-default border-0 bg-black/35 backdrop-blur-[2px]'
+          }
           aria-label={t(siteCopy.search.ariaClose)}
           onClick={closeSearch}
         />
@@ -480,7 +495,9 @@ export function NavigationArchive() {
 
       {searchOpen ? (
         <div
-          className="w-full border-t border-white/[0.07] bg-[rgba(10,12,17,0.72)] backdrop-blur-md shadow-[0_3px_12px_-2px_rgba(0,0,0,0.32)]"
+          className={`w-full border-t border-white/[0.07] backdrop-blur-md ${
+            DEBUG_DISABLE_SEARCH_PANEL_BG ? 'bg-transparent' : 'bg-[rgba(10,12,17,0.72)]'
+          } ${DEBUG_DISABLE_SEARCH_PANEL_SHADOW ? '' : 'shadow-[0_3px_12px_-2px_rgba(0,0,0,0.32)]'}`}
           onMouseDown={(e) => e.stopPropagation()}
           role="search"
         >
