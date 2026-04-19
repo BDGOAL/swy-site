@@ -463,17 +463,19 @@ export function NavigationArchive() {
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="pointer-events-none h-1 sm:h-1.5"
-          style={{
-            marginTop: "-0.02rem",
-            background: `linear-gradient(to bottom, rgba(242, 240, 237, ${edgeFeatherTopAlpha}) 0%, rgba(10, 10, 10, 0.012) 36%, transparent 78%)`,
-          }}
-          aria-hidden
-        />
-      </nav>
-      </div>
+          </div>
+      {/*
+      <div
+        className="pointer-events-none h-1 sm:h-1.5"
+        style={{
+          marginTop: "-0.02rem",
+          background: `linear-gradient(to bottom, rgba(242, 240, 237, ${edgeFeatherTopAlpha}) 0%, rgba(10, 10, 10, 0.012) 36%, transparent 78%)`,
+        }}
+        aria-hidden
+      />
+      */}
+    </nav>
+  </div>
 
       {searchOpen ? (
         <div
