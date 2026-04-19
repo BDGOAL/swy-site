@@ -259,10 +259,9 @@ export function NavigationArchive() {
   const recess = isMobileMenuOpen ? Math.min(navRecess, 0.22) : navRecess;
   const reveal = isMobileMenuOpen ? 1 : navReveal;
 
-  const navBgAlpha = lerp(0.55, 0.08, recess);
+  const navBgAlpha = lerp(0.72, 0.08, recess);
   const navBlurPx = lerp(7.5, 2.25, recess);
   const navPadY = lerp(0.5, 0.3, recess);
-  const navTextShadow = '0 1px 4px rgba(0,0,0,0.5)';
   const navIconDropShadow = 'drop-shadow(0 1px 3px rgba(0,0,0,0.55))';
   const edgeFeatherTopAlpha = lerp(0.026, 0.008, recess);
   const linkAlpha = lerp(0.64, 0.54, recess);
@@ -403,7 +402,6 @@ export function NavigationArchive() {
                       style={{
                         fontFamily: 'var(--font-sans)',
                         color: `rgba(242, 240, 237, ${linkAlpha})`,
-                        textShadow: navTextShadow,
                       }}
                     >
                       {link.label}
@@ -421,7 +419,6 @@ export function NavigationArchive() {
                       style={{
                         fontFamily: 'var(--font-sans)',
                         color: `rgba(242, 240, 237, ${linkAlpha})`,
-                        textShadow: navTextShadow,
                       }}
                     >
                       {link.label}
@@ -456,7 +453,6 @@ export function NavigationArchive() {
                     fontFamily: 'var(--font-sans)',
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
-                    textShadow: navTextShadow,
                     filter: navIconDropShadow,
                   }}
                   aria-label={t(siteCopy.nav.cart)}
