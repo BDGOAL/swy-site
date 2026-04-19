@@ -259,9 +259,11 @@ export function NavigationArchive() {
   const recess = isMobileMenuOpen ? Math.min(navRecess, 0.22) : navRecess;
   const reveal = isMobileMenuOpen ? 1 : navReveal;
 
-  const navBgAlpha = lerp(0.22, 0.035, recess);
+  const navBgAlpha = lerp(0.55, 0.08, recess);
   const navBlurPx = lerp(7.5, 2.25, recess);
   const navPadY = lerp(0.5, 0.3, recess);
+  const navTextShadow = '0 1px 4px rgba(0,0,0,0.5)';
+  const navIconDropShadow = 'drop-shadow(0 1px 3px rgba(0,0,0,0.55))';
   const edgeFeatherTopAlpha = lerp(0.026, 0.008, recess);
   const linkAlpha = lerp(0.64, 0.54, recess);
   const accentAlpha = lerp(0.82, 0.7, recess);
@@ -365,9 +367,8 @@ export function NavigationArchive() {
         className="w-full overflow-hidden"
         style={{
           backgroundColor: `rgba(10, 10, 10, ${navBgAlpha})`,
-          // Diagnostic: disable backdrop blur to test overlay feel on /contact + landing hero (re-enable when done).
-          // backdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
-          // WebkitBackdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
+          backdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
+          WebkitBackdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
         }}
       >
         <div
@@ -381,7 +382,12 @@ export function NavigationArchive() {
               className="pointer-events-auto flex origin-left shrink-0 items-center gap-2"
               style={{ transform: `scale(${logoScale})` }}
             >
-              <img src="/swy-logo.png" alt={t(siteCopy.brand.logoAlt)} className="h-8 w-auto sm:h-10" />
+              <img
+                src="/swy-logo.png"
+                alt={t(siteCopy.brand.logoAlt)}
+                className="h-8 w-auto sm:h-10"
+                style={{ filter: navIconDropShadow }}
+              />
             </LocalizedLink>
 
             <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3 lg:gap-5">
@@ -397,6 +403,7 @@ export function NavigationArchive() {
                       style={{
                         fontFamily: 'var(--font-sans)',
                         color: `rgba(242, 240, 237, ${linkAlpha})`,
+                        textShadow: navTextShadow,
                       }}
                     >
                       {link.label}
@@ -414,6 +421,7 @@ export function NavigationArchive() {
                       style={{
                         fontFamily: 'var(--font-sans)',
                         color: `rgba(242, 240, 237, ${linkAlpha})`,
+                        textShadow: navTextShadow,
                       }}
                     >
                       {link.label}
@@ -426,12 +434,15 @@ export function NavigationArchive() {
                 className="flex items-center gap-1.5 sm:gap-2 lg:border-l lg:border-white/[0.1] lg:pl-3 xl:pl-4"
                 aria-label={t(siteCopy.nav.utilitiesAria)}
               >
-                <LanguageSwitcher />
+                <LanguageSwitcher className="[filter:drop-shadow(0_1px_3px_rgba(0,0,0,0.55))]" />
                 <button
                   type="button"
                   onClick={toggleSearchPanel}
                   className="pointer-events-auto inline-flex items-center justify-center rounded border border-white/15 p-2 text-[#F2F0ED]/75 transition hover:text-[#F2F0ED]"
-                  style={{ color: `rgba(242, 240, 237, ${accentAlpha})` }}
+                  style={{
+                    color: `rgba(242, 240, 237, ${accentAlpha})`,
+                    filter: navIconDropShadow,
+                  }}
                   aria-expanded={searchOpen}
                   aria-label={searchOpen ? t(siteCopy.search.ariaClose) : t(siteCopy.search.ariaOpen)}
                 >
@@ -445,6 +456,8 @@ export function NavigationArchive() {
                     fontFamily: 'var(--font-sans)',
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
+                    textShadow: navTextShadow,
+                    filter: navIconDropShadow,
                   }}
                   aria-label={t(siteCopy.nav.cart)}
                 >
@@ -458,6 +471,7 @@ export function NavigationArchive() {
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
+                    filter: navIconDropShadow,
                   }}
                   aria-label={t(siteCopy.nav.cart)}
                 >
@@ -470,6 +484,7 @@ export function NavigationArchive() {
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
+                    filter: navIconDropShadow,
                   }}
                   aria-expanded={isMobileMenuOpen}
                   aria-label={isMobileMenuOpen ? t(siteCopy.nav.menuClose) : t(siteCopy.nav.menuToggle)}
