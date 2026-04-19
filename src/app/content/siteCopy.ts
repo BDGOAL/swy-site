@@ -126,7 +126,7 @@ export const siteCopy = {
         zh: "回到選集，或沿著這條線索，再往前一點。",
       } satisfies Bilingual,
       ctaPrimary: { en: "Explore all scents", zh: "探索所有香氣" } satisfies Bilingual,
-      /** Temporary: scrolls to on-page narrative; replace when a dedicated story route exists. */
+      /** Links to the dedicated contact route (`/contact`). */
       ctaSecondary: { en: "Continue the story", zh: "延續這段故事" } satisfies Bilingual,
     },
     footer: {
@@ -177,6 +177,18 @@ export const siteCopy = {
     emailLabel: { en: "Email", zh: "電郵" } satisfies Bilingual,
     instagramLabel: { en: "Instagram", zh: "Instagram" } satisfies Bilingual,
     whatsappLabel: { en: "WhatsApp", zh: "WhatsApp" } satisfies Bilingual,
+    emailMicrocopy: {
+      en: "Email — For general enquiries and press.",
+      zh: "電郵 — 一般諮詢與媒體聯絡。",
+    } satisfies Bilingual,
+    instagramMicrocopy: {
+      en: "Instagram — For updates, DMs, and visual stories.",
+      zh: "Instagram — 動態、私訊與視覺敘事。",
+    } satisfies Bilingual,
+    whatsappMicrocopy: {
+      en: "WhatsApp — For direct conversations.",
+      zh: "WhatsApp — 直接對話。",
+    } satisfies Bilingual,
   },
   product: {
     notFound: { en: "Product not found", zh: "找不到此香氣" } satisfies Bilingual,

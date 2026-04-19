@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import { SECTION_IDS, toLandingHash } from "../constants/landingSectionIds";
+import { SECTION_IDS } from "../constants/landingSectionIds";
+import { ROUTES } from "../constants/routes";
 import { siteCopy } from "../content/siteCopy";
 import { useLanguage } from "../context/LanguageContext";
 import { editorialTransition, usePrefersReducedMotion } from "../utils/editorialLandingMotion";
@@ -60,11 +61,8 @@ export function ConversionSection() {
             >
               {t(siteCopy.landing.conversion.ctaPrimary)}
             </CollectionLink>
-            {/*
-              Temporary: in-page narrative anchor on the landing route until a dedicated long-form story URL exists.
-            */}
             <LocalizedLink
-              to={toLandingHash("storyContinue")}
+              to={ROUTES.contact}
               className="conversion-section__action conversion-section__action--secondary inline-flex min-h-[48px] items-center justify-center rounded-[2px] border border-[#F2F0ED]/12 bg-transparent px-6 py-3.5 text-[10.5px] uppercase tracking-[0.2em] text-[#F2F0ED]/50 underline decoration-[#F2F0ED]/22 underline-offset-[6px] transition-[color,background-color,border-color,text-decoration-color] duration-500 ease-out hover:border-[#F2F0ED]/18 hover:bg-[#F2F0ED]/[0.04] hover:text-[#F2F0ED]/72 hover:decoration-[#F2F0ED]/35 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/28 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050509] active:translate-y-px md:min-h-[46px]"
               style={{ fontFamily: "var(--font-sans)" }}
             >

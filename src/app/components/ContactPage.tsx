@@ -153,7 +153,13 @@ export function ContactPage() {
         />
       </div>
 
-      <main className="relative z-10 mx-auto max-w-[1200px] px-4 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-32 md:px-12 lg:px-14">
+      <main
+        className="relative z-10 mx-auto max-w-[1200px] px-4 pb-20 sm:px-8 sm:pb-24 md:px-12 lg:px-14"
+        style={{
+          paddingTop:
+            "max(9.5rem, calc(env(safe-area-inset-top, 0px) + 7rem))",
+        }}
+      >
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 lg:items-start">
           <header className="lg:col-span-5">
             <p
@@ -208,6 +214,12 @@ export function ContactPage() {
                 >
                   {CONTACT.email.display}
                 </span>
+                <p
+                  className="mt-2.5 text-[11px] leading-[1.55] text-[#F2F0ED]/42 transition-colors duration-300 group-hover:text-[#F2F0ED]/52"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.contactPage.emailMicrocopy)}
+                </p>
               </span>
             </a>
 
@@ -232,6 +244,12 @@ export function ContactPage() {
                 >
                   {CONTACT.instagram.display}
                 </span>
+                <p
+                  className="mt-2.5 text-[11px] leading-[1.55] text-[#F2F0ED]/42 transition-colors duration-300 group-hover:text-[#F2F0ED]/52"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.contactPage.instagramMicrocopy)}
+                </p>
               </span>
             </a>
 
@@ -256,6 +274,12 @@ export function ContactPage() {
                 >
                   {CONTACT.whatsapp.display}
                 </span>
+                <p
+                  className="mt-2.5 text-[11px] leading-[1.55] text-[#F2F0ED]/42 transition-colors duration-300 group-hover:text-[#F2F0ED]/52"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.contactPage.whatsappMicrocopy)}
+                </p>
               </span>
             </a>
           </div>
