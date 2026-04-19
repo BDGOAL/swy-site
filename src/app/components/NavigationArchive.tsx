@@ -261,7 +261,7 @@ export function NavigationArchive() {
 
   const navBgAlpha = lerp(0.22, 0.035, recess);
   const navBlurPx = lerp(7.5, 2.25, recess);
-  const navPadY = lerp(1.12, 0.7, recess);
+  const navPadY = lerp(0.98, 0.62, recess);
   const edgeFeatherTopAlpha = lerp(0.026, 0.008, recess);
   const linkAlpha = lerp(0.64, 0.54, recess);
   const accentAlpha = lerp(0.82, 0.7, recess);
@@ -381,7 +381,7 @@ export function NavigationArchive() {
               className="pointer-events-auto flex origin-left shrink-0 items-center gap-2"
               style={{ transform: `scale(${logoScale})` }}
             >
-              <img src="/swy-logo.png" alt={t(siteCopy.brand.logoAlt)} className="h-20 w-auto sm:h-28" />
+              <img src="/swy-logo.png" alt={t(siteCopy.brand.logoAlt)} className="h-14 w-auto sm:h-20" />
             </LocalizedLink>
 
             <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3 lg:gap-5">
