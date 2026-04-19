@@ -157,7 +157,7 @@ export function ContactPage() {
         className="relative z-10 mx-auto max-w-[1200px] px-4 pb-20 sm:px-8 sm:pb-24 md:px-12 lg:px-14"
         style={{
           paddingTop:
-            "max(9.5rem, calc(env(safe-area-inset-top, 0px) + 7rem))",
+            "max(8.5rem, calc(env(safe-area-inset-top, 0px) + 6.25rem))",
         }}
       >
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 lg:items-start">

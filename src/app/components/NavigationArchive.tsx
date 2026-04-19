@@ -347,7 +347,7 @@ export function NavigationArchive() {
         }}
       >
       <nav
-        className="w-full"
+        className="w-full overflow-hidden"
         style={{
           backgroundColor: `rgba(10, 10, 10, ${navBgAlpha})`,
           backdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
@@ -465,11 +465,10 @@ export function NavigationArchive() {
           </div>
         </div>
         <div
-          className="pointer-events-none h-1.5 sm:h-2"
+          className="pointer-events-none h-1 sm:h-1.5"
           style={{
             marginTop: "-0.02rem",
-            background: `linear-gradient(to bottom, rgba(242, 240, 237, ${edgeFeatherTopAlpha}) 0%, rgba(10, 10, 10, 0.004) 28%, transparent 100%)`,
-            filter: "blur(2px)",
+            background: `linear-gradient(to bottom, rgba(242, 240, 237, ${edgeFeatherTopAlpha}) 0%, rgba(10, 10, 10, 0.012) 36%, transparent 78%)`,
           }}
           aria-hidden
         />
