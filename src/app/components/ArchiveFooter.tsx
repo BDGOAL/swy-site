@@ -1,4 +1,5 @@
 import { SECTION_IDS, toLandingHash } from "../constants/landingSectionIds";
+import { ROUTES } from "../constants/routes";
 import { siteCopy } from "../content/siteCopy";
 import { useLanguage } from "../context/LanguageContext";
 import { CollectionLink } from "./CollectionLink";
@@ -44,7 +45,7 @@ export function ArchiveFooter() {
           <LocalizedLink to={toLandingHash("brandVision")} className={footerLinkClass}>
             {t(siteCopy.nav.about)}
           </LocalizedLink>
-          <LocalizedLink to={toLandingHash("siteFooter")} className={footerLinkClass}>
+          <LocalizedLink to={ROUTES.contact} className={footerLinkClass}>
             {t(siteCopy.nav.contact)}
           </LocalizedLink>
         </nav>

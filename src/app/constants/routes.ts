@@ -2,6 +2,7 @@
 export const ROUTES = {
   home: "/",
   collection: "/collection",
+  contact: "/contact",
   landing: "/landing",
   product: (id: string) => `/product/${id}`,
 } as const;

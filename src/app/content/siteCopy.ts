@@ -159,6 +159,25 @@ export const siteCopy = {
       priceLabel: { en: "Price", zh: "售價" } satisfies Bilingual,
     },
   },
+  contactPage: {
+    eyebrow: { en: "SWY", zh: "SWY" } satisfies Bilingual,
+    title: { en: "Contact Us", zh: "聯絡我們" } satisfies Bilingual,
+    subtitle: {
+      en: "For press, collaborations, or scent inquiries.",
+      zh: "媒體、合作或香氣相關諮詢。",
+    } satisfies Bilingual,
+    intro: {
+      en: "Reach out to us through the channel that feels most natural.",
+      zh: "請選擇您覺得最自然的方式與我們聯繫。",
+    } satisfies Bilingual,
+    responseNote: {
+      en: "We usually reply within 1–2 business days.",
+      zh: "我們通常會於 1–2 個工作天內回覆。",
+    } satisfies Bilingual,
+    emailLabel: { en: "Email", zh: "電郵" } satisfies Bilingual,
+    instagramLabel: { en: "Instagram", zh: "Instagram" } satisfies Bilingual,
+    whatsappLabel: { en: "WhatsApp", zh: "WhatsApp" } satisfies Bilingual,
+  },
   product: {
     notFound: { en: "Product not found", zh: "找不到此香氣" } satisfies Bilingual,
     scentNarrativeEyebrow: { en: "Scent story", zh: "香氣故事" } satisfies Bilingual,

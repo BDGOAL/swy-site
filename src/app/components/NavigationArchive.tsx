@@ -209,11 +209,7 @@ export function NavigationArchive() {
         to: toLandingHash('brandVision'),
         landingSectionId: SECTION_IDS.brandVision,
       },
-      {
-        label: t(siteCopy.nav.contact),
-        to: toLandingHash('siteFooter'),
-        landingSectionId: SECTION_IDS.siteFooter,
-      },
+      { label: t(siteCopy.nav.contact), to: ROUTES.contact },
     ],
     [t]
   );
