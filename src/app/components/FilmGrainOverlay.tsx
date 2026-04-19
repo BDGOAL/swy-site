@@ -109,7 +109,7 @@ export function FilmGrainOverlay() {
         }}
       />
 
-      {/* Faded edges - Memory fade effect */}
+      {/* Faded edges — full-viewport layer; gradient from theme.css --swy-overlay-edge-fade-gradient (top band softened vs. heavy header-shadow read) */}
       <div
         className="pointer-events-none fixed inset-0 z-[99]"
         style={{
