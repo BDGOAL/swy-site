@@ -383,9 +383,9 @@ export function NavigationArchive() {
               style={{ transform: `scale(${logoScale})` }}
             >
               <img
-                src="/swy-logo.png"
-                alt={t(siteCopy.brand.logoAlt)}
-                className="h-8 w-auto sm:h-10"
+                src="https://cdn.shopify.com/s/files/1/0268/0098/0048/files/logo_thin.png?v=1776330250"
+                alt="Scent With You"
+                className="h-full w-auto object-contain"
                 style={{ filter: navIconDropShadow }}
               />
             </LocalizedLink>
