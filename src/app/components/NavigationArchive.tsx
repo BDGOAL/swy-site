@@ -350,8 +350,9 @@ export function NavigationArchive() {
         className="w-full overflow-hidden"
         style={{
           backgroundColor: `rgba(10, 10, 10, ${navBgAlpha})`,
-          backdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
-          WebkitBackdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
+          // Diagnostic: disable backdrop blur to test overlay feel on /contact + landing hero (re-enable when done).
+          // backdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
+          // WebkitBackdropFilter: `saturate(1.03) blur(${navBlurPx}px)`,
         }}
       >
         <div
