@@ -480,7 +480,7 @@ export function NavigationArchive() {
 
       {searchOpen ? (
         <div
-          className="w-full border-t border-white/[0.07] bg-[rgba(10,12,17,0.72)] backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.28)]"
+          className="w-full border-t border-white/[0.07] bg-[rgba(10,12,17,0.72)] backdrop-blur-md shadow-[0_3px_12px_-2px_rgba(0,0,0,0.32)]"
           onMouseDown={(e) => e.stopPropagation()}
           role="search"
         >
