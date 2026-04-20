@@ -809,7 +809,7 @@ export function UnboxingExperience() {
   );
 
   const showFragranceProfileSection = Boolean(
-    localAccords.length || hasNotes || scentFamilyLabel || pairingForPdp
+    localAccords.length || scentFamilyLabel || pairingForPdp
   );
 
   const relatedFromSlugs: RelatedScent[] = (product.relatedSlugs ?? [])
@@ -881,6 +881,109 @@ export function UnboxingExperience() {
     }
   };
 
+  const fragranceNotesSummary = hasNotes ? (
+    <>
+      <div className="space-y-3 border border-white/10 bg-black/20 p-4 md:hidden">
+        {topNotes.length > 0 && (
+          <div>
+            <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
+            <div className="space-y-1.5">
+              {topNotes.map((note, idx) => {
+                const inline = joinBilingualInline(note);
+                if (!inline) return null;
+                return <p key={`m-top-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+              })}
+            </div>
+          </div>
+        )}
+        {heartNotes.length > 0 && (
+          <div className="border-t border-white/10 pt-3">
+            <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
+            <div className="space-y-1.5">
+              {heartNotes.map((note, idx) => {
+                const inline = joinBilingualInline(note);
+                if (!inline) return null;
+                return <p key={`m-heart-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+              })}
+            </div>
+          </div>
+        )}
+        {baseNotes.length > 0 && (
+          <div className="border-t border-white/10 pt-3">
+            <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
+            <div className="space-y-1.5">
+              {baseNotes.map((note, idx) => {
+                const inline = joinBilingualInline(note);
+                if (!inline) return null;
+                return <p key={`m-base-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="hidden gap-5 md:grid md:grid-cols-3">
+        {topNotes.length > 0 && (
+          <div className="border border-white/10 bg-black/20 p-5">
+            <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
+            <div className="space-y-3">
+              {topNotes.map((note, idx) => {
+                const parsed = splitBilingualNote(note);
+                if (!parsed.primary) return null;
+                return (
+                  <div key={`top-${idx}-${parsed.primary}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
+                    {parsed.secondary && (
+                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {heartNotes.length > 0 && (
+          <div className="border border-white/10 bg-black/20 p-5">
+            <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
+            <div className="space-y-3">
+              {heartNotes.map((note, idx) => {
+                const parsed = splitBilingualNote(note);
+                if (!parsed.primary) return null;
+                return (
+                  <div key={`heart-${idx}-${parsed.primary}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
+                    {parsed.secondary && (
+                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {baseNotes.length > 0 && (
+          <div className="border border-white/10 bg-black/20 p-5">
+            <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
+            <div className="space-y-3">
+              {baseNotes.map((note, idx) => {
+                const parsed = splitBilingualNote(note);
+                if (!parsed.primary) return null;
+                return (
+                  <div key={`base-${idx}-${parsed.primary}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
+                    {parsed.secondary && (
+                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  ) : null;
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] pt-20 text-[#F2F0ED] sm:pt-24">
       {/* 1) Product hero — gallery, English name, localized story layer, commerce */}
@@ -949,6 +1052,8 @@ export function UnboxingExperience() {
                 {pdpStoryBodyDisplay}
               </p>
             ) : null}
+
+            {fragranceNotesSummary ? <div className="mt-10">{fragranceNotesSummary}</div> : null}
 
             {!!priceDisplay && (
               <p className="mt-10 text-2xl text-[#F2F0ED]/88" style={{ fontFamily: "var(--font-mono)" }}>
@@ -1141,109 +1246,6 @@ export function UnboxingExperience() {
                   ))}
                 </div>
               </div>
-            )}
-
-            {hasNotes && (
-              <>
-              <div className="space-y-3 border border-white/10 bg-black/20 p-4 md:hidden">
-                {topNotes.length > 0 && (
-                  <div>
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
-                    <div className="space-y-1.5">
-                      {topNotes.map((note, idx) => {
-                        const inline = joinBilingualInline(note);
-                        if (!inline) return null;
-                        return <p key={`m-top-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
-                      })}
-                    </div>
-                  </div>
-                )}
-                {heartNotes.length > 0 && (
-                  <div className="border-t border-white/10 pt-3">
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
-                    <div className="space-y-1.5">
-                      {heartNotes.map((note, idx) => {
-                        const inline = joinBilingualInline(note);
-                        if (!inline) return null;
-                        return <p key={`m-heart-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
-                      })}
-                    </div>
-                  </div>
-                )}
-                {baseNotes.length > 0 && (
-                  <div className="border-t border-white/10 pt-3">
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
-                    <div className="space-y-1.5">
-                      {baseNotes.map((note, idx) => {
-                        const inline = joinBilingualInline(note);
-                        if (!inline) return null;
-                        return <p key={`m-base-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="hidden gap-5 md:grid md:grid-cols-3">
-                {topNotes.length > 0 && (
-                  <div className="border border-white/10 bg-black/20 p-5">
-                    <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
-                    <div className="space-y-3">
-                      {topNotes.map((note, idx) => {
-                        const parsed = splitBilingualNote(note);
-                        if (!parsed.primary) return null;
-                        return (
-                          <div key={`top-${idx}-${parsed.primary}`} className="leading-snug">
-                            <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                            {parsed.secondary && (
-                              <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                {heartNotes.length > 0 && (
-                  <div className="border border-white/10 bg-black/20 p-5">
-                    <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
-                    <div className="space-y-3">
-                      {heartNotes.map((note, idx) => {
-                        const parsed = splitBilingualNote(note);
-                        if (!parsed.primary) return null;
-                        return (
-                          <div key={`heart-${idx}-${parsed.primary}`} className="leading-snug">
-                            <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                            {parsed.secondary && (
-                              <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                {baseNotes.length > 0 && (
-                  <div className="border border-white/10 bg-black/20 p-5">
-                    <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
-                    <div className="space-y-3">
-                      {baseNotes.map((note, idx) => {
-                        const parsed = splitBilingualNote(note);
-                        if (!parsed.primary) return null;
-                        return (
-                          <div key={`base-${idx}-${parsed.primary}`} className="leading-snug">
-                            <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                            {parsed.secondary && (
-                              <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-              </>
             )}
 
             {!!pairingForPdp && (
