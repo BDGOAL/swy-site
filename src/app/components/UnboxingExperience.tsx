@@ -171,10 +171,30 @@ function splitBilingualNote(note: string): { primary: string; secondary?: string
   return { primary: first, secondary: rest.join(" / ") };
 }
 
-function joinBilingualInline(note: string): string {
-  const parsed = splitBilingualNote(note);
+/** Single-locale line from a note row (e.g. Shopify `EN / ZH` or `ZH / EN`). */
+function noteLineForLocale(note: string, locale: Locale): string {
+  const parsed = splitBilingualNote((note || "").trim());
   if (!parsed.primary) return "";
-  return parsed.secondary ? `${parsed.primary} ${parsed.secondary}` : parsed.primary;
+  if (!parsed.secondary) return parsed.primary;
+
+  const a = parsed.primary.trim();
+  const b = parsed.secondary.trim();
+  const aHan = textContainsHan(a);
+  const bHan = textContainsHan(b);
+  const aLat = /[a-zA-Z]{2,}/.test(a);
+  const bLat = /[a-zA-Z]{2,}/.test(b);
+
+  if (locale === "zh") {
+    if (bHan && !aHan) return b;
+    if (aHan && !bHan) return a;
+    if (aHan && bHan) return a;
+    return bHan ? b : a;
+  }
+
+  if (aLat && !aHan) return a;
+  if (bLat && !bHan) return b;
+  if (aLat && bLat) return a;
+  return aLat ? a : bLat ? b : a;
 }
 
 function truncateText(value: string, maxChars: number): string {
@@ -798,7 +818,7 @@ export function UnboxingExperience() {
     productPairingSuggestion(product, locale)
   );
 
-  const hasImpressionLayer = Boolean(
+  const showFragranceAtmosphereBlock = Boolean(
     impressionText ||
       wearMomentText ||
       moodTagsDisplay.length ||
@@ -808,9 +828,11 @@ export function UnboxingExperience() {
       sillageDisplay
   );
 
-  const showFragranceProfileSection = Boolean(
-    localAccords.length || scentFamilyLabel || pairingForPdp
-  );
+  const showFragranceStructureBlock = Boolean(scentFamilyLabel || localAccords.length);
+  const showFragranceStylingBlock = Boolean(pairingForPdp);
+
+  const showPdpFragranceInfoSection =
+    showFragranceAtmosphereBlock || showFragranceStructureBlock || showFragranceStylingBlock;
 
   const relatedFromSlugs: RelatedScent[] = (product.relatedSlugs ?? [])
     .map((slug) => products.find((p) => p.slug === slug || p.id === slug))
@@ -889,9 +911,9 @@ export function UnboxingExperience() {
             <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
             <div className="space-y-1.5">
               {topNotes.map((note, idx) => {
-                const inline = joinBilingualInline(note);
-                if (!inline) return null;
-                return <p key={`m-top-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
+                return <p key={`m-top-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
               })}
             </div>
           </div>
@@ -901,9 +923,9 @@ export function UnboxingExperience() {
             <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
             <div className="space-y-1.5">
               {heartNotes.map((note, idx) => {
-                const inline = joinBilingualInline(note);
-                if (!inline) return null;
-                return <p key={`m-heart-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
+                return <p key={`m-heart-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
               })}
             </div>
           </div>
@@ -913,9 +935,9 @@ export function UnboxingExperience() {
             <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
             <div className="space-y-1.5">
               {baseNotes.map((note, idx) => {
-                const inline = joinBilingualInline(note);
-                if (!inline) return null;
-                return <p key={`m-base-${idx}-${inline}`} className="text-[13px] text-[#F2F0ED]/82">{inline}</p>;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
+                return <p key={`m-base-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
               })}
             </div>
           </div>
@@ -928,14 +950,11 @@ export function UnboxingExperience() {
             <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesTop)}</p>
             <div className="space-y-3">
               {topNotes.map((note, idx) => {
-                const parsed = splitBilingualNote(note);
-                if (!parsed.primary) return null;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
                 return (
-                  <div key={`top-${idx}-${parsed.primary}`} className="leading-snug">
-                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                    {parsed.secondary && (
-                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                    )}
+                  <div key={`top-${idx}-${line}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{line}</p>
                   </div>
                 );
               })}
@@ -947,14 +966,11 @@ export function UnboxingExperience() {
             <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesHeart)}</p>
             <div className="space-y-3">
               {heartNotes.map((note, idx) => {
-                const parsed = splitBilingualNote(note);
-                if (!parsed.primary) return null;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
                 return (
-                  <div key={`heart-${idx}-${parsed.primary}`} className="leading-snug">
-                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                    {parsed.secondary && (
-                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                    )}
+                  <div key={`heart-${idx}-${line}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{line}</p>
                   </div>
                 );
               })}
@@ -966,14 +982,11 @@ export function UnboxingExperience() {
             <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/45">{t(siteCopy.product.notesBase)}</p>
             <div className="space-y-3">
               {baseNotes.map((note, idx) => {
-                const parsed = splitBilingualNote(note);
-                if (!parsed.primary) return null;
+                const line = noteLineForLocale(note, locale);
+                if (!line) return null;
                 return (
-                  <div key={`base-${idx}-${parsed.primary}`} className="leading-snug">
-                    <p className="text-[13px] text-[#F2F0ED]/84">{parsed.primary}</p>
-                    {parsed.secondary && (
-                      <p className="mt-1 text-[11px] tracking-[0.04em] text-[#F2F0ED]/46">{parsed.secondary}</p>
-                    )}
+                  <div key={`base-${idx}-${line}`} className="leading-snug">
+                    <p className="text-[13px] text-[#F2F0ED]/84">{line}</p>
                   </div>
                 );
               })}
@@ -1147,116 +1160,141 @@ export function UnboxingExperience() {
         />
       ) : null}
 
-      {/* 2) Scent impression (氣息之間) */}
-      {hasImpressionLayer && (
+      {/* 2) Fragrance details — atmosphere (impression + mood + metrics), structure (family + accords), styling (pairing) */}
+      {showPdpFragranceInfoSection && (
         <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.scentCharacter)}
-            </h2>
-            <div className="grid gap-8 lg:grid-cols-2">
-              {impressionText && (
-                <div className="border border-white/10 bg-black/20 p-5">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.impression)}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{impressionText}</p>
-                </div>
-              )}
-              {wearMomentText && (
-                <div className="border border-white/10 bg-black/20 p-5">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.wearContext)}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{wearMomentText}</p>
-                </div>
-              )}
-            </div>
+          <div className="mx-auto max-w-6xl space-y-16">
+            {showFragranceAtmosphereBlock && (
+              <div>
+                <h2
+                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.product.fragranceGroupAtmosphere)}
+                </h2>
+                <div className="space-y-10">
+                  {(impressionText || wearMomentText) && (
+                    <div className="grid gap-8 lg:grid-cols-2">
+                      {impressionText && (
+                        <div className="border border-white/10 bg-black/20 p-5">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.impression)}</p>
+                          <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{impressionText}</p>
+                        </div>
+                      )}
+                      {wearMomentText && (
+                        <div className="border border-white/10 bg-black/20 p-5">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.wearContext)}</p>
+                          <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{wearMomentText}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-            {moodTagsDisplay.length > 0 && (
-              <div className="mt-10">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.moodKeywords)}</p>
-                <div className="mt-4 flex flex-wrap gap-2.5">
-                  {moodTagsDisplay.map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="border border-white/14 bg-black/10 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.08em] text-[#F2F0ED]/68"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+                  {moodTagsDisplay.length > 0 && (
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.moodKeywords)}</p>
+                      <div className="mt-4 flex flex-wrap gap-2.5">
+                        {moodTagsDisplay.map((keyword) => (
+                          <span
+                            key={keyword}
+                            className="border border-white/14 bg-black/10 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.08em] text-[#F2F0ED]/68"
+                          >
+                            {keyword}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-            {(localIntensity || localLasting || longevityDisplay || sillageDisplay) && (
-              <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {localIntensity && (
-                  <div className="border border-white/10 bg-black/20 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.presence)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{localIntensity}</p>
-                  </div>
-                )}
-                {localLasting && (
-                  <div className="border border-white/10 bg-black/20 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.endurance)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{localLasting}</p>
-                  </div>
-                )}
-                {longevityDisplay ? (
-                  <div className="border border-white/10 bg-black/20 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.longevity)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{longevityDisplay}</p>
-                  </div>
-                ) : null}
-                {sillageDisplay ? (
-                  <div className="border border-white/10 bg-black/20 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.sillage)}</p>
-                    <p className="mt-2 text-sm text-[#F2F0ED]/80">{sillageDisplay}</p>
-                  </div>
-                ) : null}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* 3) Accords & structured notes */}
-      {showFragranceProfileSection && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-10 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.fragranceProfile)}
-            </h2>
-
-            {!!scentFamilyLabel && (
-              <div className="mb-10 border border-white/10 bg-black/15 p-5">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.scentFamily)}</p>
-                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/82">{scentFamilyLabel}</p>
-              </div>
-            )}
-
-            {localAccords.length > 0 && (
-              <div className="mb-10">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.accords)}</p>
-                <div className="mt-4 flex flex-wrap gap-2.5">
-                  {localAccords.map((accord) => (
-                    <span
-                      key={accord}
-                      className="border border-white/14 bg-black/10 px-3.5 py-1.5 text-[11px] tracking-[0.06em] text-[#F2F0ED]/72"
-                    >
-                      {accord}
-                    </span>
-                  ))}
+                  {(localIntensity || localLasting || longevityDisplay || sillageDisplay) && (
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      {localIntensity && (
+                        <div className="border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.presence)}</p>
+                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{localIntensity}</p>
+                        </div>
+                      )}
+                      {localLasting && (
+                        <div className="border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.endurance)}</p>
+                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{localLasting}</p>
+                        </div>
+                      )}
+                      {longevityDisplay ? (
+                        <div className="border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.longevity)}</p>
+                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{longevityDisplay}</p>
+                        </div>
+                      ) : null}
+                      {sillageDisplay ? (
+                        <div className="border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.sillage)}</p>
+                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{sillageDisplay}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {!!pairingForPdp && (
-              <div className="mt-10 max-w-3xl border border-white/10 bg-black/20 p-5">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
-                <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
-                  {pairingForPdp}
-                </p>
+            {showFragranceStructureBlock && (
+              <div className={showFragranceAtmosphereBlock ? "border-t border-white/10 pt-16" : ""}>
+                <h2
+                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.product.fragranceGroupStructure)}
+                </h2>
+                <div className="space-y-8">
+                  {!!scentFamilyLabel && (
+                    <div className="border border-white/10 bg-black/15 p-5">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.scentFamily)}</p>
+                      <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/82">{scentFamilyLabel}</p>
+                    </div>
+                  )}
+
+                  {localAccords.length > 0 && (
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.accords)}</p>
+                      <div className="mt-4 flex flex-wrap gap-2.5">
+                        {localAccords.map((accord) => (
+                          <span
+                            key={accord}
+                            className="border border-white/14 bg-black/10 px-3.5 py-1.5 text-[11px] tracking-[0.06em] text-[#F2F0ED]/72"
+                          >
+                            {accord}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
+            {showFragranceStylingBlock && (
+              <div
+                className={
+                  showFragranceAtmosphereBlock || showFragranceStructureBlock
+                    ? "border-t border-white/10 pt-16"
+                    : ""
+                }
+              >
+                <h2
+                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  {t(siteCopy.product.fragranceGroupStyling)}
+                </h2>
+                <div className="max-w-3xl border border-white/10 bg-black/20 p-5">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
+                    {pairingForPdp}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}

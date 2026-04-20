@@ -197,6 +197,10 @@ export const siteCopy = {
     variantSoldOut: { en: "(Sold out)", zh: "（售罄）" } satisfies Bilingual,
     defaultVariant: { en: "Default", zh: "標準" } satisfies Bilingual,
     fragranceProfile: { en: "Fragrance Profile", zh: "香氣輪廓" } satisfies Bilingual,
+    /** PDP lower area — grouped reading hierarchy */
+    fragranceGroupAtmosphere: { en: "Atmosphere", zh: "氛圍與氣息" } satisfies Bilingual,
+    fragranceGroupStructure: { en: "Scent structure", zh: "香氣結構" } satisfies Bilingual,
+    fragranceGroupStyling: { en: "Styling", zh: "風格搭配" } satisfies Bilingual,
     scentCharacter: { en: "In the air", zh: "氣息之間" } satisfies Bilingual,
     accords: { en: "Accords", zh: "氣味結構" } satisfies Bilingual,
     narrative: { en: "The Narrative", zh: "敘事" } satisfies Bilingual,
