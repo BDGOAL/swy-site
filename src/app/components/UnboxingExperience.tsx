@@ -1162,29 +1162,29 @@ export function UnboxingExperience() {
 
       {/* 2) Fragrance details — atmosphere (impression + mood + metrics), structure (family + accords), styling (pairing) */}
       {showPdpFragranceInfoSection && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
-          <div className="mx-auto max-w-6xl space-y-16">
+        <section className="border-t border-white/10 px-6 py-10 sm:px-10 sm:py-12 md:px-14 lg:px-20">
+          <div className="mx-auto max-w-6xl space-y-10">
             {showFragranceAtmosphereBlock && (
               <div>
                 <h2
-                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  className="mb-5 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   {t(siteCopy.product.fragranceGroupAtmosphere)}
                 </h2>
-                <div className="space-y-10">
+                <div className="space-y-6">
                   {(impressionText || wearMomentText) && (
-                    <div className="grid gap-8 lg:grid-cols-2">
+                    <div className="grid gap-5 lg:grid-cols-2">
                       {impressionText && (
-                        <div className="border border-white/10 bg-black/20 p-5">
+                        <div className="border border-white/10 bg-black/20 p-4">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.impression)}</p>
-                          <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{impressionText}</p>
+                          <p className="mt-2 text-sm leading-snug text-[#F2F0ED]/80">{impressionText}</p>
                         </div>
                       )}
                       {wearMomentText && (
-                        <div className="border border-white/10 bg-black/20 p-5">
+                        <div className="border border-white/10 bg-black/20 p-4">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.wearContext)}</p>
-                          <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/80">{wearMomentText}</p>
+                          <p className="mt-2 text-sm leading-snug text-[#F2F0ED]/80">{wearMomentText}</p>
                         </div>
                       )}
                     </div>
@@ -1193,7 +1193,7 @@ export function UnboxingExperience() {
                   {moodTagsDisplay.length > 0 && (
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.moodKeywords)}</p>
-                      <div className="mt-4 flex flex-wrap gap-2.5">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         {moodTagsDisplay.map((keyword) => (
                           <span
                             key={keyword}
@@ -1207,29 +1207,29 @@ export function UnboxingExperience() {
                   )}
 
                   {(localIntensity || localLasting || longevityDisplay || sillageDisplay) && (
-                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                       {localIntensity && (
-                        <div className="border border-white/10 bg-black/20 p-4">
+                        <div className="border border-white/10 bg-black/20 p-3">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.presence)}</p>
-                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{localIntensity}</p>
+                          <p className="mt-1.5 text-sm leading-snug text-[#F2F0ED]/80">{localIntensity}</p>
                         </div>
                       )}
                       {localLasting && (
-                        <div className="border border-white/10 bg-black/20 p-4">
+                        <div className="border border-white/10 bg-black/20 p-3">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.endurance)}</p>
-                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{localLasting}</p>
+                          <p className="mt-1.5 text-sm leading-snug text-[#F2F0ED]/80">{localLasting}</p>
                         </div>
                       )}
                       {longevityDisplay ? (
-                        <div className="border border-white/10 bg-black/20 p-4">
+                        <div className="border border-white/10 bg-black/20 p-3">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.longevity)}</p>
-                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{longevityDisplay}</p>
+                          <p className="mt-1.5 text-sm leading-snug text-[#F2F0ED]/80">{longevityDisplay}</p>
                         </div>
                       ) : null}
                       {sillageDisplay ? (
-                        <div className="border border-white/10 bg-black/20 p-4">
+                        <div className="border border-white/10 bg-black/20 p-3">
                           <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.sillage)}</p>
-                          <p className="mt-2 text-sm text-[#F2F0ED]/80">{sillageDisplay}</p>
+                          <p className="mt-1.5 text-sm leading-snug text-[#F2F0ED]/80">{sillageDisplay}</p>
                         </div>
                       ) : null}
                     </div>
@@ -1239,25 +1239,25 @@ export function UnboxingExperience() {
             )}
 
             {showFragranceStructureBlock && (
-              <div className={showFragranceAtmosphereBlock ? "border-t border-white/10 pt-16" : ""}>
+              <div className={showFragranceAtmosphereBlock ? "border-t border-white/10 pt-10" : ""}>
                 <h2
-                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  className="mb-5 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   {t(siteCopy.product.fragranceGroupStructure)}
                 </h2>
-                <div className="space-y-8">
+                <div className="space-y-5">
                   {!!scentFamilyLabel && (
-                    <div className="border border-white/10 bg-black/15 p-5">
+                    <div className="border border-white/10 bg-black/15 p-4">
                       <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.scentFamily)}</p>
-                      <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/82">{scentFamilyLabel}</p>
+                      <p className="mt-2 text-sm leading-snug text-[#F2F0ED]/82">{scentFamilyLabel}</p>
                     </div>
                   )}
 
                   {localAccords.length > 0 && (
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.accords)}</p>
-                      <div className="mt-4 flex flex-wrap gap-2.5">
+                      <div className="mt-3 flex flex-wrap gap-2">
                         {localAccords.map((accord) => (
                           <span
                             key={accord}
@@ -1277,19 +1277,19 @@ export function UnboxingExperience() {
               <div
                 className={
                   showFragranceAtmosphereBlock || showFragranceStructureBlock
-                    ? "border-t border-white/10 pt-16"
+                    ? "border-t border-white/10 pt-10"
                     : ""
                 }
               >
                 <h2
-                  className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
+                  className="mb-5 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   {t(siteCopy.product.fragranceGroupStyling)}
                 </h2>
-                <div className="max-w-3xl border border-white/10 bg-black/20 p-5">
+                <div className="max-w-3xl border border-white/10 bg-black/20 p-4">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">{t(siteCopy.product.pairing)}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
+                  <p className="mt-2 text-sm leading-snug text-[#F2F0ED]/78" style={{ fontFamily: "var(--font-sans)" }}>
                     {pairingForPdp}
                   </p>
                 </div>
