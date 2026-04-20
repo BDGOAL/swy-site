@@ -1,4 +1,5 @@
-import { Outlet } from "react-router";
+import { useLayoutEffect } from "react";
+import { Outlet, useLocation } from "react-router";
 import { CollectionSearchProvider } from "../context/CollectionSearchContext";
 import { LanguageProvider } from "../context/LanguageContext";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -9,6 +10,13 @@ import { ShoppingCart } from "./ShoppingCart";
 
 function RootContent() {
   const { isCartOpen, closeCart } = useShopify();
+  const location = useLocation();
+
+  /** Reset document scroll on real route changes; skip when navigating to a hash so in-page anchors still work. */
+  useLayoutEffect(() => {
+    if (location.hash) return;
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.search, location.hash]);
 
   return (
     <div 
