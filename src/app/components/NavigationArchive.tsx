@@ -379,13 +379,15 @@ export function NavigationArchive() {
               to={ROUTES.home}
               onClick={onHomeLogoClick}
               className="pointer-events-auto flex origin-left shrink-0 items-center gap-2"
-              style={{ transform: `scale(${logoScale})` }}
+              style={{
+                transform: `scale(${logoScale}) translateZ(0)`,
+                backfaceVisibility: 'hidden',
+              }}
             >
               <img
                 src="https://cdn.shopify.com/s/files/1/0268/0098/0048/files/logo_thin.png?v=1776330250"
                 alt="Scent With You"
                 className="h-8 w-auto sm:h-10"
-                style={{ filter: navIconDropShadow }}
               />
             </LocalizedLink>
 
