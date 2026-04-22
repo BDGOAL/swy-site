@@ -327,7 +327,7 @@ export function LandingPage() {
                     <img
                       src="https://cdn.shopify.com/s/files/1/0268/0098/0048/files/SWY-fif-05.png?v=1776831372"
                       alt={t(siteCopy.brand.logoAlt)}
-                      className="h-auto max-w-none origin-center scale-[1.79] sm:scale-[1.87] md:scale-[0.98] lg:scale-[1.52] xl:scale-[1.58] w-[min(98vw,820px)] sm:w-[min(97vw,980px)] md:w-[min(95vw,560px)] lg:w-[min(92vw,960px)] xl:w-[min(88vw,1060px)]"
+                      className="h-auto max-w-none origin-center scale-[0.895] sm:scale-[0.935] md:scale-[0.49] lg:scale-[0.76] xl:scale-[0.79] w-[min(49vw,410px)] sm:w-[min(48.5vw,490px)] md:w-[min(47.5vw,280px)] lg:w-[min(46vw,480px)] xl:w-[min(44vw,530px)]"
                       style={{
                         filter: "drop-shadow(0 4px 32px rgba(0,0,0,0.48))",
                       }}
