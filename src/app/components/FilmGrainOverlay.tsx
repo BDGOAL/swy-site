@@ -148,6 +148,8 @@ export function FilmGrainOverlay() {
           opacity: 'var(--swy-overlay-light-leak-opacity)',
           background: lightLeak.background,
           mixBlendMode: 'screen',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
         }}
       />
     </>

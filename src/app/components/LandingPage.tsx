@@ -50,8 +50,13 @@ function useLandingHashAlign() {
 export function LandingPage() {
   const { mode } = useTheme();
   const { t } = useLanguage();
-  const { scrollY } = useScroll();
   const heroSceneRef = useRef<HTMLElement | null>(null);
+  const { scrollY } = useScroll();
+  /** Document scroll progress through hero `<section>` — matches legacy `heroP100` range (section height − vh). */
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroSceneRef,
+    offset: ["start start", "end start"],
+  });
   useLandingHashAlign();
 
   const [narrow, setNarrow] = useState(() =>
@@ -183,7 +188,10 @@ export function LandingPage() {
     heroP100 >= (reduce ? 22 : desktopHero ? 27 : 30);
   const showLogo =
     heroP100 < (reduce ? 12 : desktopHero ? 19 : 16);
-  const veilO = Math.min(0.18, (heroP100 / 100) * 0.22);
+  /** Same curve as former `veilO` but MotionValue → no React re-render per scroll step (stabilizes compositing vs global grain/light leak). */
+  const veilOpacityMotion = useTransform(heroScrollProgress, (p) =>
+    Math.min(0.18, Math.max(0, p) * 0.22)
+  );
   const cueO = showQuote ? 0.22 : Math.max(0.18, 1 - (heroP100 / 100) * 0.78);
   const fadeMs = reduce ? 0 : 380;
 
@@ -255,10 +263,11 @@ export function LandingPage() {
 
         {/* Frame 1: logo + scroll cue (sticky viewport). */}
         <div className="relative z-[1] min-h-[100svh] w-full">
-          <div className="sticky top-0 z-10 h-[100svh] min-h-[100dvh] w-full overflow-x-hidden overflow-y-visible">
-            <div
+          {/* overflow-x-clip: horizontal clip without forcing overflow-y:auto (unlike overflow-x-hidden), so mobile document scroll is not trapped in sticky. */}
+          <div className="sticky top-0 z-10 h-[100svh] min-h-[100dvh] w-full overflow-x-clip overflow-y-visible touch-pan-y">
+            <motion.div
               className="pointer-events-none absolute inset-0 z-[5]"
-              style={{ opacity: veilO }}
+              style={{ opacity: veilOpacityMotion }}
               aria-hidden
             >
               <div
@@ -273,7 +282,7 @@ export function LandingPage() {
                 )`,
                 }}
               />
-            </div>
+            </motion.div>
 
             <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-2 sm:px-4">
               <div
@@ -316,7 +325,7 @@ export function LandingPage() {
                     }
                   >
                     <img
-                      src="/swy-logo.png"
+                      src="https://cdn.shopify.com/s/files/1/0268/0098/0048/files/SWY-fif-05.png?v=1776831372"
                       alt={t(siteCopy.brand.logoAlt)}
                       className="h-auto max-w-none origin-center scale-[1.79] sm:scale-[1.87] md:scale-[0.98] lg:scale-[1.52] xl:scale-[1.58] w-[min(98vw,820px)] sm:w-[min(97vw,980px)] md:w-[min(95vw,560px)] lg:w-[min(92vw,960px)] xl:w-[min(88vw,1060px)]"
                       style={{
