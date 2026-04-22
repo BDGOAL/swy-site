@@ -1,17 +1,31 @@
 import { motion, useAnimationFrame } from "motion/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
+
+/** Advance grain position ~1×/s at 60fps — avoids time-based modulo on `t` causing setState storms. */
+const GRAIN_OFFSET_FRAME_INTERVAL = 60;
 
 export function FilmGrainOverlay() {
   const [offset, setOffset] = useState(0);
-  const frameRef = useRef(0);
+  const frameCountRef = useRef(0);
   const { mode } = useTheme();
 
-  // Create dynamic film grain effect - simulating 16mm film
-  useAnimationFrame((t) => {
-    frameRef.current = t;
-    // Update every 3 frames for authentic film grain flicker
-    if (frameRef.current % 50 < 1) {
+  const scratchBackgroundImage = useMemo(() => {
+    const gapStart = Math.random() * 100 + 50;
+    const lineStart = Math.random() * 100 + 50;
+    const lineEnd = Math.random() * 100 + 52;
+    return `repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent ${gapStart}px,
+            rgba(255, 255, 255, 0.5) ${lineStart}px,
+            rgba(255, 255, 255, 0.5) ${lineEnd}px
+          )`;
+  }, []);
+
+  useAnimationFrame(() => {
+    frameCountRef.current += 1;
+    if (frameCountRef.current % GRAIN_OFFSET_FRAME_INTERVAL === 0) {
       setOffset(Math.random() * 200);
     }
   });
@@ -122,13 +136,7 @@ export function FilmGrainOverlay() {
         className="pointer-events-none fixed inset-0 z-[98]"
         style={{
           opacity: 'var(--swy-overlay-scratch-opacity)',
-          backgroundImage: `repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent ${Math.random() * 100 + 50}px,
-            rgba(255, 255, 255, 0.5) ${Math.random() * 100 + 50}px,
-            rgba(255, 255, 255, 0.5) ${Math.random() * 100 + 52}px
-          )`,
+          backgroundImage: scratchBackgroundImage,
           mixBlendMode: 'overlay',
         }}
       />
