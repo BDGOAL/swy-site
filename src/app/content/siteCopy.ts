@@ -222,7 +222,7 @@ export const siteCopy = {
     detailsEyebrow: { en: "Details", zh: "細節" } satisfies Bilingual,
     selectVariant: { en: "Edition", zh: "版本" } satisfies Bilingual,
     volumeLabel: { en: "Capacity", zh: "容量" } satisfies Bilingual,
-    capacityValue: { en: "30ml", zh: "30毫升" } satisfies Bilingual,
+    capacityValue: { en: "100ml", zh: "100毫升" } satisfies Bilingual,
     quantityLabel: { en: "Quantity", zh: "數量" } satisfies Bilingual,
     addToCart: { en: "Add to cart", zh: "加入購物車" } satisfies Bilingual,
     adding: { en: "Adding…", zh: "加入中…" } satisfies Bilingual,
