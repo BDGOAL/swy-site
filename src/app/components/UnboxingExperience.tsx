@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
-import { productShopifyBodyEnglish } from "../data/productShopifyBody";
 import { productPdpStoryBodyEn, productPdpStoryIntroEn } from "../data/productPdpStoryEn";
 import { productPdpStoryBodyZh, productPdpStoryIntroZh } from "../data/productPdpStoryZh";
 import { productImageFallbacks } from "../data/productImageFallbacks";
@@ -30,7 +29,6 @@ import {
   coalesceMetaStringList,
   pdpLocaleString,
   productPairingSuggestion,
-  stripHtmlToText,
   textContainsHan,
 } from "../lib/productLocale";
 import type { Locale } from "../lib/i18n";
@@ -770,14 +768,6 @@ export function UnboxingExperience() {
           ? storyBodyMerged
           : productPdpStoryBodyEn(product.id);
 
-  const shopifyDescriptionZh = stripHtmlToText(shopifyProduct?.description ?? "");
-  const pdpProductDescription =
-    isConfigured && shopifyProduct
-      ? locale === "en"
-        ? productShopifyBodyEnglish(product.id)
-        : shopifyDescriptionZh
-      : "";
-
   const textureImagesList = meta?.textureImages ?? [];
   const textureLeadImage = textureImagesList[0] ?? null;
   const textureImagesRemaining = textureImagesList.slice(1);
@@ -1124,27 +1114,8 @@ export function UnboxingExperience() {
               </p>
             )}
 
-            {pdpProductDescription ? (
-              <div className="mt-10 border-t border-white/10 pt-10">
-                <p
-                  className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45"
-                  style={{ fontFamily: "var(--font-sans)" }}
-                >
-                  {t(siteCopy.product.narrative)}
-                </p>
-                <p
-                  className="max-w-[52ch] text-sm leading-[1.75] text-[#F2F0ED]/70"
-                  style={{ fontFamily: "var(--font-sans)" }}
-                >
-                  {pdpProductDescription}
-                </p>
-              </div>
-            ) : null}
-
             {textureLeadImage?.url ? (
-              <div
-                className={`md:hidden w-full ${pdpProductDescription ? "mt-6" : "mt-10"}`}
-              >
+              <div className="mt-10 w-full md:hidden">
                 <PdpTextureFigure
                   url={textureLeadImage.url}
                   alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
