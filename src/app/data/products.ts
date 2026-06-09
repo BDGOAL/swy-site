@@ -470,11 +470,11 @@ export const products: Product[] = [
     },
     shortStory: {
       en: "Rum, tobacco, and the hush of a room that watches you win.",
-      zh: "煙草與蘭姆在初上燈火的房間裡交錯，魅力在沉默中蔓延。",
+      zh: "華燈初上，煙草與蘭姆在黑暗裡交錯——這夜，屬於我。",
     },
     longStory: {
       en: "The night I first tasted success, the room was heavy with smoke and rum. I was in control—confident, certain, aware of every glance that found me.",
-      zh: "煙草味與蘭姆酒味在華燈初上的房間裡輕盈交錯，魅力在不語中蔓延。",
+      zh: "華燈初上。窗外中環的交界依舊人來人往。霓虹拉扯出失焦的光線，每個人都在急於將自己推銷給這座城市。這夜，屬於我。",
     },
     scentFamily: { en: "Confidence & Allure", zh: "自信與魅力" },
     moodTags: {

@@ -4,6 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
 import { productShopifyBodyEnglish } from "../data/productShopifyBody";
 import { productPdpStoryBodyEn, productPdpStoryIntroEn } from "../data/productPdpStoryEn";
+import { productPdpStoryBodyZh, productPdpStoryIntroZh } from "../data/productPdpStoryZh";
 import { productImageFallbacks } from "../data/productImageFallbacks";
 import { BOTTLE_IMAGE } from "../data/bottleImage";
 import { useShopify } from "../context/ShopifyContext";
@@ -748,20 +749,23 @@ export function UnboxingExperience() {
     (meta?.storyBody ?? storyMetafieldsShopDefault?.body ?? "") as string
   ).trim();
 
+  const localZhIntro = productPdpStoryIntroZh(product.id);
+  const localZhBody = productPdpStoryBodyZh(product.id);
+
   const pdpStoryIntroDisplay =
-    !hasShopifyStorySource
-      ? ""
-      : locale === "zh"
-        ? storyIntroMerged
+    locale === "zh"
+      ? localZhIntro || storyIntroMerged
+      : !hasShopifyStorySource
+        ? ""
         : storyIntroMerged && !textContainsHan(storyIntroMerged)
           ? storyIntroMerged
           : productPdpStoryIntroEn(product.id);
 
   const pdpStoryBodyDisplay =
-    !hasShopifyStorySource
-      ? ""
-      : locale === "zh"
-        ? storyBodyMerged
+    locale === "zh"
+      ? localZhBody || storyBodyMerged
+      : !hasShopifyStorySource
+        ? ""
         : storyBodyMerged && !textContainsHan(storyBodyMerged)
           ? storyBodyMerged
           : productPdpStoryBodyEn(product.id);
@@ -1051,7 +1055,7 @@ export function UnboxingExperience() {
 
             {pdpStoryIntroDisplay ? (
               <p
-                className="mt-5 max-w-2xl text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
+                className="mt-5 max-w-2xl whitespace-pre-line text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {pdpStoryIntroDisplay}
@@ -1059,7 +1063,7 @@ export function UnboxingExperience() {
             ) : null}
             {pdpStoryBodyDisplay ? (
               <p
-                className="mt-5 max-w-2xl text-[12px] leading-relaxed text-[#F2F0ED]/62 sm:text-[13px]"
+                className="mt-5 max-w-2xl whitespace-pre-line text-[12px] leading-relaxed text-[#F2F0ED]/62 sm:text-[13px]"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {pdpStoryBodyDisplay}
