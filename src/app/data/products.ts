@@ -98,7 +98,7 @@ export const products: Product[] = [
       en: "The last snow fell as I graduated, in a city where winter lasted half the year. The air was sharp, the sky pale, the streets washed quiet in white.",
       zh: "在半載冬季的城市，雪花靜靜墜落，為畢業那年畫上最後溫柔的句號。",
     },
-    scentFamily: { en: "Endings & Beginnings", zh: "結束與開始" },
+    scentFamily: { en: "Woody Floral", zh: "木質花香" },
     moodTags: {
       en: ["Snowlight", "Farewell", "Quiet bloom"],
       zh: ["雪光", "告別", "靜靜綻放"],
@@ -118,12 +118,12 @@ export const products: Product[] = [
       zh: "可與 The Morning After I Quit 疊擦，為清冽前調添一層晨光與亞麻般的舒張感。",
     },
     notes: nl(
-      ["橙花", "Orange"],
+      ["橙", "Orange"],
       ["小蒼蘭", "鈴蘭", "Freesia", "Lily of the Valley"],
-      ["廣藿香", "喀什米爾木", "白雪松", "Patchouli", "Cashmere Wood", "White Cedarwood"]
+      ["廣藿香", "開司米木", "白雪松", "Patchouli", "Cashmere Wood", "White Cedarwood"]
     ),
     accords: accFromNotes(
-      ["橙花", "Orange"],
+      ["橙", "Orange"],
       ["小蒼蘭", "鈴蘭", "Freesia", "Lily of the Valley"]
     ),
     price: 128,
@@ -152,7 +152,7 @@ export const products: Product[] = [
       en: "I was young, with little to my name. All I could offer was a single rose—the only rose I could afford, yet it carried every part of me.",
       zh: "在青春流轉的黃昏，想用一朵玫瑰，訴說難得的純真與愛戀。",
     },
-    scentFamily: { en: "Innocence & Pure Love", zh: "純真與初戀" },
+    scentFamily: { en: "Modern Floral Woody", zh: "現代花香木調" },
     moodTags: {
       en: ["First blush", "Petal warmth", "Youth"],
       zh: ["初綻", "花瓣溫度", "年少"],
@@ -206,7 +206,10 @@ export const products: Product[] = [
       en: "At the neighbor's house, the air was filled with lemon and herbs, the warmth of meals, the comfort of laughter. It wasn't mine, yet it felt like home.",
       zh: "舊唐樓走廊，鄰居曬過的檸檬皮香氣，斜陽下的溫度。",
     },
-    scentFamily: { en: "Safety & Childhood Warmth", zh: "溫暖與童年" },
+    scentFamily: {
+      en: "Aromatic Herbal, Spices & Warm Resins",
+      zh: "芳香草本、香料與溫暖樹脂",
+    },
     moodTags: {
       en: ["Kitchen light", "Belonging", "Unhurried"],
       zh: ["廚房餘光", "歸屬", "從容"],
@@ -228,7 +231,7 @@ export const products: Product[] = [
     notes: nl(
       ["檸檬", "佛手柑", "小豆蔻", "Lemon", "Bergamot", "Cardamom"],
       ["鼠尾草", "茉莉", "薰衣草", "丁香", "Sage", "Jasmine", "Lavender", "Clove"],
-      ["岩薔薇", "琥珀", "苔蘚", "廣藿香", "乳香", "Labdanum", "Amber", "Moss", "Patchouli", "Frankincense"]
+      ["勞丹脂", "琥珀", "苔蘚", "廣藿香", "乳香", "Labdanum", "Amber", "Moss", "Patchouli", "Frankincense"]
     ),
     accords: accFromNotes(
       ["檸檬", "佛手柑", "小豆蔻", "Lemon", "Bergamot", "Cardamom"],
@@ -260,7 +263,7 @@ export const products: Product[] = [
       en: "I spent most of my school days in the library. The air was heavy with books—paper, ink, and the quiet rustle of pages.",
       zh: "昏黃午後的光影輕鋪在老木書架間，紙張油墨交織的氣味。",
     },
-    scentFamily: { en: "Knowledge & Friendship", zh: "知識與友誼" },
+    scentFamily: { en: "Dry Woody, Green & Deep Ambers", zh: "乾木、綠意與深邃琥珀" },
     moodTags: {
       en: ["Paper", "Oak", "Quiet hours"],
       zh: ["紙頁", "橡木", "安靜時光"],
@@ -280,13 +283,13 @@ export const products: Product[] = [
       zh: "可與 It means no worries 疊擦，為書架沉香添一層檸檬與廚房餘溫般的明亮。",
     },
     notes: nl(
-      ["橙花", "佛手柑", "迷迭香", "Orange", "Bergamot", "Rosemary"],
-      ["沉香", "天竺葵", "Oud", "Geranium"],
-      ["琥珀", "麝香", "岩蘭草", "Amber", "Musk", "Vetiver"]
+      ["橙", "迷迭香", "Orange", "Rosemary"],
+      ["沉香木", "天竺葵", "Oud", "Geranium"],
+      ["琥珀", "香根草", "Amber", "Vetiver"]
     ),
     accords: accFromNotes(
-      ["橙花", "佛手柑", "迷迭香", "Orange", "Bergamot", "Rosemary"],
-      ["沉香", "天竺葵", "Oud", "Geranium"]
+      ["橙", "迷迭香", "Orange", "Rosemary"],
+      ["沉香木", "天竺葵", "Oud", "Geranium"]
     ),
     price: 128,
     currency: "HKD",
@@ -314,7 +317,10 @@ export const products: Product[] = [
       en: "The air was thick with sawdust and leather, the scent of wood, tools, and time well spent. My grandfather was always building—his hands shaping what would last.",
       zh: "男人需要的是屬於自己的一隅天地，微光和皮革座椅的舒適氣息。",
     },
-    scentFamily: { en: "Craft, Solitude & Quiet Romance", zh: "獨處、沉靜與實現夢想的過程" },
+    scentFamily: {
+      en: "Bold Spices, Soothing Herbs & Mature Leather",
+      zh: "鮮明香料、舒緩草本與成熟皮革",
+    },
     moodTags: {
       en: ["Workshop", "Leather", "Patience"],
       zh: ["工坊", "皮革", "耐心"],
@@ -335,12 +341,12 @@ export const products: Product[] = [
     },
     notes: nl(
       ["羅勒", "黑胡椒", "Basil", "Black Pepper"],
-      ["薰衣草", "百里香", "Lavender", "Thyme"],
-      ["廣藿香", "岩蘭草", "皮革", "Patchouli", "Vetiver", "Leather"]
+      ["皮革", "薰衣草", "百里香", "Leather", "Lavender", "Thyme"],
+      ["香根草", "廣藿香", "Vetiver", "Patchouli"]
     ),
     accords: accFromNotes(
       ["羅勒", "黑胡椒", "Basil", "Black Pepper"],
-      ["薰衣草", "百里香", "Lavender", "Thyme"]
+      ["皮革", "薰衣草", "百里香", "Leather", "Lavender", "Thyme"]
     ),
     price: 128,
     currency: "HKD",
@@ -368,10 +374,13 @@ export const products: Product[] = [
       en: "The day I held my first paycheck, I told myself: I want to be rich. I will be rich. I am rich.",
       zh: "第一次拿到薪水的那天，富有並不在於擁有多少，而在於敢於相信生活的可能。",
     },
-    scentFamily: { en: "Ambition & Self-Belief", zh: "野心與自信" },
+    scentFamily: {
+      en: "Intertwined Florals, Metallic Aldehydes & Sharp Spices",
+      zh: "交織花香、金屬醛與銳利香料",
+    },
     moodTags: {
       en: ["Resolve", "Metal gleam", "Self-possession"],
-      zh: "決心、冷光、自持",
+      zh: ["決心", "冷光", "自持"],
     },
     impression: {
       en: "Sharpened air, cool metal, conviction without a speech.",
@@ -389,12 +398,12 @@ export const products: Product[] = [
     },
     notes: nl(
       ["小豆蔻", "胡椒", "Cardamom", "Pepper"],
-      ["玫瑰葉", "金色橙花", "金屬醛", "Rose Leaf", "Golden Neroli", "Metallic Aldehyde"],
-      ["銀麝香", "雪松", "Silver Musk", "Cedarwood"]
+      ["金屬醛香", "金色橙花", "Metallic Aldehydes", "Gold Orange Blossom"],
+      ["銀色麝香", "雪松", "Silver Musk", "Cedarwood"]
     ),
     accords: accFromNotes(
       ["小豆蔻", "胡椒", "Cardamom", "Pepper"],
-      ["玫瑰葉", "金色橙花", "金屬醛", "Rose Leaf", "Golden Neroli", "Metallic Aldehyde"]
+      ["金屬醛香", "金色橙花", "Metallic Aldehydes", "Gold Orange Blossom"]
     ),
     price: 128,
     currency: "HKD",
@@ -422,7 +431,10 @@ export const products: Product[] = [
       en: "The morning after I quit my first job, I woke to silence, sunlight spilling across the sheets. For the first time in a long while, I could breathe without weight.",
       zh: "陽光靜靜穿過紗窗，沒有鬧鐘、沒有老闆的訊息，是與自己的久別重逢。",
     },
-    scentFamily: { en: "Release & Relief", zh: "釋放與解脫" },
+    scentFamily: {
+      en: "Bright Citrus, Clean Linen & Serene Woods",
+      zh: "明亮柑橘、潔淨亞麻與靜謐木質",
+    },
     moodTags: {
       en: ["Clean sheets", "Daylight", "Relief"],
       zh: ["乾淨床單", "日光", "釋然"],
@@ -442,13 +454,13 @@ export const products: Product[] = [
       zh: "可與 It means no worries 疊擦，延續同樣從容的柑橘與亞麻氣息。",
     },
     notes: nl(
-      ["佛手柑", "柑橘", "紫丁香", "Bergamot", "Mandarin", "Lilac"],
-      ["白亞麻", "山楂花", "White Linen", "Hawthorn"],
-      ["麝香", "雪松", "檀香", "Musk", "Cedarwood", "Sandalwood"]
+      ["佛手柑", "紫丁香", "Bergamot", "Lilac"],
+      ["白亞麻香調", "White Linen Accord"],
+      ["雪松", "檀香", "Cedarwood", "Sandalwood"]
     ),
     accords: accFromNotes(
-      ["佛手柑", "柑橘", "紫丁香", "Bergamot", "Mandarin", "Lilac"],
-      ["白亞麻", "山楂花", "White Linen", "Hawthorn"]
+      ["佛手柑", "紫丁香", "Bergamot", "Lilac"],
+      ["白亞麻香調", "White Linen Accord"]
     ),
     price: 128,
     currency: "HKD",
@@ -476,7 +488,10 @@ export const products: Product[] = [
       en: "The night I first tasted success, the room was heavy with smoke and rum. I was in control—confident, certain, aware of every glance that found me.",
       zh: "華燈初上。窗外中環的交界依舊人來人往。霓虹拉扯出失焦的光線，每個人都在急於將自己推銷給這座城市。這夜，屬於我。",
     },
-    scentFamily: { en: "Confidence & Allure", zh: "自信與魅力" },
+    scentFamily: {
+      en: "Rich Spirits, Dry Tobacco & Grounded Woods",
+      zh: "豐潤烈酒、乾燥煙草與沉穩木質",
+    },
     moodTags: {
       en: ["Smoke", "Rum", "Low light"],
       zh: ["煙霧", "蘭姆", "低光"],
@@ -496,13 +511,13 @@ export const products: Product[] = [
       zh: "可與 I'm Rich 疊擦，以冷冽金屬光提煉煙草與蘭姆的夜色層次。",
     },
     notes: nl(
-      ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
-      ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"],
-      ["岩蘭草", "麝香", "煙草", "Vetiver", "Musk", "Tobacco"]
+      ["黑胡椒", "Black Pepper"],
+      ["琥珀", "天芥菜", "Amber", "Heliotrope"],
+      ["香根草", "煙草", "Vetiver", "Tobacco"]
     ),
     accords: accFromNotes(
-      ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
-      ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"]
+      ["黑胡椒", "Black Pepper"],
+      ["琥珀", "天芥菜", "Amber", "Heliotrope"]
     ),
     price: 128,
     currency: "HKD",

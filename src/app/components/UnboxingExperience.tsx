@@ -738,7 +738,6 @@ export function UnboxingExperience() {
   const meta = shopifyProduct?.metafields;
   const displayName = product.name;
 
-  const hasShopifyStorySource = Boolean(isConfigured && shopifyProduct && meta);
   /** Merged: in-context metafields + shop-default fetch (restores Chinese when EN context omits). */
   const storyIntroMerged = (
     (meta?.storyIntro ?? storyMetafieldsShopDefault?.intro ?? "") as string
@@ -749,38 +748,29 @@ export function UnboxingExperience() {
 
   const localZhIntro = productPdpStoryIntroZh(product.id);
   const localZhBody = productPdpStoryBodyZh(product.id);
+  const localEnIntro = productPdpStoryIntroEn(product.id);
+  const localEnBody = productPdpStoryBodyEn(product.id);
 
   const pdpStoryIntroDisplay =
     locale === "zh"
       ? localZhIntro || storyIntroMerged
-      : !hasShopifyStorySource
-        ? ""
-        : storyIntroMerged && !textContainsHan(storyIntroMerged)
-          ? storyIntroMerged
-          : productPdpStoryIntroEn(product.id);
+      : localEnIntro ||
+        (storyIntroMerged && !textContainsHan(storyIntroMerged) ? storyIntroMerged : "");
 
   const pdpStoryBodyDisplay =
     locale === "zh"
       ? localZhBody || storyBodyMerged
-      : !hasShopifyStorySource
-        ? ""
-        : storyBodyMerged && !textContainsHan(storyBodyMerged)
-          ? storyBodyMerged
-          : productPdpStoryBodyEn(product.id);
+      : localEnBody ||
+        (storyBodyMerged && !textContainsHan(storyBodyMerged) ? storyBodyMerged : "");
 
   const textureImagesList = meta?.textureImages ?? [];
   const textureLeadImage = textureImagesList[0] ?? null;
   const textureImagesRemaining = textureImagesList.slice(1);
 
-  const topNotes = meta?.topNotes?.length
-    ? coalesceMetaStringList(meta.topNotes, locale, productNotesTop(product, locale))
-    : productNotesTop(product, locale);
-  const heartNotes = meta?.heartNotes?.length
-    ? coalesceMetaStringList(meta.heartNotes, locale, productNotesHeart(product, locale))
-    : productNotesHeart(product, locale);
-  const baseNotes = meta?.baseNotes?.length
-    ? coalesceMetaStringList(meta.baseNotes, locale, productNotesBase(product, locale))
-    : productNotesBase(product, locale);
+  /** Local `products.ts` note pyramid is the approved source of truth. */
+  const topNotes = productNotesTop(product, locale);
+  const heartNotes = productNotesHeart(product, locale);
+  const baseNotes = productNotesBase(product, locale);
   const hasNotes = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
 
   const localAccords = productAccords(product, locale);

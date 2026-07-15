@@ -44,9 +44,9 @@ Knowledge & Friendship
 Where paper and silence keep your growing heart in trust.
 我的青蔥歲月，大多留在老圖書館裡。昏黃午後的光影輕鋪在老木書架間，紙張油墨交織的氣味，藏著與青春的竊竊私語。知識、友情，青春都在這間書房裡緩緩發酵，把歷史和夢想輕輕收藏。溫柔發酵的時光，靜靜陪我走過成長。你的什麼回憶，被時光與書頁靜靜地封存？
 I spent most of my school days in the library. The air was heavy with books—paper, ink, and the quiet rustle of pages. It wasn't just about knowledge. It was about the laughter shared in hushed voices, the hours lost with friends between the shelves, the feeling that time itself lived there. The old library held more than books. It held the shape of who I was becoming. This was my chapter. Tell me, what was yours?
-Orange, Bergamot, Rosemary
+Orange, Rosemary
 Oud, Geranium
-Amber, Musk, Vetiver
+Amber, Vetiver
 
 The Men's Garage
 男人車庫
@@ -57,8 +57,8 @@ When duty clocks out, curiosity clocks in.
 我總在想，男人需要的或許不是虛華或紙醉金迷，而是屬於自己的一隅天地——屬於自己的車庫。在那裡，世界可以暫時關掉；只剩微光和空氣裡那些低沈、貼地、塵埃飛揚的味道。它聞起來像深夜裡，溫暖而沉穩的皮革座椅上，那種剛結束長途奔波後的舒適氣息。人在車庫裡，世界彷彿變得簡單，理想和心事可以安然沉澱。偶爾三五知己來訪，靜坐片刻，大家心底的重擔緩緩放下，回到那個只屬於男人們的Men's Talk Time。浪漫，可以很低調，卻充滿了只有自己才懂的、無可替代的浪漫情懷。你會不會也有個空間，悄悄收藏著自己的夢想和奇想？
 Whenever I visited my grandparents, I would look for him in the garage. The air was thick with sawdust and leather, the scent of wood, tools, and time well spent. My grandfather was always building—his hands shaping what would last. And when I was small enough to help, the world felt bigger, brighter, as if I was building too. That garage was more than a room. It was where I learned that care is made, with patience, with hands, with love. This was my foundation. Tell me, what was yours?
 Basil, Black Pepper
-Lavender, Thyme
-Patchouli, Vetiver, Leather
+Leather, Lavender, Thyme
+Vetiver, Patchouli
 
 I'm Rich
 我很富有
@@ -69,7 +69,7 @@ When your worth begins long before the numbers do.
 記得第一次拿到薪水的那天，我站在鏡子前，靜靜看著自己。手裡的鈔票不只是收入，更像人生新頁悄然展開。花香與辛辣彼此交纏，彷彿象徵著生命裡的無限可能和身處艱難的堅持。我慢慢發現，富有並不在於擁有多少，而在於每一個出發的早上，敢於向自己點頭，敢於相信生活的可能。真正的「富有」，往往是內在世界無懼枯竭的自信與能量。你，有否也在每一天早晨時，和自己默默打了個氣？
 The day I held my first paycheck, I told myself: I want to be rich. I will be rich. I am rich. It wasn't about the money. It was about ambition, about the freedom I was chasing, about becoming the person I wanted to be. That moment, I wasn't just earning—I was already rich, in possibility, in belief, in myself. This was my voice. Tell me, what was yours?
 Cardamom, Pepper
-Rose Leaf, Golden Neroli, Metallic Aldehyde
+Metallic Aldehydes, Gold Orange Blossom
 Silver Musk, Cedarwood
 
 The Morning After I Quit
@@ -80,9 +80,9 @@ Release & Relief
 When the loudest freedom is the silence you wake to.
 初次醒來於不再被打擾的清晨，陽光靜靜穿過紗窗，曬在微涼的被鋪上。格外安靜，沒有鬧鐘、沒有老闆的訊息，空氣裡只剩下呼吸與發呆的自由。躺在床上的一刻，卸下所有束縛，是與自己的久別重逢。繁華落盡後的安靜，原來才是真正生活的開始。你經歷過哪一刻，真正感受到自由與釋放？
 The morning after I quit my first job, I woke to silence, sunlight spilling across the sheets. For the first time in a long while, I could breathe without weight, without the heaviness of yesterday. I stayed in bed, doing nothing, and in that nothing I felt free. This was my release. Tell me, what was yours?
-Bergamot, Mandarin, Lilac
-White Linen, Hawthorn
-Musk, Cedarwood, Sandalwood
+Bergamot, Lilac
+White Linen Accord
+Cedarwood, Sandalwood
 
 The Night Was Mine
 那夜屬於我
@@ -110,6 +110,6 @@ Where unspoken confidence lingers longer than the night.
 
 這夜，屬於我。
 The night I first tasted success, the room was heavy with smoke and rum. I was in control—confident, certain, aware of every glance that found me. For the first time, I knew I was stunning. Not because of what I wore, but because of what I had done. This was my arrival. Tell me, what was yours?
-Black Pepper, Elemi
-Amber, Heliotrope, Rum
-Vetiver, Musk, Tobacco
+Black Pepper
+Amber, Heliotrope
+Vetiver, Tobacco
