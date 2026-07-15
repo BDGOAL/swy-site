@@ -64,6 +64,9 @@ function SearchResultRow({
           alt={item.imageAlt}
           className="h-full w-full object-cover object-center"
           loading="lazy"
+          decoding="async"
+          width={864}
+          height={1184}
         />
       </div>
       <div className="min-w-0 flex-1">
@@ -437,7 +440,7 @@ export function NavigationArchive() {
                 <button
                   type="button"
                   onClick={toggleSearchPanel}
-                  className="pointer-events-auto inline-flex items-center justify-center rounded border border-white/15 p-2 text-[#F2F0ED]/75 transition hover:text-[#F2F0ED]"
+                  className="pointer-events-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded border border-white/15 p-2 text-[#F2F0ED]/75 transition hover:text-[#F2F0ED] lg:min-h-0 lg:min-w-0"
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     filter: navIconDropShadow,
@@ -465,7 +468,7 @@ export function NavigationArchive() {
                 <button
                   type="button"
                   onClick={openCart}
-                  className="pointer-events-auto inline-flex rounded border p-2 lg:hidden"
+                  className="pointer-events-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded border p-2 lg:hidden"
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
@@ -478,7 +481,7 @@ export function NavigationArchive() {
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                  className="pointer-events-auto inline-flex rounded border p-2 lg:hidden"
+                  className="pointer-events-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded border p-2 lg:hidden"
                   style={{
                     color: `rgba(242, 240, 237, ${accentAlpha})`,
                     borderColor: `rgba(255, 255, 255, ${lerp(0.15, 0.1, recess)})`,
@@ -617,6 +620,8 @@ export function NavigationArchive() {
               className="fixed right-0 top-0 z-[105] flex h-[100dvh] w-full max-w-md flex-col bg-[#0A0A0A] shadow-[0_0_80px_rgba(0,0,0,0.65)] lg:hidden"
               style={{
                 border: '0.5px solid rgba(242,240,237,0.15)',
+                paddingTop: 'env(safe-area-inset-top, 0px)',
+                paddingBottom: 'env(safe-area-inset-bottom, 0px)',
               }}
             >
               <div
@@ -642,9 +647,9 @@ export function NavigationArchive() {
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="inline-flex shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
+                  className="inline-flex min-h-[44px] shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
                   style={{ fontFamily: 'var(--font-sans)' }}
-                  aria-label={t(siteCopy.product.cartDrawerClose)}
+                  aria-label={t(siteCopy.nav.menuClose)}
                 >
                   <X size={16} strokeWidth={1.75} className="opacity-80" aria-hidden />
                   {t(siteCopy.product.cartDrawerClose)}

@@ -2,19 +2,24 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   type ReactNode,
 } from "react";
 import { useSearchParams } from "react-router";
 import type { Bilingual, Locale } from "../lib/i18n";
-import { localeFromSearchParams, withLangPath } from "../lib/i18n";
+import {
+  htmlLangForLocale,
+  localeFromSearchParams,
+  withLangPath,
+} from "../lib/i18n";
 
 type LanguageContextValue = {
   locale: Locale;
   setLocale: (next: Locale) => void;
   /** Pick localized string from a bilingual pair */
   t: (pair: Bilingual) => string;
-  /** Append/remove `lang=zh` while preserving path and hash */
+  /** Apply current locale to a path (Chinese default omits `lang`; English uses `?lang=en`) */
   localizePath: (path: string) => string;
 };
 
@@ -28,20 +33,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [searchParams]
   );
 
+  useEffect(() => {
+    document.documentElement.lang = htmlLangForLocale(locale);
+  }, [locale]);
+
   const setLocale = useCallback(
     (next: Locale) => {
       const nextParams = new URLSearchParams(searchParams);
-      if (next === "zh") nextParams.set("lang", "zh");
+      if (next === "en") nextParams.set("lang", "en");
       else nextParams.delete("lang");
       setSearchParams(nextParams, { replace: true });
     },
     [searchParams, setSearchParams]
   );
 
-  const t = useCallback(
-    (pair: Bilingual) => pair[locale],
-    [locale]
-  );
+  const t = useCallback((pair: Bilingual) => pair[locale], [locale]);
 
   const localizePath = useCallback(
     (path: string) => withLangPath(path, locale),

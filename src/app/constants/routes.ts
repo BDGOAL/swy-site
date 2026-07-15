@@ -1,4 +1,4 @@
-/** Top-level app routes (no hash). Use with `withLangPath` / `localizePath` for locale query. */
+/** Top-level app routes (no hash). Use with `withLangPath` / `localizePath` (Chinese default omits `lang`; English uses `?lang=en`). */
 export const ROUTES = {
   home: "/",
   collection: "/collection",

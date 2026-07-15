@@ -111,7 +111,7 @@ export function localizeSearchableItem(
 /** Local fallback row for search panel when catalog has not hydrated yet. */
 export function getStaticSearchableItem(
   productId: string,
-  locale: Locale = "en"
+  locale: Locale = "zh"
 ): SearchableCollectionItem | null {
   const p: Product | undefined = products.find((pr) => pr.id === productId);
   if (!p) return null;

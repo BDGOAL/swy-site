@@ -23,10 +23,10 @@ function escapeXml(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
+/** Chinese is the site default (no `lang` query). Sitemap lists canonical Chinese URLs. */
 function makeUrl(pathname: string): string {
   const url = new URL(BASE_URL);
   url.pathname = pathname;
-  url.searchParams.set("lang", "zh");
   return url.toString();
 }
 

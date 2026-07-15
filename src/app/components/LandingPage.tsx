@@ -305,7 +305,7 @@ export function LandingPage() {
                   <motion.div
                     className="flex flex-col items-center"
                     animate={
-                      narrow
+                      narrow || reduce
                         ? { y: 0, x: 0, rotate: 0 }
                         : {
                             y: [0, -9.5, 2.5, 8, -3, 0],
@@ -314,7 +314,7 @@ export function LandingPage() {
                           }
                     }
                     transition={
-                      narrow
+                      narrow || reduce
                         ? { duration: 0 }
                         : {
                             duration: 10.5,
@@ -343,10 +343,10 @@ export function LandingPage() {
             </div>
 
             <p
-              className="pointer-events-none absolute bottom-8 left-1/2 z-[45] -translate-x-1/2 text-[9px] uppercase tracking-[0.32em] text-[#F2F0ED]/28 sm:bottom-12"
+              className="pointer-events-none absolute left-1/2 z-[45] -translate-x-1/2 text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/28"
               style={{
                 opacity: cueO,
-                paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                bottom: "max(2rem, calc(1.25rem + env(safe-area-inset-bottom, 0px)))",
               }}
             >
               {t(siteCopy.landing.hero.scrollCue)}
@@ -485,7 +485,7 @@ export function LandingPage() {
               </motion.p>
             </div>
             <motion.p
-              className="mt-12 max-w-[30ch] text-center text-[11px] font-normal leading-[1.75] tracking-[0.13em] text-[#F2F0ED] sm:mt-14 sm:max-w-[32ch] sm:text-[12px] md:mt-16 md:tracking-[0.14em] lg:mt-16 lg:max-w-[36ch] lg:text-[13px]"
+              className="mt-12 max-w-[30ch] text-center text-[12px] font-normal leading-[1.75] tracking-[0.13em] text-[#F2F0ED] sm:mt-14 sm:max-w-[32ch] sm:text-[12px] md:mt-16 md:tracking-[0.14em] lg:mt-16 lg:max-w-[36ch] lg:text-[13px]"
               initial={false}
               animate={
                 reduce

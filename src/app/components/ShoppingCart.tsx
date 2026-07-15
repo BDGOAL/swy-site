@@ -95,9 +95,11 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-drawer-title"
-            className="fixed right-0 top-0 z-[115] flex h-screen w-full max-w-md flex-col bg-[#0A0A0A] shadow-[0_0_80px_rgba(0,0,0,0.65)]"
+            className="fixed right-0 top-0 z-[115] flex h-[100dvh] w-full max-w-md flex-col bg-[#0A0A0A] shadow-[0_0_80px_rgba(0,0,0,0.65)]"
             style={{
               border: '0.5px solid rgba(242,240,237,0.15)',
+              paddingTop: 'env(safe-area-inset-top, 0px)',
+              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
             }}
           >
             <div
@@ -123,7 +125,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
+                className="inline-flex min-h-[44px] shrink-0 items-center gap-2 border border-white/25 px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/90 transition hover:border-white/40 hover:bg-white/[0.06]"
                 style={{ fontFamily: 'var(--font-sans)' }}
                 aria-label={t(siteCopy.product.cartDrawerClose)}
               >
@@ -143,7 +145,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                       color: '#F2F0ED',
                     }}
                   >
-                    YOUR CART IS EMPTY
+                    {t(siteCopy.product.cartEmpty)}
                   </p>
                 </div>
               ) : (
@@ -168,6 +170,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                             alt={item.title}
                             className="h-full w-full object-cover object-center grayscale"
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : null}
                       </div>
@@ -200,13 +203,14 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                             onClick={() =>
                               updateQuantity(item.lineId, item.quantity - 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
+                            className="flex h-11 w-11 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
+                            aria-label="-"
                           >
-                            <Minus size={12} color="#F2F0ED" />
+                            <Minus size={14} color="#F2F0ED" />
                           </button>
 
                           <span
-                            className="w-6 text-center text-[10px] tracking-wider"
+                            className="min-w-8 text-center text-[12px] tracking-wider"
                             style={{
                               fontFamily: 'var(--font-sans)',
                               color: '#F2F0ED',
@@ -220,21 +224,23 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                             onClick={() =>
                               updateQuantity(item.lineId, item.quantity + 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
+                            className="flex h-11 w-11 items-center justify-center border border-[#F2F0ED]/20 transition-colors hover:border-[#F2F0ED]/40"
+                            aria-label="+"
                           >
-                            <Plus size={12} color="#F2F0ED" />
+                            <Plus size={14} color="#F2F0ED" />
                           </button>
 
                           <button
                             type="button"
                             onClick={() => removeFromCart(item.lineId)}
-                            className="ml-auto text-[8px] tracking-wider opacity-40 transition-opacity hover:opacity-100"
+                            className="ml-auto min-h-[44px] px-2 text-[10px] uppercase tracking-wider opacity-50 transition-opacity hover:opacity-100"
                             style={{
                               fontFamily: 'var(--font-sans)',
                               color: '#F2F0ED',
                             }}
+                            aria-label={t(siteCopy.product.cartRemove)}
                           >
-                            REMOVE
+                            {t(siteCopy.product.cartRemove)}
                           </button>
                         </div>
                       </div>
@@ -290,7 +296,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                       color: '#F2F0ED',
                     }}
                   >
-                    Subtotal
+                    {t(siteCopy.product.cartSubtotal)}
                   </span>
                   <span
                     className="text-sm tracking-wider"
@@ -306,7 +312,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                 <button
                   type="button"
                   onClick={handleCheckout}
-                  className="group flex w-full items-center justify-center border border-[#F2F0ED] py-4 transition-all duration-300 hover:bg-[#F2F0ED] hover:text-[#0A0A0A]"
+                  className="group flex min-h-[48px] w-full items-center justify-center border border-[#F2F0ED] py-4 transition-all duration-300 hover:bg-[#F2F0ED] hover:text-[#0A0A0A]"
                   style={{
                     fontFamily: 'var(--font-sans)',
                     fontSize: '10px',
@@ -315,8 +321,8 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                   }}
                 >
                   {isCreatingCheckout
-                    ? 'CREATING CHECKOUT...'
-                    : 'PROCEED TO CHECKOUT'}
+                    ? t(siteCopy.product.cartCreatingCheckout)
+                    : t(siteCopy.product.cartCheckout)}
                 </button>
 
                 {checkoutError && (

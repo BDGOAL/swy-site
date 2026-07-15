@@ -7,8 +7,10 @@ export function pickLocale(b: Bilingual, locale: Locale): string {
 }
 
 /**
- * Preserves hash and merges `lang` query for Traditional Chinese.
- * Example: withLangPath("/#story-continue", "zh") -> "/?lang=zh#story-continue"
+ * Preserves hash and merges `lang` for English.
+ * Traditional Chinese is the site default (no `lang` query).
+ * Example: withLangPath("/#story-continue", "zh") -> "/#story-continue"
+ * Example: withLangPath("/collection", "en") -> "/collection?lang=en"
  */
 export function withLangPath(path: string, locale: Locale): string {
   const hashIndex = path.indexOf("#");
@@ -18,14 +20,35 @@ export function withLangPath(path: string, locale: Locale): string {
   const pathname = qIndex >= 0 ? beforeHash.slice(0, qIndex) : beforeHash;
   const query = qIndex >= 0 ? beforeHash.slice(qIndex + 1) : "";
   const params = new URLSearchParams(query);
-  if (locale === "zh") params.set("lang", "zh");
+  if (locale === "en") params.set("lang", "en");
   else params.delete("lang");
   const qs = params.toString();
   const base = qs ? `${pathname}?${qs}` : pathname;
   return `${base}${hash}`;
 }
 
+/**
+ * Resolve UI locale from `?lang=`.
+ * - missing / unknown => zh (Traditional Chinese default)
+ * - en => en
+ * - zh / zh-HK / zh-TW => zh
+ */
 export function localeFromSearchParams(lang: string | null): Locale {
-  if (lang === "zh" || lang === "zh-TW" || lang === "zh-HK") return "zh";
-  return "en";
+  if (!lang) return "zh";
+  const normalized = lang.trim().toLowerCase().replace(/_/g, "-");
+  if (normalized === "en" || normalized.startsWith("en-")) return "en";
+  if (
+    normalized === "zh" ||
+    normalized === "zh-hk" ||
+    normalized === "zh-tw" ||
+    normalized.startsWith("zh-")
+  ) {
+    return "zh";
+  }
+  return "zh";
+}
+
+/** HTML `lang` attribute values for the active UI locale. */
+export function htmlLangForLocale(locale: Locale): string {
+  return locale === "zh" ? "zh-HK" : "en";
 }

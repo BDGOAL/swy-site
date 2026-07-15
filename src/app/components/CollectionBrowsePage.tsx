@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import { motion } from "motion/react";
 import { siteCopy } from "../content/siteCopy";
 import { products, type Product } from "../data/products";
@@ -24,7 +24,6 @@ type MoodFilter = "all" | Product["mood"];
 
 export function CollectionBrowsePage() {
   const { t, locale, localizePath } = useLanguage();
-  const navigate = useNavigate();
   const [mood, setMood] = useState<MoodFilter>("all");
   const [featuredById, setFeaturedById] = useState<Record<string, BrowseCollectionFeatured>>({});
 
@@ -108,7 +107,7 @@ export function CollectionBrowsePage() {
                   type="button"
                   onClick={() => setMood(key)}
                   aria-pressed={mood === key}
-                  className={`rounded-sm border px-3 py-2 text-[10px] uppercase tracking-[0.16em] transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 ${
+                  className={`min-h-[44px] rounded-sm border px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 ${
                     mood === key
                       ? "border-[#F2F0ED]/32 bg-[#F2F0ED]/[0.07] text-[#F2F0ED]"
                       : "border-white/10 bg-black/20 text-[#F2F0ED]/48 hover:border-white/16 hover:text-[#F2F0ED]/72"
@@ -132,7 +131,7 @@ export function CollectionBrowsePage() {
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 min-[360px]:grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p) => {
             const pitch = getLocalizedElevatorPitch(p.id, locale);
             const teaser = pitch.trim() || productTagline(p, locale);
@@ -150,19 +149,25 @@ export function CollectionBrowsePage() {
             return (
               <motion.article
                 key={p.id}
-                className="group cursor-pointer overflow-hidden border border-white/10 bg-black/25 shadow-[0_8px_28px_rgba(0,0,0,0.28)] transition-colors duration-300 hover:border-white/20"
-                onClick={() => navigate(localizePath(ROUTES.product(p.id)))}
+                className="group overflow-hidden border border-white/10 bg-black/25 shadow-[0_8px_28px_rgba(0,0,0,0.28)] transition-colors duration-300 hover:border-white/20"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.45 }}
               >
+                <Link
+                  to={localizePath(ROUTES.product(p.id))}
+                  className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0E14]"
+                >
                 <div className="aspect-[864/1184] w-full overflow-hidden">
                   <img
                     src={imageUrl}
                     alt={imageAlt}
+                    width={864}
+                    height={1184}
                     className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="space-y-3 p-4 sm:p-5">
@@ -210,6 +215,7 @@ export function CollectionBrowsePage() {
                     ) : null}
                   </div>
                 </div>
+                </Link>
               </motion.article>
             );
           })}

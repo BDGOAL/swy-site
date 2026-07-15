@@ -248,6 +248,14 @@ export const siteCopy = {
     explore: { en: "Explore", zh: "探索" } satisfies Bilingual,
     floatingCart: { en: "Cart", zh: "購物車" } satisfies Bilingual,
     cartDrawerClose: { en: "Close", zh: "關閉" } satisfies Bilingual,
+    cartEmpty: { en: "Your cart is empty", zh: "購物車是空的" } satisfies Bilingual,
+    cartRemove: { en: "Remove", zh: "移除" } satisfies Bilingual,
+    cartSubtotal: { en: "Subtotal", zh: "小計" } satisfies Bilingual,
+    cartCheckout: { en: "Proceed to checkout", zh: "前往結帳" } satisfies Bilingual,
+    cartCreatingCheckout: {
+      en: "Creating checkout…",
+      zh: "正在建立結帳…",
+    } satisfies Bilingual,
     fallback: {
       description: { en: "Description coming soon.", zh: "更多內容即將補上。" } satisfies Bilingual,
       imageAlt: { en: "Product image", zh: "產品圖片" } satisfies Bilingual,

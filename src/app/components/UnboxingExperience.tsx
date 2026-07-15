@@ -1045,7 +1045,7 @@ export function UnboxingExperience() {
 
             {pdpStoryIntroDisplay ? (
               <p
-                className="mt-5 max-w-2xl whitespace-pre-line text-[13px] leading-relaxed text-[#F2F0ED]/76 sm:text-sm"
+                className="mt-5 max-w-2xl whitespace-pre-line text-[13px] leading-[1.75] text-[#F2F0ED]/76 sm:text-sm"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {pdpStoryIntroDisplay}
@@ -1053,7 +1053,7 @@ export function UnboxingExperience() {
             ) : null}
             {pdpStoryBodyDisplay ? (
               <p
-                className="mt-5 max-w-2xl whitespace-pre-line text-[12px] leading-relaxed text-[#F2F0ED]/62 sm:text-[13px]"
+                className="mt-5 max-w-2xl whitespace-pre-line text-[12px] leading-[1.75] text-[#F2F0ED]/62 sm:text-[13px]"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {pdpStoryBodyDisplay}
@@ -1082,7 +1082,7 @@ export function UnboxingExperience() {
                 <select
                   value={selectedVariant?.id || ""}
                   onChange={(e) => setSelectedVariantId(e.target.value)}
-                  className="w-full border border-white/15 bg-black/30 px-4 py-3 text-sm text-[#F2F0ED]"
+                  className="min-h-[44px] w-full border border-white/15 bg-black/30 px-4 py-3 text-sm text-[#F2F0ED]"
                 >
                   {variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
@@ -1097,7 +1097,7 @@ export function UnboxingExperience() {
             <button
               onClick={handleAddToCart}
               disabled={isAddingToCart || !selectedVariant || !selectedVariant.availableForSale}
-              className="mt-8 inline-flex w-full items-center justify-center gap-3 border border-white/25 bg-white/10 px-6 py-4 text-[11px] uppercase tracking-[0.26em] text-[#F2F0ED] transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-8 inline-flex min-h-[48px] w-full items-center justify-center gap-3 border border-white/25 bg-white/10 px-6 py-4 text-[11px] uppercase tracking-[0.26em] text-[#F2F0ED] transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               <ShoppingBag size={16} />

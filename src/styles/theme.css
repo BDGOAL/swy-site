@@ -222,6 +222,9 @@
     font-size: var(--font-size);
     background-color: #0A0A0A;
     scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -233,6 +236,8 @@
   body {
     @apply bg-background text-foreground;
     background-color: #0A0A0A;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /**

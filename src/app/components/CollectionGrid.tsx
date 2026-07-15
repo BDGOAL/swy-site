@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import { products } from "../data/products";
 import { getLocalizedElevatorPitch } from "../data/collectionElevatorPitches";
 import { useCollectionSearch } from "../context/CollectionSearchContext";
@@ -27,13 +27,11 @@ type ShopifyImage = { url: string; altText?: string | null };
 
 function ProductCard({
   item,
-  navigate,
   compact,
   toProduct,
   viewStoryLabel,
 }: {
   item: SearchableCollectionItem;
-  navigate: ReturnType<typeof useNavigate>;
   compact: boolean;
   toProduct: (id: string) => string;
   viewStoryLabel: string;
@@ -45,96 +43,94 @@ function ProductCard({
 
   return (
     <motion.article
-      className="group cursor-pointer overflow-hidden border border-white/10 bg-black/25 shadow-[0_8px_28px_rgba(0,0,0,0.28)] transition-colors duration-300 hover:border-white/20"
-      onClick={() => navigate(toProduct(item.id))}
+      className="group overflow-hidden border border-white/10 bg-black/25 shadow-[0_8px_28px_rgba(0,0,0,0.28)] transition-colors duration-300 hover:border-white/20"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="aspect-[864/1184] w-full overflow-hidden">
-        <img
-          src={item.imageUrl}
-          alt={item.imageAlt}
-          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-          loading="lazy"
-        />
-      </div>
-      <div
-        className={
-          compact ? "space-y-2 px-2.5 py-3" : "space-y-4 p-5 sm:p-6"
-        }
+      <Link
+        to={toProduct(item.id)}
+        className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0E14]"
       >
-        <div>
-          <h3
-            className={
-              compact
-                ? "text-[13px] leading-snug text-[#F2F0ED]"
-                : "text-xl leading-tight text-[#F2F0ED]"
-            }
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            {item.title}
-          </h3>
-          <p
-            className={
-              compact
-                ? "mt-1.5 line-clamp-1 text-[11px] leading-snug text-[#F2F0ED]/68"
-                : "mt-3 line-clamp-2 text-sm leading-relaxed text-[#F2F0ED]/68"
-            }
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            {teaser}
-          </p>
-          <p
-            className="mt-1.5 text-[9px] uppercase tracking-[0.22em] text-[#F2F0ED]/38 transition group-hover:text-[#F2F0ED]/55 sm:text-[10px]"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            {viewStoryLabel}
-          </p>
+        <div className="aspect-[864/1184] w-full overflow-hidden">
+          <img
+            src={item.imageUrl}
+            alt={item.imageAlt}
+            width={864}
+            height={1184}
+            className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
-
         <div
           className={
-            compact
-              ? "space-y-1.5 border-t border-white/10 pt-2"
-              : "space-y-3 border-t border-white/10 pt-4"
+            compact ? "space-y-2 px-2.5 py-3" : "space-y-4 p-5 sm:p-6"
           }
         >
-          {item.scentFamily && (
+          <div>
+            <h3
+              className={
+                compact
+                  ? "text-[13px] leading-snug text-[#F2F0ED]"
+                  : "text-xl leading-tight text-[#F2F0ED]"
+              }
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {item.title}
+            </h3>
             <p
               className={
                 compact
-                  ? "text-[9px] uppercase tracking-[0.2em] text-[#F2F0ED]/48"
-                  : "text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/48"
+                  ? "mt-1.5 line-clamp-2 text-[12px] leading-snug text-[#F2F0ED]/68"
+                  : "mt-3 line-clamp-2 text-sm leading-relaxed text-[#F2F0ED]/68"
               }
+              style={{ fontFamily: "var(--font-sans)" }}
             >
-              {item.scentFamily}
+              {teaser}
             </p>
-          )}
-          {!!item.moodKeywords.length && (
-            <div className={`flex flex-wrap ${moodGap}`}>
-              {item.moodKeywords.slice(0, moodLimit).map((keyword) => (
-                <span
-                  key={`${item.id}-${keyword}`}
-                  className={`border border-white/14 bg-black/10 ${moodPad} uppercase tracking-[0.08em] text-[#F2F0ED]/68 ${
-                    compact ? "text-[9px]" : "text-[10px]"
-                  }`}
-                >
-                  {keyword}
-                </span>
-              ))}
-            </div>
-          )}
+            <p
+              className="mt-1.5 text-[10px] uppercase tracking-[0.22em] text-[#F2F0ED]/38 transition group-hover:text-[#F2F0ED]/55"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {viewStoryLabel}
+            </p>
+          </div>
+
+          <div
+            className={
+              compact
+                ? "space-y-1.5 border-t border-white/10 pt-2"
+                : "space-y-3 border-t border-white/10 pt-4"
+            }
+          >
+            {item.scentFamily && (
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/48">
+                {item.scentFamily}
+              </p>
+            )}
+            {!!item.moodKeywords.length && (
+              <div className={`flex flex-wrap ${moodGap}`}>
+                {item.moodKeywords.slice(0, moodLimit).map((keyword) => (
+                  <span
+                    key={`${item.id}-${keyword}`}
+                    className={`border border-white/14 bg-black/10 ${moodPad} text-[10px] uppercase tracking-[0.08em] text-[#F2F0ED]/68`}
+                  >
+                    {keyword}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </Link>
     </motion.article>
   );
 }
 
 export function CollectionGrid() {
-  const navigate = useNavigate();
   const { locale, t, localizePath } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const { setItems } = useCollectionSearch();
@@ -331,13 +327,12 @@ export function CollectionGrid() {
       </div>
 
       <div 
-        className="relative z-[50] mx-auto grid max-w-[1600px] grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        className="relative z-[50] mx-auto grid max-w-[1600px] grid-cols-1 min-[360px]:grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         {displayData.map((item) => (
           <ProductCard
             key={item.id}
             item={item}
-            navigate={navigate}
             compact={compactCards}
             toProduct={(id) => localizePath(ROUTES.product(id))}
             viewStoryLabel={t(siteCopy.landing.collectionPreview.viewStory)}

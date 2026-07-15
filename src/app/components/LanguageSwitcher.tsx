@@ -6,7 +6,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const { locale, setLocale, t } = useLanguage();
 
   const segmentBase =
-    "min-w-[3.35rem] rounded-full px-2.5 py-1 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/40 focus-visible:ring-offset-1 focus-visible:ring-offset-[#0a0a0a]";
+    "inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full px-2.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/40 focus-visible:ring-offset-1 focus-visible:ring-offset-[#0a0a0a] lg:min-h-0 lg:min-w-[3.35rem] lg:py-1";
 
   return (
     <div
