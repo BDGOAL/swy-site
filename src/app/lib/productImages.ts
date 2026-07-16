@@ -54,15 +54,14 @@ export function pdpImageAlt(
 }
 
 /**
- * Collection / related card image:
- * custom.story_image → featuredImage → null (dark wrapper only)
+ * Collection / search / related card image:
+ * featuredImage → null (dark wrapper only)
  */
-export function resolveStoryCardImage(opts: {
-  storyImage?: ProductImage | null;
+export function resolveProductCardImage(opts: {
   featuredImage?: ProductImage | null;
   productName: string;
 }): ProductImage | null {
-  const pick = opts.storyImage ?? opts.featuredImage ?? null;
+  const pick = opts.featuredImage ?? null;
   if (!pick) return null;
   return { ...pick, alt: cardImageAlt(opts.productName, pick.alt) };
 }

@@ -8,7 +8,7 @@ Storefront API version: see `VITE_SHOPIFY_STORE_DOMAIN` / token env vars and `sr
 
 | Surface | Prefer | Then | If none |
 |---------|--------|------|---------|
-| Collection / landing / related card | `custom.story_image` | Product **featured image** | Dark aspect wrapper only (no stock / bottle fallback) |
+| Collection / landing / related card | Product **featured image** | — | Dark aspect wrapper only (no stock / bottle fallback) |
 | PDP main | Product **featured image** | First gallery image | Dark product-image stage only |
 | PDP gallery | Product **media / images** (Admin order, deduped; featured prepended only if absent) | — | Empty gallery (no fallback URL) |
 | PDP scent-story narrative slot | `custom.story_image` only | — | Nothing (dark wrapper only if the image node renders and then fails to load) |
@@ -37,12 +37,13 @@ These are **independent placements** with different jobs:
 |-----------|-----------|------|
 | PDP **Scent story** narrative slot | Always `custom.story_image` | Editorial pause between story intro and body (`intro → image → body`) |
 | Product Media / featured / gallery | Admin Product media only | Bottle / hero / alternate product shots on the PDP gallery |
-| Collection / card | Prefers `custom.story_image`, then featured | Browse card crop |
+| Collection / landing / search / related card | Always Product **featured image** | Product thumbnail crop |
 
 Rules:
 
 - A valid `custom.story_image` **always** renders in the dedicated PDP narrative slot.
 - The same file **may also** appear in Product Media if you want that crop in the gallery — the storefront does **not** suppress the narrative slot when URLs match.
+- Collection-style thumbnails do **not** use `custom.story_image`; they use Shopify `featuredImage` only.
 - Do **not** expect the narrative slot to inject itself into the gallery, and do **not** mix `story_image` into `texture_images`.
 - Product Media keeps its own URL deduplication; that does not affect the narrative slot.
 
@@ -50,15 +51,16 @@ Rules:
 
 1. **Products** → open a product (e.g. The Last Snow).  
 2. Upload / reorder **Product media**. The **first media item** is the featured product image (PDP main + gallery start).  
-3. In **Metafields**, set **Story image** (`custom.story_image`) to the narrative / collection crop.  
-4. Optionally also add that crop (or a different one) to Product Media if it should appear in the gallery.  
-5. Fill **ALT text** on each media image (and the story image file).  
-6. **Save**.
+3. In **Metafields**, set **Story image** (`custom.story_image`) to the PDP narrative crop.
+4. Choose the Shopify **featured image** for collection / landing / search / related thumbnails.
+5. Optionally also add the story crop (or a different one) to Product Media if it should appear in the gallery.
+6. Fill **ALT text** on each media image (and the story image file).
+7. **Save**.
 
 ### Recommended media order
 
 1. Product front (bottle / hero — featured)  
-2. Optional story / campaign crop in Product Media (gallery only; narrative still comes from the metafield)  
+2. Optional story / campaign crop in Product Media (gallery only; thumbnails still come from the featured image)
 3. Bottle close-up  
 4. Packaging  
 5. Unboxing  

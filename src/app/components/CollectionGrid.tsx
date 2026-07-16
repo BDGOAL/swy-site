@@ -12,7 +12,7 @@ import { shopifyConfig } from "../config/shopify";
 import {
   asProductImage,
   hideImageOnError,
-  resolveStoryCardImage,
+  resolveProductCardImage,
 } from "../lib/productImages";
 
 function useMediaQuery(query: string) {
@@ -170,13 +170,6 @@ export function CollectionGrid() {
                   title
                   featuredImage { url altText width height }
                   storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
-                  storyImage: metafield(namespace: "custom", key: "story_image") {
-                    reference {
-                      ... on MediaImage {
-                        image { url altText width height }
-                      }
-                    }
-                  }
                   scentFamily: metafield(namespace: "custom", key: "scent_family") { value }
                 }
               }
@@ -211,12 +204,8 @@ export function CollectionGrid() {
             const localProduct = products.find((p) => p.id === localId);
             if (!localProduct) return null;
 
-            const storyImage = asProductImage(
-              node?.product?.storyImage?.reference?.image
-            );
             const featuredImage = asProductImage(node?.product?.featuredImage);
-            const card = resolveStoryCardImage({
-              storyImage,
+            const card = resolveProductCardImage({
               featuredImage,
               productName: localProduct.name,
             });
@@ -260,7 +249,7 @@ export function CollectionGrid() {
   const fallbackCollectionData = useMemo(
     () =>
       products.map((product) => {
-        const card = resolveStoryCardImage({
+        const card = resolveProductCardImage({
           productName: product.name,
         });
         return {

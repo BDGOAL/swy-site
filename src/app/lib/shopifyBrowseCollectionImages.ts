@@ -2,23 +2,23 @@ import { products } from "../data/products";
 import { shopifyConfig } from "../config/shopify";
 import {
   asProductImage,
-  resolveStoryCardImage,
+  resolveProductCardImage,
 } from "./productImages";
 
 /** Card data for /collection — resolved card image + variant price from Shopify. */
 export type BrowseCollectionFeatured = {
-  /** Resolved card image: story_image → featuredImage (absent from map when neither exists). */
+  /** Resolved card image: featuredImage only (absent from map when unavailable). */
   url: string;
   alt: string;
   width?: number | null;
   height?: number | null;
-  /** Which Shopify field supplied the card image. */
-  imageSource: "story_image" | "featuredImage";
+  /** Shopify field supplying the card image. */
+  imageSource: "featuredImage";
   price?: { amount: string; currencyCode: string };
 };
 
 /**
- * Fetches story_image + featuredImage per local catalog id via variant GIDs.
+ * Fetches featuredImage per local catalog id via variant GIDs.
  * Returns partial map; callers render dark card background when id is missing.
  */
 export async function fetchBrowseCollectionFeaturedImages(): Promise<
@@ -46,13 +46,6 @@ export async function fetchBrowseCollectionFeaturedImages(): Promise<
           }
           product {
             featuredImage { url altText width height }
-            storyImage: metafield(namespace: "custom", key: "story_image") {
-              reference {
-                ... on MediaImage {
-                  image { url altText width height }
-                }
-              }
-            }
           }
         }
       }
@@ -83,14 +76,10 @@ export async function fetchBrowseCollectionFeaturedImages(): Promise<
       const localProduct = products.find((p) => p.id === localId);
       if (!localProduct) continue;
 
-      const storyImage = asProductImage(
-        node?.product?.storyImage?.reference?.image
-      );
       const featuredImage = asProductImage(node?.product?.featuredImage);
-      if (!storyImage && !featuredImage) continue;
+      if (!featuredImage) continue;
 
-      const resolved = resolveStoryCardImage({
-        storyImage,
+      const resolved = resolveProductCardImage({
         featuredImage,
         productName: localProduct.name,
       });
@@ -103,7 +92,7 @@ export async function fetchBrowseCollectionFeaturedImages(): Promise<
         alt: resolved.alt || `SWY ${localProduct.name} perfume`,
         width: resolved.width,
         height: resolved.height,
-        imageSource: storyImage ? "story_image" : "featuredImage",
+        imageSource: "featuredImage",
         ...(amount && currencyCode
           ? { price: { amount, currencyCode } }
           : {}),

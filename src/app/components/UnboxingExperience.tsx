@@ -10,7 +10,7 @@ import {
   hideImageOnError,
   resolveFeaturedImage,
   resolveGalleryImages,
-  resolveStoryCardImage,
+  resolveProductCardImage,
   pdpImageAlt,
 } from "../lib/productImages";
 import { useShopify } from "../context/ShopifyContext";
@@ -60,7 +60,6 @@ type RelatedScent = {
   handle: string;
   title: string;
   image?: ShopifyImage | null;
-  storyImage?: ShopifyImage | null;
   storyIntro?: string;
 };
 type ProductMetafields = {
@@ -432,13 +431,6 @@ export function UnboxingExperience() {
                           handle
                           title
                           featuredImage { url altText width height }
-                          storyImage: metafield(namespace: "custom", key: "story_image") {
-                            reference {
-                              ... on MediaImage {
-                                image { url altText width height }
-                              }
-                            }
-                          }
                           storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
                         }
                       }
@@ -523,7 +515,6 @@ export function UnboxingExperience() {
               handle: n.handle,
               title: n.title,
               image: n.featuredImage,
-              storyImage: n.storyImage?.reference?.image || null,
               storyIntro: n.storyIntro?.value || "",
             })),
           },
@@ -638,13 +629,6 @@ export function UnboxingExperience() {
                   title
                   featuredImage { url altText width height }
                   storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
-                  storyImage: metafield(namespace: "custom", key: "story_image") {
-                    reference {
-                      ... on MediaImage {
-                        image { url altText width height }
-                      }
-                    }
-                  }
                 }
               }
             }
@@ -682,7 +666,6 @@ export function UnboxingExperience() {
               handle: rp.handle,
               title: rp.title,
               image: rp.featuredImage || null,
-              storyImage: rp.storyImage?.reference?.image || null,
               storyIntro: rp.storyIntro?.value || "",
             } as RelatedScent;
           })
@@ -854,7 +837,6 @@ export function UnboxingExperience() {
       title: p.name,
       storyIntro: productDescriptor(p, locale),
       image: null,
-      storyImage: null,
     }));
 
   const relatedScents = meta?.relatedScents?.length
@@ -872,7 +854,6 @@ export function UnboxingExperience() {
               title: p.name,
               storyIntro: productDescriptor(p, locale),
               image: null,
-              storyImage: null,
             }));
 
   const relatedScentsResolved = relatedScents
@@ -1521,8 +1502,7 @@ export function UnboxingExperience() {
               {relatedScentsResolved.slice(0, 3).map(({ related, localId }) => {
                 const lp = products.find((p) => p.id === localId);
                 const localizedTitle = lp ? lp.name : related.title;
-                const card = resolveStoryCardImage({
-                  storyImage: asProductImage(related.storyImage),
+                const card = resolveProductCardImage({
                   featuredImage: asProductImage(related.image),
                   productName: localizedTitle,
                 });
@@ -1531,7 +1511,6 @@ export function UnboxingExperience() {
                   console.log("[ContinueTheScentStory] image", {
                     handle: related.handle,
                     title: related.title,
-                    storyImage: related.storyImage?.url,
                     featuredImage: related.image?.url,
                     finalImage: card?.url ?? null,
                   });
