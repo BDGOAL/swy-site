@@ -801,8 +801,12 @@ export function UnboxingExperience() {
   const hasNotes = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
 
   const localAccords = productAccords(product, locale);
+  const scentFamilyRaw = meta?.scentFamily?.trim() ?? "";
+  const scentFamilyLocalized = scentFamilyRaw
+    ? noteLineForLocale(scentFamilyRaw, locale)
+    : "";
   const scentFamilyLabel = pdpLocaleString(
-    meta?.scentFamily,
+    scentFamilyLocalized || undefined,
     locale,
     productScentFamily(product, locale)
   );
