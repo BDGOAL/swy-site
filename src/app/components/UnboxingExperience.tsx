@@ -785,16 +785,9 @@ export function UnboxingExperience() {
   const textureLeadImage = textureImagesList[0] ?? null;
   const textureImagesRemaining = textureImagesList.slice(1);
 
-  /** PDP narrative/mood slot: story_image only; skip when URL already appears in Product Media. */
+  /** PDP narrative/mood slot: dedicated custom.story_image (may share URL with Product Media). */
   const narrativeMoodImage = asProductImage(meta?.storyImage);
-  const productMediaUrls = new Set(
-    [shopifyFeatured?.url, ...shopifyGallery.map((img) => img.url)].filter(
-      (url): url is string => Boolean(url)
-    )
-  );
-  const showNarrativeMoodImage = Boolean(
-    narrativeMoodImage?.url && !productMediaUrls.has(narrativeMoodImage.url)
-  );
+  const showNarrativeMoodImage = Boolean(narrativeMoodImage?.url);
 
   /** Local `products.ts` note pyramid is the approved source of truth. */
   const topNotes = productNotesTop(product, locale);
@@ -1239,15 +1232,6 @@ export function UnboxingExperience() {
               </p>
             ) : null}
 
-            {pdpStoryBodyDisplay ? (
-              <p
-                className={`mt-5 max-w-2xl whitespace-pre-line text-[15px] text-[#F2F0ED]/68 ${storyLeadingClass}`}
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                {pdpStoryBodyDisplay}
-              </p>
-            ) : null}
-
             {showNarrativeMoodImage && narrativeMoodImage ? (
               <div className="mt-6 max-w-2xl overflow-hidden border border-white/10 bg-black/30">
                 <div className="aspect-[864/1184] w-full max-h-[min(36vh,18rem)] sm:max-h-[min(42vh,22rem)] lg:max-h-[min(48vh,26rem)]">
@@ -1266,6 +1250,15 @@ export function UnboxingExperience() {
                   />
                 </div>
               </div>
+            ) : null}
+
+            {pdpStoryBodyDisplay ? (
+              <p
+                className={`mt-5 max-w-2xl whitespace-pre-line text-[15px] text-[#F2F0ED]/68 ${storyLeadingClass}`}
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {pdpStoryBodyDisplay}
+              </p>
             ) : null}
           </div>
         </div>
