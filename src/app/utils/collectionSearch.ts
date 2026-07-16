@@ -3,7 +3,6 @@ import {
   getLocalizedElevatorPitch,
   getSearchBoostForProductId,
 } from "../data/collectionElevatorPitches";
-import { BOTTLE_IMAGE } from "../data/bottleImage";
 import type { Locale } from "../lib/i18n";
 import {
   productDescriptor,
@@ -20,7 +19,8 @@ export type SearchableCollectionItem = {
   elevatorPitch: string;
   scentFamily: string;
   moodKeywords: string[];
-  imageUrl: string;
+  /** Shopify-resolved card image URL, or null when Admin has no usable image. */
+  imageUrl: string | null;
   imageAlt: string;
 };
 
@@ -104,7 +104,7 @@ export function localizeSearchableItem(
     elevatorPitch: getLocalizedElevatorPitch(p.id, locale),
     scentFamily: productScentFamily(p, locale),
     moodKeywords: productMoodTags(p, locale),
-    imageAlt: productName(p, locale),
+    imageAlt: item.imageAlt?.trim() || `SWY ${productName(p, locale)} perfume`,
   };
 }
 
@@ -122,8 +122,8 @@ export function getStaticSearchableItem(
     elevatorPitch: getLocalizedElevatorPitch(p.id, locale),
     scentFamily: productScentFamily(p, locale),
     moodKeywords: productMoodTags(p, locale),
-    imageUrl: BOTTLE_IMAGE,
-    imageAlt: productName(p, locale),
+    imageUrl: null,
+    imageAlt: `SWY ${productName(p, locale)} perfume`,
   };
 }
 

@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { motion } from "motion/react";
 import { siteCopy } from "../content/siteCopy";
 import { products, type Product } from "../data/products";
-import { BOTTLE_IMAGE } from "../data/bottleImage";
+import { hideImageOnError } from "../lib/productImages";
 import { useLanguage } from "../context/LanguageContext";
 import { ROUTES } from "../constants/routes";
 import { getLocalizedElevatorPitch } from "../data/collectionElevatorPitches";
@@ -144,8 +144,9 @@ export function CollectionBrowsePage() {
                     locale
                   )
                 : productPriceDisplay(p, locale);
-            const imageUrl = featured?.url || BOTTLE_IMAGE;
-            const imageAlt = featured?.alt?.trim() || productName(p, locale);
+            const imageUrl = featured?.url ?? null;
+            const imageAlt =
+              featured?.alt?.trim() || `SWY ${productName(p, locale)} perfume`;
             return (
               <motion.article
                 key={p.id}
@@ -160,15 +161,18 @@ export function CollectionBrowsePage() {
                   className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0E14]"
                 >
                 <div className="aspect-[864/1184] w-full overflow-hidden">
-                  <img
-                    src={imageUrl}
-                    alt={imageAlt}
-                    width={864}
-                    height={1184}
-                    className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={imageAlt}
+                      width={featured?.width || 864}
+                      height={featured?.height || 1184}
+                      className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                      loading="lazy"
+                      decoding="async"
+                      onError={hideImageOnError}
+                    />
+                  ) : null}
                 </div>
                 <div className="space-y-3 p-4 sm:p-5">
                   <div>

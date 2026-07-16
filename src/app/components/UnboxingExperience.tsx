@@ -4,8 +4,15 @@ import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
 import { productPdpStoryBodyEn, productPdpStoryIntroEn } from "../data/productPdpStoryEn";
 import { productPdpStoryBodyZh, productPdpStoryIntroZh } from "../data/productPdpStoryZh";
-import { productImageFallbacks } from "../data/productImageFallbacks";
-import { BOTTLE_IMAGE } from "../data/bottleImage";
+import {
+  asProductImage,
+  asProductImages,
+  hideImageOnError,
+  resolveFeaturedImage,
+  resolveGalleryImages,
+  resolveStoryCardImage,
+  pdpImageAlt,
+} from "../lib/productImages";
 import { useShopify } from "../context/ShopifyContext";
 import { shopifyConfig } from "../config/shopify";
 import { siteCopy } from "../content/siteCopy";
@@ -254,11 +261,15 @@ export function UnboxingExperience() {
                   featuredImage {
                     url
                     altText
+                    width
+                    height
                   }
                   images(first: 12) {
                     nodes {
                       url
                       altText
+                      width
+                      height
                     }
                   }
                   variants(first: 50) {
@@ -287,7 +298,7 @@ export function UnboxingExperience() {
                   storyImage: metafield(namespace: "custom", key: "story_image") {
                     reference {
                       ... on MediaImage {
-                        image { url altText }
+                        image { url altText width height }
                       }
                     }
                   }
@@ -418,11 +429,11 @@ export function UnboxingExperience() {
                           id
                           handle
                           title
-                          featuredImage { url altText }
+                          featuredImage { url altText width height }
                           storyImage: metafield(namespace: "custom", key: "story_image") {
                             reference {
                               ... on MediaImage {
-                                image { url altText }
+                                image { url altText width height }
                               }
                             }
                           }
@@ -623,12 +634,12 @@ export function UnboxingExperience() {
                   id
                   handle
                   title
-                  featuredImage { url altText }
+                  featuredImage { url altText width height }
                   storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
                   storyImage: metafield(namespace: "custom", key: "story_image") {
                     reference {
                       ... on MediaImage {
-                        image { url altText }
+                        image { url altText width height }
                       }
                     }
                   }
@@ -701,19 +712,24 @@ export function UnboxingExperience() {
     );
   }
 
-  const fallbackImage = productImageFallbacks[product.id] || "";
-  const galleryUrls = [
-    ...(product.featuredImage ? [product.featuredImage] : []),
-    ...(product.gallery ?? []),
-  ].filter(Boolean);
-  const allImages = shopifyProduct?.images?.length
-    ? shopifyProduct.images
-    : galleryUrls.length
-      ? galleryUrls.map((url) => ({ url, altText: product.name }))
-      : fallbackImage
-        ? [{ url: fallbackImage, altText: product.name }]
-        : [];
-  const selectedImage = allImages[selectedImageIndex] || allImages[0] || null;
+  const shopifyFeatured = asProductImage(shopifyProduct?.featuredImage);
+  const shopifyGallery = asProductImages(shopifyProduct?.images);
+  const allImages = resolveGalleryImages({
+    featuredImage: shopifyFeatured,
+    images: shopifyGallery,
+    productName: product.name,
+  });
+  const primaryImage = resolveFeaturedImage({
+    featuredImage: shopifyFeatured,
+    galleryImages: allImages,
+    productName: product.name,
+  });
+  const safeImageIndex =
+    allImages.length > 0
+      ? Math.min(Math.max(selectedImageIndex, 0), allImages.length - 1)
+      : 0;
+  const selectedImage =
+    allImages[safeImageIndex] ?? primaryImage ?? null;
   const variants = shopifyProduct?.variants?.length
     ? shopifyProduct.variants
     : product.shopifyVariantId
@@ -992,8 +1008,15 @@ export function UnboxingExperience() {
                 {selectedImage ? (
                   <img
                     src={selectedImage.url}
-                    alt={selectedImage.altText || displayName}
+                    alt={pdpImageAlt(displayName, selectedImage.alt)}
+                    width={selectedImage.width || 864}
+                    height={selectedImage.height || 1184}
                     className="h-full w-full object-cover object-center"
+                    decoding="async"
+                    {...(safeImageIndex === 0
+                      ? { fetchPriority: "high" as const }
+                      : { loading: "lazy" as const })}
+                    onError={hideImageOnError}
                   />
                 ) : (
                   <div className="h-full w-full bg-black/30" />
@@ -1007,13 +1030,18 @@ export function UnboxingExperience() {
                     key={`${img.url}-${idx}`}
                     type="button"
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`overflow-hidden border ${idx === selectedImageIndex ? "border-white/40" : "border-white/10"} bg-black/20`}
+                    className={`overflow-hidden border ${idx === safeImageIndex ? "border-white/40" : "border-white/10"} bg-black/20`}
                   >
                     <div className="aspect-[864/1184] w-full">
                       <img
                         src={img.url}
-                        alt={img.altText || displayName}
+                        alt={pdpImageAlt(displayName, img.alt)}
+                        width={img.width || 864}
+                        height={img.height || 1184}
                         className="h-full w-full object-cover object-center"
+                        loading="lazy"
+                        decoding="async"
+                        onError={hideImageOnError}
                       />
                     </div>
                   </button>
@@ -1332,10 +1360,13 @@ export function UnboxingExperience() {
             </h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {relatedScentsResolved.slice(0, 3).map(({ related, localId }) => {
-                const imageUrl =
-                  related.storyImage?.url ??
-                  related.image?.url ??
-                  BOTTLE_IMAGE;
+                const lp = products.find((p) => p.id === localId);
+                const localizedTitle = lp ? lp.name : related.title;
+                const card = resolveStoryCardImage({
+                  storyImage: asProductImage(related.storyImage),
+                  featuredImage: asProductImage(related.image),
+                  productName: localizedTitle,
+                });
 
                 if (import.meta.env.DEV) {
                   console.log("[ContinueTheScentStory] image", {
@@ -1343,12 +1374,10 @@ export function UnboxingExperience() {
                     title: related.title,
                     storyImage: related.storyImage?.url,
                     featuredImage: related.image?.url,
-                    finalImage: imageUrl,
+                    finalImage: card?.url ?? null,
                   });
                 }
 
-                const lp = products.find((p) => p.id === localId);
-                const localizedTitle = lp ? lp.name : related.title;
                 const localizedIntro = coalesceMetaText(
                   related.storyIntro,
                   locale,
@@ -1362,13 +1391,19 @@ export function UnboxingExperience() {
                     to={toPath}
                     className="group border border-white/10 bg-black/20 transition hover:border-white/25"
                   >
-                    <div className="aspect-[864/1184] w-full overflow-hidden">
-                      <img
-                        src={imageUrl}
-                        alt={related.storyImage?.altText || related.image?.altText || related.title}
-                        className="h-full w-full object-cover object-center"
-                        loading="lazy"
-                      />
+                    <div className="aspect-[864/1184] w-full overflow-hidden bg-black/30">
+                      {card ? (
+                        <img
+                          src={card.url}
+                          alt={card.alt || `SWY ${localizedTitle} perfume`}
+                          width={card.width || 864}
+                          height={card.height || 1184}
+                          className="h-full w-full object-cover object-center"
+                          loading="lazy"
+                          decoding="async"
+                          onError={hideImageOnError}
+                        />
+                      ) : null}
                     </div>
                     <div className="p-5">
                       <p className="text-[10px] uppercase tracking-[0.24em] text-[#F2F0ED]/45">{t(siteCopy.product.relatedCard)}</p>

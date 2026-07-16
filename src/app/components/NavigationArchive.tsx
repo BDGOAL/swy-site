@@ -18,6 +18,7 @@ import { SECTION_IDS, toLandingHash } from '../constants/landingSectionIds';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { CollectionLink } from './CollectionLink';
 import { LocalizedLink } from './LocalizedLink';
+import { hideImageOnError } from '../lib/productImages';
 
 /**
  * Diagnostic: isolate which search overlay layer causes the long dark band.
@@ -58,16 +59,19 @@ function SearchResultRow({
       onClick={onPick}
       className="flex w-full gap-3 border border-white/[0.09] bg-black/25 px-3 py-2.5 text-left transition hover:border-white/[0.16] hover:bg-black/38"
     >
-      <div className="aspect-[864/1184] h-[4.25rem] w-auto shrink-0 overflow-hidden">
-        <img
-          src={item.imageUrl}
-          alt={item.imageAlt}
-          className="h-full w-full object-cover object-center"
-          loading="lazy"
-          decoding="async"
-          width={864}
-          height={1184}
-        />
+      <div className="aspect-[864/1184] h-[4.25rem] w-auto shrink-0 overflow-hidden bg-black/30">
+        {item.imageUrl ? (
+          <img
+            src={item.imageUrl}
+            alt={item.imageAlt}
+            className="h-full w-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+            width={864}
+            height={1184}
+            onError={hideImageOnError}
+          />
+        ) : null}
       </div>
       <div className="min-w-0 flex-1">
         <p

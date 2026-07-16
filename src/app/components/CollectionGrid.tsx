@@ -9,7 +9,11 @@ import { siteCopy } from "../content/siteCopy";
 import { ROUTES } from "../constants/routes";
 import { localizeSearchableItem, type SearchableCollectionItem } from "../utils/collectionSearch";
 import { shopifyConfig } from "../config/shopify";
-import { BOTTLE_IMAGE } from "../data/bottleImage";
+import {
+  asProductImage,
+  hideImageOnError,
+  resolveStoryCardImage,
+} from "../lib/productImages";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false);
@@ -22,8 +26,6 @@ function useMediaQuery(query: string) {
   }, [matches, query]);
   return matches;
 }
-
-type ShopifyImage = { url: string; altText?: string | null };
 
 function ProductCard({
   item,
@@ -55,15 +57,18 @@ function ProductCard({
         className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0E14]"
       >
         <div className="aspect-[864/1184] w-full overflow-hidden">
-          <img
-            src={item.imageUrl}
-            alt={item.imageAlt}
-            width={864}
-            height={1184}
-            className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-            loading="lazy"
-            decoding="async"
-          />
+          {item.imageUrl ? (
+            <img
+              src={item.imageUrl}
+              alt={item.imageAlt}
+              width={864}
+              height={1184}
+              className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+              loading="lazy"
+              decoding="async"
+              onError={hideImageOnError}
+            />
+          ) : null}
         </div>
         <div
           className={
@@ -163,12 +168,12 @@ export function CollectionGrid() {
                 product {
                   id
                   title
-                  featuredImage { url altText }
+                  featuredImage { url altText width height }
                   storyIntro: metafield(namespace: "custom", key: "story_intro") { value }
                   storyImage: metafield(namespace: "custom", key: "story_image") {
                     reference {
                       ... on MediaImage {
-                        image { url altText }
+                        image { url altText width height }
                       }
                     }
                   }
@@ -206,12 +211,15 @@ export function CollectionGrid() {
             const localProduct = products.find((p) => p.id === localId);
             if (!localProduct) return null;
 
-            const storyImage: ShopifyImage | null = node?.product?.storyImage?.reference?.image || null;
-            const featuredImage: ShopifyImage | null = node?.product?.featuredImage || null;
-            const imageUrl =
-              storyImage?.url ||
-              featuredImage?.url ||
-              BOTTLE_IMAGE;
+            const storyImage = asProductImage(
+              node?.product?.storyImage?.reference?.image
+            );
+            const featuredImage = asProductImage(node?.product?.featuredImage);
+            const card = resolveStoryCardImage({
+              storyImage,
+              featuredImage,
+              productName: localProduct.name,
+            });
 
             return {
               id: localId,
@@ -223,12 +231,8 @@ export function CollectionGrid() {
                 node?.product?.scentFamily?.value || localProduct.scentFamily.en || "",
               /** Display tags come from `products.ts` via localizeSearchableItem — not Shopify metafield. */
               moodKeywords: [],
-              imageUrl,
-              imageAlt:
-                storyImage?.altText ||
-                featuredImage?.altText ||
-                node?.product?.title ||
-                localProduct.name,
+              imageUrl: card?.url ?? null,
+              imageAlt: card?.alt || `SWY ${localProduct.name} perfume`,
             } as SearchableCollectionItem;
           })
           .filter(Boolean) as SearchableCollectionItem[];
@@ -255,16 +259,21 @@ export function CollectionGrid() {
 
   const fallbackCollectionData = useMemo(
     () =>
-      products.map((product) => ({
-        id: product.id,
-        title: product.name,
-        storyIntro: product.descriptor.en,
-        elevatorPitch: getLocalizedElevatorPitch(product.id, "en"),
-        scentFamily: product.scentFamily.en || "",
-        moodKeywords: [],
-        imageUrl: BOTTLE_IMAGE,
-        imageAlt: product.name,
-      })),
+      products.map((product) => {
+        const card = resolveStoryCardImage({
+          productName: product.name,
+        });
+        return {
+          id: product.id,
+          title: product.name,
+          storyIntro: product.descriptor.en,
+          elevatorPitch: getLocalizedElevatorPitch(product.id, "en"),
+          scentFamily: product.scentFamily.en || "",
+          moodKeywords: [],
+          imageUrl: card?.url ?? null,
+          imageAlt: card?.alt || `SWY ${product.name} perfume`,
+        };
+      }),
     []
   );
 

@@ -1,16 +1,25 @@
 import { products } from "../data/products";
 import { shopifyConfig } from "../config/shopify";
+import {
+  asProductImage,
+  resolveStoryCardImage,
+} from "./productImages";
 
-/** Card data for /collection — featured image + variant price from Shopify (store currency, e.g. HKD). */
+/** Card data for /collection — resolved card image + variant price from Shopify. */
 export type BrowseCollectionFeatured = {
+  /** Resolved card image: story_image → featuredImage (absent from map when neither exists). */
   url: string;
   alt: string;
+  width?: number | null;
+  height?: number | null;
+  /** Which Shopify field supplied the card image. */
+  imageSource: "story_image" | "featuredImage";
   price?: { amount: string; currencyCode: string };
 };
 
 /**
- * Fetches featuredImage per local catalog id via variant GIDs.
- * Returns partial map; callers should fall back to a placeholder when id is missing.
+ * Fetches story_image + featuredImage per local catalog id via variant GIDs.
+ * Returns partial map; callers render dark card background when id is missing.
  */
 export async function fetchBrowseCollectionFeaturedImages(): Promise<
   Record<string, BrowseCollectionFeatured>
@@ -36,7 +45,14 @@ export async function fetchBrowseCollectionFeaturedImages(): Promise<
             currencyCode
           }
           product {
-            featuredImage { url altText }
+            featuredImage { url altText width height }
+            storyImage: metafield(namespace: "custom", key: "story_image") {
+              reference {
+                ... on MediaImage {
+                  image { url altText width height }
+                }
+              }
+            }
           }
         }
       }
@@ -63,13 +79,31 @@ export async function fetchBrowseCollectionFeaturedImages(): Promise<
 
     for (const node of nodes) {
       const localId = variantMap.get(node?.id || "");
-      const url = node?.product?.featuredImage?.url as string | undefined;
-      if (!localId || !url) continue;
+      if (!localId) continue;
+      const localProduct = products.find((p) => p.id === localId);
+      if (!localProduct) continue;
+
+      const storyImage = asProductImage(
+        node?.product?.storyImage?.reference?.image
+      );
+      const featuredImage = asProductImage(node?.product?.featuredImage);
+      if (!storyImage && !featuredImage) continue;
+
+      const resolved = resolveStoryCardImage({
+        storyImage,
+        featuredImage,
+        productName: localProduct.name,
+      });
+      if (!resolved) continue;
+
       const amount = node?.price?.amount as string | undefined;
       const currencyCode = node?.price?.currencyCode as string | undefined;
       out[localId] = {
-        url,
-        alt: (node?.product?.featuredImage?.altText as string | undefined) || "",
+        url: resolved.url,
+        alt: resolved.alt || `SWY ${localProduct.name} perfume`,
+        width: resolved.width,
+        height: resolved.height,
+        imageSource: storyImage ? "story_image" : "featuredImage",
         ...(amount && currencyCode
           ? { price: { amount, currencyCode } }
           : {}),
