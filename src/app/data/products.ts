@@ -126,7 +126,7 @@ export const products: Product[] = [
       ["橙", "Orange"],
       ["小蒼蘭", "鈴蘭", "Freesia", "Lily of the Valley"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "the-last-snow",
     shopifyVariantId: "gid://shopify/ProductVariant/44985797837000",
@@ -180,7 +180,7 @@ export const products: Product[] = [
       ["水蜜桃", "佛手柑", "牡丹", "Peach", "Bergamot", "Peony"],
       ["玫瑰", "茉莉", "紫羅蘭", "Rose", "Jasmine", "Violet"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "the-first-rose",
     shopifyVariantId: "gid://shopify/ProductVariant/44985798164680",
@@ -237,7 +237,7 @@ export const products: Product[] = [
       ["檸檬", "佛手柑", "小豆蔻", "Lemon", "Bergamot", "Cardamom"],
       ["鼠尾草", "茉莉", "薰衣草", "丁香", "Sage", "Jasmine", "Lavender", "Clove"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "no-worries",
     shopifyVariantId: "gid://shopify/ProductVariant/44985799999688",
@@ -291,7 +291,7 @@ export const products: Product[] = [
       ["橙", "迷迭香", "Orange", "Rosemary"],
       ["沉香木", "天竺葵", "Oud", "Geranium"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "old-library",
     shopifyVariantId: "gid://shopify/ProductVariant/44985803047112",
@@ -348,7 +348,7 @@ export const products: Product[] = [
       ["羅勒", "黑胡椒", "Basil", "Black Pepper"],
       ["皮革", "薰衣草", "百里香", "Leather", "Lavender", "Thyme"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "mens-garage",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805111496",
@@ -405,7 +405,7 @@ export const products: Product[] = [
       ["小豆蔻", "胡椒", "Cardamom", "Pepper"],
       ["金屬醛香", "金色橙花", "Metallic Aldehydes", "Gold Orange Blossom"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "im-rich",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805177032",
@@ -462,7 +462,7 @@ export const products: Product[] = [
       ["佛手柑", "紫丁香", "Bergamot", "Lilac"],
       ["白亞麻香調", "White Linen Accord"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "morning-after-quit",
     shopifyVariantId: "gid://shopify/ProductVariant/44985805701320",
@@ -519,7 +519,7 @@ export const products: Product[] = [
       ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
       ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"]
     ),
-    price: 128,
+    price: 1280,
     currency: "HKD",
     shopifyHandle: "night-was-mine",
     shopifyVariantId: "gid://shopify/ProductVariant/44985806356680",

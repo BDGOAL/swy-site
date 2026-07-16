@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import { ShoppingBag } from "lucide-react";
 import { products } from "../data/products";
@@ -230,6 +230,8 @@ export function UnboxingExperience() {
     intro?: string;
     body?: string;
   } | null>(null);
+  const atcButtonRef = useRef<HTMLButtonElement>(null);
+  const [showStickyAtc, setShowStickyAtc] = useState(false);
 
   const product = products.find((p) => p.id === id);
 
@@ -843,7 +845,7 @@ export function UnboxingExperience() {
       sillageDisplay
   );
 
-  const showFragranceStructureBlock = Boolean(scentFamilyLabel || localAccords.length);
+  const showFragranceStructureBlock = Boolean(localAccords.length);
   const showFragranceStylingBlock = Boolean(pairingForPdp);
 
   const showPdpFragranceInfoSection =
@@ -900,6 +902,32 @@ export function UnboxingExperience() {
         )
       : productPriceDisplay(product, locale);
 
+  useEffect(() => {
+    const el = atcButtonRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setShowStickyAtc(false);
+      return;
+    }
+
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyAtc(!entry.isIntersecting);
+      },
+      { root: null, threshold: 0, rootMargin: "0px" }
+    );
+
+    // Defer observe until after layout so first paint does not flicker sticky.
+    frame = window.requestAnimationFrame(() => {
+      if (atcButtonRef.current) observer.observe(atcButtonRef.current);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [product?.id, selectedVariant?.id]);
+
   const handleAddToCart = async () => {
     const cartVariantId = selectedVariant?.id || product.shopifyVariantId;
     if (!cartVariantId) {
@@ -928,7 +956,7 @@ export function UnboxingExperience() {
               {topNotes.map((note, idx) => {
                 const line = noteLineForLocale(note, locale);
                 if (!line) return null;
-                return <p key={`m-top-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
+                return <p key={`m-top-${idx}-${line}`} className="text-[14px] leading-snug text-[#F2F0ED]/84">{line}</p>;
               })}
             </div>
           </div>
@@ -940,7 +968,7 @@ export function UnboxingExperience() {
               {heartNotes.map((note, idx) => {
                 const line = noteLineForLocale(note, locale);
                 if (!line) return null;
-                return <p key={`m-heart-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
+                return <p key={`m-heart-${idx}-${line}`} className="text-[14px] leading-snug text-[#F2F0ED]/84">{line}</p>;
               })}
             </div>
           </div>
@@ -952,7 +980,7 @@ export function UnboxingExperience() {
               {baseNotes.map((note, idx) => {
                 const line = noteLineForLocale(note, locale);
                 if (!line) return null;
-                return <p key={`m-base-${idx}-${line}`} className="text-[13px] text-[#F2F0ED]/82">{line}</p>;
+                return <p key={`m-base-${idx}-${line}`} className="text-[14px] leading-snug text-[#F2F0ED]/84">{line}</p>;
               })}
             </div>
           </div>
@@ -1012,12 +1040,72 @@ export function UnboxingExperience() {
     </>
   ) : null;
 
+  const dialogueTheme = productDescriptor(product, locale);
+  const emotionalSummary = impressionText;
+  const storyLeadingClass =
+    locale === "zh" ? "leading-[1.85]" : "leading-[1.7]";
+
   return (
-    <div className="min-h-screen bg-[#0A0A0A] pt-20 text-[#F2F0ED] sm:pt-24">
-      {/* 1) Product hero — gallery, English name, localized story layer, commerce */}
-      <section className="px-6 py-24 sm:px-10 md:px-14 lg:px-20">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-start">
-          <div>
+    <div
+      className={`min-h-screen bg-[#0A0A0A] pt-20 text-[#F2F0ED] sm:pt-24 ${
+        showStickyAtc ? "pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0" : ""
+      }`}
+    >
+      {/* 1) Product hero — mobile purchase-first; desktop two-column editorial */}
+      <section className="px-4 py-10 sm:px-10 sm:py-16 md:px-14 lg:px-20 lg:py-24">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:grid-rows-[auto_auto_auto] lg:items-start lg:gap-x-12 lg:gap-y-8">
+          {/* Identity — name, theme, family, price (mobile order 1) */}
+          <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1 lg:pt-2">
+            <p
+              className="text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {t(siteCopy.product.productType)}
+            </p>
+            <h1
+              className="mt-3 text-[1.75rem] leading-tight sm:text-4xl md:text-5xl"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {displayName}
+            </h1>
+            {dialogueTheme ? (
+              <p
+                className={`mt-4 max-w-2xl text-[15px] text-[#F2F0ED]/72 ${storyLeadingClass}`}
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {dialogueTheme}
+              </p>
+            ) : null}
+            {scentFamilyLabel ? (
+              <p
+                className="mt-3 text-[11px] uppercase tracking-[0.18em] text-[#F2F0ED]/48"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {t(siteCopy.product.scentFamily)}
+                <span className="text-[#F2F0ED]/28"> · </span>
+                <span className="normal-case tracking-normal text-[13px] text-[#F2F0ED]/72">
+                  {scentFamilyLabel}
+                </span>
+              </p>
+            ) : null}
+            {!!priceDisplay && (
+              <p
+                className="mt-5 text-2xl text-[#F2F0ED]/88"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                {priceDisplay}
+              </p>
+            )}
+            <p
+              className="mt-2 max-w-xl text-[11px] tracking-[0.06em] text-[#F2F0ED]/52"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {t(siteCopy.product.volumeLabel)} · {t(siteCopy.product.capacityValue)}
+            </p>
+          </div>
+
+          {/* Gallery — mobile order 2; desktop left column */}
+          <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-3">
             <div className="overflow-hidden border border-white/10 bg-black/30">
               <div className="aspect-[864/1184] w-full">
                 {selectedImage ? (
@@ -1039,18 +1127,22 @@ export function UnboxingExperience() {
               </div>
             </div>
             {allImages.length > 1 && (
-              <div className="mt-4 grid grid-cols-4 gap-3">
+              <div className="mt-3 grid grid-cols-3 gap-2 min-[390px]:grid-cols-4 min-[390px]:gap-3">
                 {allImages.slice(0, 8).map((img, idx) => (
                   <button
                     key={`${img.url}-${idx}`}
                     type="button"
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`overflow-hidden border ${idx === safeImageIndex ? "border-white/40" : "border-white/10"} bg-black/20`}
+                    aria-label={pdpImageAlt(displayName, img.alt)}
+                    aria-pressed={idx === safeImageIndex}
+                    className={`min-h-[44px] overflow-hidden border ${
+                      idx === safeImageIndex ? "border-white/45" : "border-white/10"
+                    } bg-black/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35`}
                   >
                     <div className="aspect-[864/1184] w-full">
                       <img
                         src={img.url}
-                        alt={pdpImageAlt(displayName, img.alt)}
+                        alt=""
                         width={img.width || 864}
                         height={img.height || 1184}
                         className="h-full w-full object-cover object-center"
@@ -1065,72 +1157,27 @@ export function UnboxingExperience() {
             )}
           </div>
 
-          <div className="lg:pt-2">
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.productType)}
-            </p>
-            <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl leading-tight" style={{ fontFamily: "var(--font-sans)" }}>
-              {displayName}
-            </h1>
-            <p className="mt-5 text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
-              {t(siteCopy.product.scentNarrativeEyebrow)}
-            </p>
-
-            {pdpStoryIntroDisplay ? (
+          {/* Purchase cluster — summary, notes, variant, ATC (mobile order 3) */}
+          <div className="order-3 lg:order-none lg:col-start-2 lg:row-start-3">
+            {emotionalSummary ? (
               <p
-                className="mt-5 max-w-2xl whitespace-pre-line text-[13px] leading-[1.75] text-[#F2F0ED]/76 sm:text-sm"
+                className={`max-w-2xl text-[15px] text-[#F2F0ED]/70 ${storyLeadingClass}`}
                 style={{ fontFamily: "var(--font-sans)" }}
               >
-                {pdpStoryIntroDisplay}
+                {emotionalSummary}
               </p>
             ) : null}
 
-            {showNarrativeMoodImage && narrativeMoodImage ? (
-              <div className="mt-6 max-w-2xl overflow-hidden border border-white/10 bg-black/30">
-                <div className="aspect-[864/1184] w-full max-h-[min(40vh,20rem)] sm:max-h-[min(46vh,24rem)] lg:max-h-[min(50vh,28rem)]">
-                  <img
-                    src={narrativeMoodImage.url}
-                    alt={
-                      narrativeMoodImage.alt?.trim() ||
-                      `SWY ${displayName} narrative scene`
-                    }
-                    width={narrativeMoodImage.width || 864}
-                    height={narrativeMoodImage.height || 1184}
-                    className="h-full w-full object-cover object-center"
-                    loading="lazy"
-                    decoding="async"
-                    onError={hideImageOnError}
-                  />
-                </div>
-              </div>
+            {fragranceNotesSummary ? (
+              <div className={emotionalSummary ? "mt-6" : ""}>{fragranceNotesSummary}</div>
             ) : null}
-
-            {pdpStoryBodyDisplay ? (
-              <p
-                className="mt-5 max-w-2xl whitespace-pre-line text-[12px] leading-[1.75] text-[#F2F0ED]/62 sm:text-[13px]"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                {pdpStoryBodyDisplay}
-              </p>
-            ) : null}
-
-            {fragranceNotesSummary ? <div className="mt-10">{fragranceNotesSummary}</div> : null}
-
-            {!!priceDisplay && (
-              <p className="mt-10 text-2xl text-[#F2F0ED]/88" style={{ fontFamily: "var(--font-mono)" }}>
-                {priceDisplay}
-              </p>
-            )}
-            <p
-              className="mt-3 max-w-xl text-[11px] tracking-[0.06em] text-[#F2F0ED]/52"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              {t(siteCopy.product.volumeLabel)} · {t(siteCopy.product.capacityValue)}
-            </p>
 
             {variants.length > 1 && (
-              <div className="mt-8">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-[#F2F0ED]/50" style={{ fontFamily: "var(--font-sans)" }}>
+              <div className="mt-6">
+                <p
+                  className="mb-2 text-[10px] uppercase tracking-[0.24em] text-[#F2F0ED]/50"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
                   {t(siteCopy.product.selectVariant)}
                 </p>
                 <select
@@ -1149,12 +1196,14 @@ export function UnboxingExperience() {
             )}
 
             <button
+              ref={atcButtonRef}
+              type="button"
               onClick={handleAddToCart}
               disabled={isAddingToCart || !selectedVariant || !selectedVariant.availableForSale}
-              className="mt-8 inline-flex min-h-[48px] w-full items-center justify-center gap-3 border border-white/25 bg-white/10 px-6 py-4 text-[11px] uppercase tracking-[0.26em] text-[#F2F0ED] transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center gap-3 border border-white/25 bg-white/10 px-6 py-4 text-[11px] uppercase tracking-[0.26em] text-[#F2F0ED] transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/40 disabled:cursor-not-allowed disabled:opacity-50"
               style={{ fontFamily: "var(--font-sans)" }}
             >
-              <ShoppingBag size={16} />
+              <ShoppingBag size={16} aria-hidden />
               {isAddingToCart
                 ? t(siteCopy.product.adding)
                 : selectedVariant?.availableForSale
@@ -1163,24 +1212,114 @@ export function UnboxingExperience() {
             </button>
 
             {!isConfigured && (
-              <p className="mt-3 text-[11px] text-[#F2F0ED]/45" style={{ fontFamily: "var(--font-sans)" }}>
+              <p
+                className="mt-3 text-[11px] text-[#F2F0ED]/45"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
                 {t(siteCopy.product.demoMode)}
               </p>
             )}
+          </div>
 
-            {textureLeadImage?.url ? (
-              <div className="mt-10 w-full md:hidden">
-                <PdpTextureFigure
-                  url={textureLeadImage.url}
-                  alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
-                  imgClassName="block w-full max-h-[min(48vh,20rem)] object-contain object-center sm:max-h-[min(52vh,24rem)]"
-                />
-              </div>
+          {/* Long story + narrative image — after ATC on mobile; between identity & purchase on desktop */}
+          <div className="order-4 lg:order-none lg:col-start-2 lg:row-start-2">
+            <p
+              className="text-[10px] uppercase tracking-[0.32em] text-[#F2F0ED]/50"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {t(siteCopy.product.scentNarrativeEyebrow)}
+            </p>
+
+            {pdpStoryIntroDisplay ? (
+              <p
+                className={`mt-4 max-w-2xl whitespace-pre-line text-[15px] text-[#F2F0ED]/78 ${storyLeadingClass}`}
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {pdpStoryIntroDisplay}
+              </p>
             ) : null}
 
+            {pdpStoryBodyDisplay ? (
+              <p
+                className={`mt-5 max-w-2xl whitespace-pre-line text-[15px] text-[#F2F0ED]/68 ${storyLeadingClass}`}
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {pdpStoryBodyDisplay}
+              </p>
+            ) : null}
+
+            {showNarrativeMoodImage && narrativeMoodImage ? (
+              <div className="mt-6 max-w-2xl overflow-hidden border border-white/10 bg-black/30">
+                <div className="aspect-[864/1184] w-full max-h-[min(36vh,18rem)] sm:max-h-[min(42vh,22rem)] lg:max-h-[min(48vh,26rem)]">
+                  <img
+                    src={narrativeMoodImage.url}
+                    alt={
+                      narrativeMoodImage.alt?.trim() ||
+                      `SWY ${displayName} narrative scene`
+                    }
+                    width={narrativeMoodImage.width || 864}
+                    height={narrativeMoodImage.height || 1184}
+                    className="h-full w-full object-cover object-center"
+                    loading="lazy"
+                    decoding="async"
+                    onError={hideImageOnError}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
+
+        {/* Mobile texture lead — after hero story, still before desktop texture section */}
+        {textureLeadImage?.url ? (
+          <div className="mx-auto mt-10 max-w-6xl md:hidden">
+            <PdpTextureFigure
+              url={textureLeadImage.url}
+              alt={textureLeadImage.altText || t(siteCopy.product.textureAlt)}
+              imgClassName="block w-full max-h-[min(48vh,20rem)] object-contain object-center sm:max-h-[min(52vh,24rem)]"
+            />
+          </div>
+        ) : null}
       </section>
+
+      {showStickyAtc ? (
+        <div
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0A0A0A]/95 px-4 pt-3 backdrop-blur-md md:hidden"
+          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
+          <div className="mx-auto flex max-w-6xl items-center gap-3">
+            {!!priceDisplay && (
+              <p
+                className="shrink-0 font-mono text-sm text-[#F2F0ED]/88"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                {priceDisplay}
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={isAddingToCart || !selectedVariant || !selectedVariant.availableForSale}
+              aria-label={
+                isAddingToCart
+                  ? t(siteCopy.product.adding)
+                  : selectedVariant?.availableForSale
+                    ? t(siteCopy.product.addToCart)
+                    : t(siteCopy.product.soldOut)
+              }
+              className="inline-flex min-h-[52px] flex-1 items-center justify-center gap-2 border border-white/25 bg-white/10 px-4 text-[11px] uppercase tracking-[0.22em] text-[#F2F0ED] transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/40 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              <ShoppingBag size={16} aria-hidden />
+              {isAddingToCart
+                ? t(siteCopy.product.adding)
+                : selectedVariant?.availableForSale
+                  ? t(siteCopy.product.addToCart)
+                  : t(siteCopy.product.soldOut)}
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {textureLeadImage?.url ? (
         <PdpTextureGallerySection
@@ -1213,11 +1352,11 @@ export function UnboxingExperience() {
                       <div className="grid gap-0 sm:grid-cols-2 sm:gap-x-8">
                         {impressionText && (
                           <div
-                            className={
+                            className={`hidden lg:block ${
                               wearMomentText
                                 ? "border-b border-white/10 pb-5 sm:border-b-0 sm:pb-0 sm:border-r sm:border-white/10 sm:pr-8"
                                 : ""
-                            }
+                            }`}
                           >
                             <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">
                               {t(siteCopy.product.impression)}
@@ -1226,7 +1365,7 @@ export function UnboxingExperience() {
                           </div>
                         )}
                         {wearMomentText && (
-                          <div className={impressionText ? "pt-5 sm:pt-0" : ""}>
+                          <div className={impressionText ? "lg:pt-0 pt-0" : ""}>
                             <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">
                               {t(siteCopy.product.wearContext)}
                             </p>
@@ -1305,17 +1444,8 @@ export function UnboxingExperience() {
                     {t(siteCopy.product.fragranceGroupStructure)}
                   </h2>
                   <div className="mt-5 space-y-6 border-t border-white/[0.08] pt-5">
-                    {!!scentFamilyLabel && (
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">
-                          {t(siteCopy.product.scentFamily)}
-                        </p>
-                        <p className="mt-2 text-sm leading-relaxed text-[#F2F0ED]/82">{scentFamilyLabel}</p>
-                      </div>
-                    )}
-
                     {localAccords.length > 0 && (
-                      <div className={scentFamilyLabel ? "border-t border-white/[0.07] pt-5" : ""}>
+                      <div>
                         <p className="text-[10px] uppercase tracking-[0.2em] text-[#F2F0ED]/45">
                           {t(siteCopy.product.accords)}
                         </p>
@@ -1364,9 +1494,9 @@ export function UnboxingExperience() {
 
       {/* 4) Visual storytelling (textures) */}
       {showTextureGallerySection && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
+        <section className="border-t border-white/10 px-4 py-12 sm:px-10 sm:py-16 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
-            <h2 className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
+            <h2 className="mb-6 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55 sm:mb-8" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.visualStorytelling)}
             </h2>
             <div className="grid gap-4 md:grid-cols-3">
@@ -1389,9 +1519,9 @@ export function UnboxingExperience() {
 
       {/* 5) Related scents / continuation section */}
       {!!relatedScentsResolved.length && (
-        <section className="border-t border-white/10 px-6 py-16 sm:px-10 md:px-14 lg:px-20">
+        <section className="border-t border-white/10 px-4 py-12 sm:px-10 sm:py-16 md:px-14 lg:px-20">
           <div className="mx-auto max-w-6xl">
-            <h3 className="mb-8 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55" style={{ fontFamily: "var(--font-sans)" }}>
+            <h3 className="mb-6 text-[11px] uppercase tracking-[0.3em] text-[#F2F0ED]/55 sm:mb-8" style={{ fontFamily: "var(--font-sans)" }}>
               {t(siteCopy.product.continueScentStory)}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
