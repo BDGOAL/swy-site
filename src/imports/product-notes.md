@@ -100,7 +100,7 @@ Where unspoken confidence lingers longer than the night.
 
 「樹大總招風，知者自守沈默。」這是他用代價學回來的字句。
 
-他點燃了這陣氣味。黑胡椒與欖美脂率先切開一道銳利的辛香輪廓；隨後，琥珀與向日葵將蘭姆酒推向溫暖的核心，那是看透遊戲規則後才長出來的溫度。最後，香根草與煙草把夜色收得極深、極穩。
+他點燃了這陣氣味。黑胡椒與欖香脂率先切開一道銳利的辛香輪廓；隨後，琥珀、天芥菜與蘭姆酒將暖意推向核心，那是看透遊戲規則後才長出來的溫度。最後，香根草、麝香與煙草把夜色收得極深、極穩。
 
 當你不再試圖向世界證明什麼，你才真正擁有了自己。
 舉手投足間那種不敢直視的從容，是歲月無聲錘鍊下來的底氣。
@@ -110,6 +110,6 @@ Where unspoken confidence lingers longer than the night.
 
 這夜，屬於我。
 The night I first tasted success, the room was heavy with smoke and rum. I was in control—confident, certain, aware of every glance that found me. For the first time, I knew I was stunning. Not because of what I wore, but because of what I had done. This was my arrival. Tell me, what was yours?
-Black Pepper
-Amber, Heliotrope
-Vetiver, Tobacco
+Black Pepper, Elemi
+Amber, Heliotrope, Rum
+Vetiver, Musk, Tobacco

@@ -78,7 +78,7 @@ This ambition contains the infinite.`,
 This silence, remaining after the noise fades, is where actual life begins.
 
 This awakening belongs to freedom.`,
-  "night-was-mine": `Black pepper slices through the initial dark with sharp focus. Then, amber and heliotrope unfold with the warm impression of rum. Finally, vetiver and tobacco compress the night into something profoundly low-key and unshakeable.
+  "night-was-mine": `Black pepper and elemi slice through the initial dark with sharp focus. Then, amber, heliotrope, and rum unfold into a warm core. Finally, vetiver, musk, and tobacco compress the night into something profoundly low-key and unshakeable.
 
 The moment you cease trying to prove anything to the world, you become untamable.
 

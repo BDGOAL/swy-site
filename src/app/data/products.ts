@@ -511,13 +511,13 @@ export const products: Product[] = [
       zh: "可與 I'm Rich 疊擦，以冷冽金屬光提煉煙草與蘭姆的夜色層次。",
     },
     notes: nl(
-      ["黑胡椒", "Black Pepper"],
-      ["琥珀", "天芥菜", "Amber", "Heliotrope"],
-      ["香根草", "煙草", "Vetiver", "Tobacco"]
+      ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
+      ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"],
+      ["香根草", "麝香", "煙草", "Vetiver", "Musk", "Tobacco"]
     ),
     accords: accFromNotes(
-      ["黑胡椒", "Black Pepper"],
-      ["琥珀", "天芥菜", "Amber", "Heliotrope"]
+      ["黑胡椒", "欖香脂", "Black Pepper", "Elemi"],
+      ["琥珀", "天芥菜", "蘭姆酒", "Amber", "Heliotrope", "Rum"]
     ),
     price: 128,
     currency: "HKD",
