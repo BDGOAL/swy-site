@@ -9,10 +9,18 @@ import { ConversionSection } from "./ConversionSection";
 import { ArchiveFooter } from "./ArchiveFooter";
 import { OceanSurfaceHero } from "./OceanSurfaceHero";
 import { WaterRipple } from "./WaterRipple";
+import { SwyImmersiveHero } from "./SwyImmersiveHero";
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 import { siteCopy } from "../content/siteCopy";
 import { SECTION_IDS } from "../constants/landingSectionIds";
+
+/**
+ * Phase 1 immersive Hero prototype (SwyImmersiveHero).
+ * Set to false to restore the legacy ocean hero below — legacy markup and all
+ * of its scroll machinery are retained unchanged for easy rollback.
+ */
+const USE_IMMERSIVE_HERO = true;
 
 const LANDING_HASH_IDS = new Set<string>(Object.values(SECTION_IDS));
 
@@ -210,6 +218,9 @@ export function LandingPage() {
 
   return (
     <div className="relative w-full">
+      {USE_IMMERSIVE_HERO ? (
+        <SwyImmersiveHero rootRef={heroSceneRef} />
+      ) : (
       <section
         ref={heroSceneRef}
         className="relative flex w-full flex-col"
@@ -525,6 +536,7 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+      )}
 
       <motion.div
         id={SECTION_IDS.archive}
