@@ -104,8 +104,10 @@ function parseList(value?: string | null): string[] {
       // fall through to comma split
     }
   }
+  // Split ASCII/fullwidth commas, ideographic commas, and line breaks.
+  // The bilingual ` / ` separator (e.g. "勞丹脂 / Ciste Labdanum") is preserved.
   return trimmed
-    .split(/,|\n/)
+    .split(/[,，、\n]/)
     .map((s) => s.trim())
     .filter(Boolean);
 }
@@ -772,10 +774,14 @@ export function UnboxingExperience() {
   const narrativeMoodImage = asProductImage(meta?.storyImage);
   const showNarrativeMoodImage = Boolean(narrativeMoodImage?.url);
 
-  /** Local `products.ts` note pyramid is the approved source of truth. */
-  const topNotes = productNotesTop(product, locale);
-  const heartNotes = productNotesHeart(product, locale);
-  const baseNotes = productNotesBase(product, locale);
+  /** Shopify note metafields are primary; local `products.ts` notes are fallback only. */
+  const localTopNotes = productNotesTop(product, locale);
+  const localHeartNotes = productNotesHeart(product, locale);
+  const localBaseNotes = productNotesBase(product, locale);
+
+  const topNotes = meta?.topNotes?.length ? meta.topNotes : localTopNotes;
+  const heartNotes = meta?.heartNotes?.length ? meta.heartNotes : localHeartNotes;
+  const baseNotes = meta?.baseNotes?.length ? meta.baseNotes : localBaseNotes;
   const hasNotes = topNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0;
 
   const localAccords = productAccords(product, locale);
