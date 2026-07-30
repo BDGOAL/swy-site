@@ -168,6 +168,14 @@ function resolveLocalProductIdForRelated(related: RelatedScent): string | null {
   return null;
 }
 
+/** Split story copy on blank lines into individual paragraphs (preserves exact wording). */
+function splitStoryParagraphs(value: string): string[] {
+  return value
+    .split(/\n\s*\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 function splitBilingualNote(note: string): { primary: string; secondary?: string } {
   const raw = (note || "").trim();
   if (!raw) return { primary: "" };
@@ -1240,12 +1248,17 @@ export function UnboxingExperience() {
             ) : null}
 
             {pdpStoryBodyDisplay ? (
-              <p
-                className={`mt-5 max-w-2xl whitespace-pre-line text-[15px] text-[#F2F0ED]/68 ${storyLeadingClass}`}
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                {pdpStoryBodyDisplay}
-              </p>
+              <div className={`mt-5 max-w-2xl space-y-4 text-[15px] text-[#F2F0ED]/68 ${storyLeadingClass}`}>
+                {splitStoryParagraphs(pdpStoryBodyDisplay).map((paragraph, idx) => (
+                  <p
+                    key={`story-body-${idx}`}
+                    className="whitespace-pre-line"
+                    style={{ fontFamily: "var(--font-sans)" }}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             ) : null}
           </div>
         </div>
