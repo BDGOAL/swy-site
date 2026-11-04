@@ -12,11 +12,11 @@ function RootContent() {
   const { isCartOpen, closeCart } = useShopify();
   const location = useLocation();
 
-  /** Reset document scroll on real route changes; skip when navigating to a hash so in-page anchors still work. */
+  /** Reset scroll on route changes only. Locale query changes must preserve cinematic hero progress. */
   useLayoutEffect(() => {
     if (location.hash) return;
     window.scrollTo(0, 0);
-  }, [location.pathname, location.search, location.hash]);
+  }, [location.pathname]);
 
   return (
     <div 
