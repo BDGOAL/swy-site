@@ -49,14 +49,14 @@ export function CinematicHeroV67() {
     };
   }, []);
 
-  const cut1 = ramp(progress,.24,.40), cut2 = ramp(progress,.61,.77);
+  const cut1 = ramp(progress,.23,.43), cut2 = ramp(progress,.59,.80);
   const shotAlpha = [1-cut1,cut1*(1-cut2),cut2];
   const textAlpha = [
-    ramp(progress,.16,.27)*(1-ramp(progress,.33,.40)),
-    ramp(progress,.41,.51)*(1-ramp(progress,.58,.67)),
-    ramp(progress,.79,.89),
+    ramp(progress,.14,.25)*(1-ramp(progress,.35,.45)),
+    ramp(progress,.44,.54)*(1-ramp(progress,.64,.75)),
+    ramp(progress,.79,.91),
   ];
-  const scene = progress < .33 ? 0 : progress < .69 ? 1 : 2;
+  const scene = progress < .34 ? 0 : progress < .70 ? 1 : 2;
   const sceneHeading = lang === "en" ? "A STORY FINDS ITS SHORE" : "故事終有彼岸";
   return <section className={"swy-v67 swy-v67--"+lang} ref={el} aria-label={lang === "en" ? "SWY brand film" : "SWY 品牌故事"}>
     <div className="swy-v67__stage">
@@ -64,7 +64,7 @@ export function CinematicHeroV67() {
         <picture className="swy-v67__picture">
           <source media="(max-width: 767px)" srcSet={"/hero/v67/m"+(i+1)+".webp"} />
           <img className="swy-v67__image" src={"/hero/v67/d"+(i+1)+".webp"} alt="" width={1672} height={941}
-            loading={i===0 ? "eager" : "lazy"} fetchPriority={i===0 ? "high" : undefined} decoding="async"
+            loading="eager" fetchPriority={i===0 ? "high" : "auto"} decoding="async"
             style={{transform:reduceMotion ? "none" : "scale("+(1.008+.016*clamp((progress-i*.28)/.7))+")"}} />
         </picture>
       </div>)}
