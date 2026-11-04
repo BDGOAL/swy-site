@@ -20,7 +20,8 @@ function RootContent() {
 
   return (
     <div 
-      className="min-h-screen w-full overflow-x-hidden relative" 
+      // overflow-x-hidden computes overflow-y:auto and breaks sticky descendants (cinematic hero).
+      className="min-h-screen w-full overflow-x-clip relative" 
       style={{ 
         position: 'relative',
         backgroundColor: '#0A0E14'
