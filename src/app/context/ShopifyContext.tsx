@@ -15,6 +15,8 @@ interface ShopifyContextType {
   cartCount: number;
   isCartOpen: boolean;
   checkoutUrl: string | null;
+  /** Recover missing or stale Shopify checkout URL from the persisted cart before redirect. */
+  getCheckoutUrl: () => Promise<string>;
   addToCart: (variantId: string, productId: string, quantity?: number) => Promise<void>;
   removeFromCart: (lineId: string) => Promise<void>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
@@ -112,8 +114,9 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
           return;
         }
         applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
-      } catch {
-        if (!cancelled) clearServerCartState();
+      } catch (error) {
+        // Transient network failure must not erase the persisted Shopify cart ID.
+        if (!cancelled) console.warn("Cart hydration failed; saved cart ID retained", error);
       }
     })();
 
@@ -128,6 +131,32 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
   }, []);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const getCheckoutUrl = async (): Promise<string> => {
+    if (!isConfigured) throw new Error("Shopify is not configured");
+    // Use Shopify-issued URL when already present. Recover only when missing.
+    if (checkoutUrl && new URL(checkoutUrl).protocol === "https:") return checkoutUrl;
+    const savedId = cartId || localStorage.getItem(CART_ID_STORAGE);
+    if (!savedId) throw new Error("No Shopify cart is available");
+    const query = `
+      query CartCheckoutRecover($id: ID!) ${storefrontInContextDirective()} {
+        cart(id: $id) {
+          ${STOREFRONT_CART_SELECTION}
+        }
+      }
+    `;
+    const data = await storefrontGraphql<{
+      data?: { cart?: Parameters<typeof normalizeStorefrontCart>[0] };
+      errors?: { message: string }[];
+    }>(query, { id: savedId });
+    if (data.errors?.length) throw new Error(data.errors.map(e => e.message).join(", "));
+    const next = normalizeStorefrontCart(data.data?.cart);
+    if (!next || !next.lines.length || !next.checkoutUrl) {
+      throw new Error("Shopify checkout link is unavailable");
+    }
+    applyNormalizedCart(data.data?.cart);
+    return next.checkoutUrl;
+  };
 
   const cartCreate = async (lines: { merchandiseId: string; quantity: number }[]) => {
     const query = `
@@ -149,16 +178,15 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { input: { lines } });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartCreate?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartCreate?.cart;
-    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+    if (!c) throw new Error("Shopify cart mutation returned no cart");
+    applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
   };
 
   const cartLinesAdd = async (lines: { merchandiseId: string; quantity: number }[]) => {
@@ -182,16 +210,15 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lines });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesAdd?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesAdd?.cart;
-    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+    if (!c) throw new Error("Shopify cart mutation returned no cart");
+    applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
   };
 
   const cartLinesUpdate = async (lines: { id: string; quantity: number }[]) => {
@@ -215,16 +242,15 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lines });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesUpdate?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesUpdate?.cart;
-    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+    if (!c) throw new Error("Shopify cart mutation returned no cart");
+    applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
   };
 
   const cartLinesRemove = async (lineIds: string[]) => {
@@ -248,22 +274,20 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lineIds });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesRemove?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesRemove?.cart;
-    if (c) applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
+    if (!c) throw new Error("Shopify cart mutation returned no cart");
+    applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
   };
 
   const addToCart = async (variantId: string, _productId: string, quantity: number = 1) => {
     if (!isConfigured) {
-      console.warn("Shopify not configured.");
-      return;
+      throw new Error("Shopify not configured.");
     }
 
     const existing = cart.find((item) => item.variantId === variantId);
@@ -310,6 +334,7 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
         cartCount,
         isCartOpen,
         checkoutUrl,
+        getCheckoutUrl,
         addToCart,
         removeFromCart,
         updateQuantity,

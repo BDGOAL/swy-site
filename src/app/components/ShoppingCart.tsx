@@ -17,7 +17,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     cart,
     cartSubtotal,
     cartCount,
-    checkoutUrl,
+    getCheckoutUrl,
     removeFromCart,
     updateQuantity,
     isConfigured,
@@ -56,18 +56,25 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     return formatShopifyMoney(String(sum), cur, locale);
   }, [cart, cartSubtotal, locale]);
 
-  const handleCheckout = () => {
-    if (checkoutUrl) {
-      window.location.href = checkoutUrl;
-    } else if (!isConfigured) {
-      alert('Shopify is not configured. Please complete setup to enable checkout.');
-    } else {
-      setIsCreatingCheckout(true);
-      setCheckoutError(null);
-      setTimeout(() => {
-        setIsCreatingCheckout(false);
-        setCheckoutError('Failed to create checkout. Please try again.');
-      }, 2000);
+  const handleCheckout = async () => {
+    if (isCreatingCheckout) return;
+    if (!isConfigured) {
+      setCheckoutError(locale === 'zh' ? '商店暫時未能提供結帳服務。' : 'Checkout is currently unavailable.');
+      return;
+    }
+    setIsCreatingCheckout(true);
+    setCheckoutError(null);
+    try {
+      const url = await getCheckoutUrl();
+      // URL is supplied by Shopify Storefront API; custom Shopify checkout domains are supported.
+      const destination = new URL(url);
+      if (destination.protocol !== 'https:') throw new Error('Insecure checkout destination');
+      window.location.assign(destination.href);
+    } catch (error) {
+      console.error('Checkout URL validation failed:', error);
+      setCheckoutError(locale === 'zh' ? '暫時無法開啟結帳頁面，請稍後再試。購物車內容已保留。' : 'Could not open checkout. Please try again; your cart is still saved.');
+    } finally {
+      setIsCreatingCheckout(false);
     }
   };
 
@@ -312,12 +319,15 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                 <button
                   type="button"
                   onClick={handleCheckout}
+                  disabled={isCreatingCheckout || !isConfigured}
+                  aria-busy={isCreatingCheckout}
                   className="group flex min-h-[48px] w-full items-center justify-center border border-[#F2F0ED] py-4 transition-all duration-300 hover:bg-[#F2F0ED] hover:text-[#0A0A0A]"
                   style={{
                     fontFamily: 'var(--font-sans)',
                     fontSize: '10px',
                     letterSpacing: '0.3em',
                     color: '#F2F0ED',
+                    opacity: isCreatingCheckout || !isConfigured ? 0.55 : 1,
                   }}
                 >
                   {isCreatingCheckout
@@ -327,7 +337,8 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
 
                 {checkoutError && (
                   <p
-                    className="mt-3 text-center text-[8px] tracking-wider opacity-30"
+                    role="alert"
+                    className="mt-3 text-center text-[11px] leading-relaxed tracking-wide text-[#F2F0ED]/85"
                     style={{
                       fontFamily: 'var(--font-sans)',
                       color: '#F2F0ED',
@@ -344,7 +355,7 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
                     color: '#F2F0ED',
                   }}
                 >
-                  Shipping calculated at checkout
+                  {locale === 'zh' ? '運費會於結帳時顯示' : 'Shipping calculated at checkout'}
                 </p>
               </div>
             )}
