@@ -58,3 +58,25 @@
  .swy-v67--zh .swy-v67__text--3 h2{font-size:clamp(25px,6.1vw,34px)}
 }
 @media(prefers-reduced-motion:reduce){.swy-v67__image{transform:none!important}}
+
+
+/* Mobile: mask the partial, baked-in lettering on concept photos.
+   Scoped to the image layer: live HTML copy and official SWY logo remain untouched.
+   Replace concept art with clean portrait masters before production merge. */
+@media (max-width: 767px) {
+ .swy-v67__shot::after {
+   content:"";
+   position:absolute;
+   z-index:2;
+   pointer-events:none;
+   left:0;
+   top:39%;
+   width:54%;
+   height:19%;
+   background:radial-gradient(ellipse 100% 88% at 0% 50%,
+     rgba(8,12,17,.99) 0%,
+     rgba(8,12,17,.94) 43%,
+     rgba(8,12,17,.52) 72%,
+     transparent 100%);
+ }
+}
