@@ -80,3 +80,19 @@
      transparent 100%);
  }
 }
+
+
+/* Approved copy: punctuation defines the intentional editorial line breaks.
+   English long clauses may wrap as a narrow-screen accessibility fallback. */
+.swy-v67__punctuation-line { display:block; }
+.swy-v67--zh .swy-v67__punctuation-line { white-space:nowrap; }
+.swy-v67--en .swy-v67__punctuation-line { white-space:normal; text-wrap:pretty; }
+@media (max-width:767px) {
+  .swy-v67--zh .swy-v67__text--1 h2,
+  .swy-v67--zh .swy-v67__text--2 h2 { font-size:clamp(18px,5.3vw,23px); }
+  .swy-v67--zh .swy-v67__text--3 h2 { font-size:clamp(18px,5.6vw,24px); }
+}
+/* Tiny-width accessibility fallback: no horizontal overflow even on very narrow screens. */
+@media (max-width:359px) {
+  .swy-v67--zh .swy-v67__text h2 { font-size:17px; letter-spacing:.01em; }
+}
