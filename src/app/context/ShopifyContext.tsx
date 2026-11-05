@@ -208,13 +208,11 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lines });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesAdd?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesAdd?.cart;
     if (!c) throw new Error("Shopify cart mutation returned no cart");
@@ -242,13 +240,11 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lines });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesUpdate?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesUpdate?.cart;
     if (!c) throw new Error("Shopify cart mutation returned no cart");
@@ -276,13 +272,11 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
     }>(query, { cartId, lineIds });
 
     if (data.errors?.length) {
-      alert(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${data.errors.map((e) => e.message).join(", ")}`);
     }
     const errs = data.data?.cartLinesRemove?.userErrors;
     if (errs?.length) {
-      alert(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
-      return;
+      throw new Error(`Cart error: ${errs.map((e) => e.message).join(", ")}`);
     }
     const c = data.data?.cartLinesRemove?.cart;
     if (!c) throw new Error("Shopify cart mutation returned no cart");
