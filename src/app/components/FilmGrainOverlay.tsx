@@ -1,13 +1,12 @@
-import { motion, useAnimationFrame } from "motion/react";
-import { useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 
-/** Advance grain position ~1×/s at 60fps — avoids time-based modulo on `t` causing setState storms. */
-const GRAIN_OFFSET_FRAME_INTERVAL = 60;
+/** The original grain drifts once per second; no continuous 60fps JS loop is needed. */
+const GRAIN_INTERVAL_MS = 1000;
 
 export function FilmGrainOverlay() {
   const [offset, setOffset] = useState(0);
-  const frameCountRef = useRef(0);
   const { mode } = useTheme();
 
   const scratchBackgroundImage = useMemo(() => {
@@ -23,12 +22,26 @@ export function FilmGrainOverlay() {
           )`;
   }, []);
 
-  useAnimationFrame(() => {
-    frameCountRef.current += 1;
-    if (frameCountRef.current % GRAIN_OFFSET_FRAME_INTERVAL === 0) {
-      setOffset(Math.random() * 200);
-    }
-  });
+  useEffect(() => {
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const sync = () => {
+      if (interval !== undefined) {
+        window.clearInterval(interval);
+        interval = undefined;
+      }
+      if (document.hidden || motionPreference.matches) return;
+      interval = window.setInterval(() => setOffset(Math.random() * 200), GRAIN_INTERVAL_MS);
+    };
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    motionPreference.addEventListener("change", sync);
+    return () => {
+      if (interval !== undefined) window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", sync);
+      motionPreference.removeEventListener("change", sync);
+    };
+  }, []);
 
   // Different color tints for Noir vs Ocean mode (opacity from theme.css tokens)
   const colorTint = mode === 'noir' 
