@@ -68,7 +68,7 @@ export function CinematicHeroV67() {
         <picture className="swy-v67__picture">
           <source media="(max-width: 767px)" srcSet={"/hero/v67/m"+(i+1)+".webp"} />
           <img className="swy-v67__image" src={"/hero/v67/d"+(i+1)+".webp"} alt="" width={1672} height={941}
-            loading="eager" fetchPriority={i===0 ? "high" : "auto"} decoding="async"
+            loading="eager" fetchPriority={i===0 ? "high" : "low"} decoding="async"
             style={{transform:reduceMotion ? "none" : "scale("+(1.008+.016*clamp((progress-i*.28)/.7))+")"}} />
         </picture>
       </div>)}
