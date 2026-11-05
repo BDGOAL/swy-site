@@ -98,7 +98,7 @@ export function CollectionBrowsePage() {
           </p>
         </header>
 
-        <div className="mt-12 flex flex-col gap-6 border-t border-white/[0.07] pt-10 md:flex-row md:items-end md:justify-between">
+        <div className="mt-12 flex flex-col gap-5 border-t border-white/[0.07] pt-10 md:flex-row md:items-end md:justify-start md:gap-7">
           <div>
             <p
               className="text-[9px] uppercase tracking-[0.22em] text-[#F2F0ED]/38"
@@ -132,7 +132,7 @@ export function CollectionBrowsePage() {
             </div>
           </div>
           <p
-            className="max-w-md text-[11px] leading-relaxed text-[#F2F0ED]/40 md:text-right"
+            className="max-w-[680px] text-[11px] leading-relaxed text-[#F2F0ED]/40 md:min-w-0 md:flex-1 md:pb-1 md:text-left"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             {themes.join(" · ")}
