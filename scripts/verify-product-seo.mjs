@@ -26,7 +26,7 @@ for (const product of products) {
     const root = base + "/product/" + product.id;
     const canonical = root + (locale === "en" ? "?lang=en" : "");
     const title = product.name + " | SWY Parfums";
-    const escapedTitle = title.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+    const escapedTitle = title.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
     check(html.includes("<title>" + escapedTitle + "</title>"), file + ": title");
     check(html.includes('rel="canonical" href="' + canonical + '"'), file + ": canonical");
     check(html.includes('hreflang="zh-HK" href="' + root + '"'), file + ": Chinese alternate");
