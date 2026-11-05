@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender-product-seo.mjs && node scripts/verify-product-seo.mjs",
     "dev": "vite",
     "debug:texture": "node scripts/print-texture-metafield.mjs"
   },

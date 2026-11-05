@@ -1,6 +1,7 @@
 const BASE_URL = "https://www.scentwithyou.com";
 
-const STATIC_PATHS = ["/", "/collection", "/hero", "/contact", "/landing"] as const;
+// /hero and /landing render alternate homepage views; avoid duplicate indexed URLs.
+const STATIC_PATHS = ["/", "/collection", "/contact"] as const;
 
 /** Keep in sync with `id` fields in `src/app/data/products.ts`. */
 const PRODUCT_IDS = [
