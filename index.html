@@ -2,6 +2,10 @@
 <html lang="zh-HK">
   <head>
     <meta charset="UTF-8" />
+    <!-- First cinematic frame is the homepage LCP candidate. Each viewport fetches only its own source. -->
+    <link rel="preload" as="image" href="/hero/v67/m1.webp" media="(max-width: 767px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/hero/v67/d1.webp" media="(min-width: 768px)" fetchpriority="high" />
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="1JN2WZbn24o17wMrN73L4mEuvKidQg1DxFHLIHdigL4" />
 
