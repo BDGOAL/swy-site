@@ -96,3 +96,37 @@
 @media (max-width:359px) {
   .swy-v67--zh .swy-v67__text h2 { font-size:17px; letter-spacing:.01em; }
 }
+
+
+/* Scene 03: approved clean photography of a hand receiving the message bottle.
+   Portrait source is deliberately composed for each viewport; avoid object-fit:cover cropping the bottle. */
+.swy-v67__shot:nth-child(3)::before {
+ content:"";
+ position:absolute;
+ inset:-4%;
+ z-index:0;
+ background:url("/hero/v67/d3.webp") center center / cover no-repeat;
+ filter:blur(36px) brightness(.54) saturate(.82);
+ transform:scale(1.03);
+ pointer-events:none;
+}
+.swy-v67__shot:nth-child(3) .swy-v67__picture { z-index:1; }
+.swy-v67__shot:nth-child(3) .swy-v67__image {
+ object-fit:contain;
+ object-position: right center;
+ -webkit-mask-image:linear-gradient(90deg,transparent 34%,rgba(0,0,0,.4) 53%,#000 78%);
+ mask-image:linear-gradient(90deg,transparent 34%,rgba(0,0,0,.4) 53%,#000 78%);
+}
+@media(max-width:767px){
+ .swy-v67__shot:nth-child(3)::before {
+   background-image:url("/hero/v67/m3.webp");
+   filter:blur(28px) brightness(.46) saturate(.84);
+ }
+ .swy-v67__shot:nth-child(3)::after{ display:none; }
+ .swy-v67__shot:nth-child(3) .swy-v67__image {
+   object-fit:contain;
+   object-position:center center;
+   -webkit-mask-image:none;
+   mask-image:none;
+ }
+}
