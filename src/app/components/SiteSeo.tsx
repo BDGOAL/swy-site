@@ -39,7 +39,8 @@ export function SiteSeo() {
 
     // Internal /hero and /landing are alternate homepage entry points, not canonical landing pages.
     const canonicalPath = path === "/hero" || path === "/landing" ? "/" : path;
-    const canonical = ORIGIN + canonicalPath;
+    const baseUrl = ORIGIN + canonicalPath;
+    const canonical = baseUrl + (locale === "en" ? "?lang=en" : "");
     document.title = title;
     setMeta("name", "description", description);
     setMeta("property", "og:title", title);
@@ -50,9 +51,41 @@ export function SiteSeo() {
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
     setMeta("name", "twitter:card", "summary_large_image");
-    // Until a product-specific official Shopify image is available, keep the official brand share image.
-    setMeta("property", "og:image", DEFAULT_OG);
-    setMeta("name", "twitter:image", DEFAULT_OG);
+    // Preserve verified official Shopify share imagery from server-rendered HTML.
+    // The manifest also keeps image data in sync when navigating between PDP routes.
+    const applyImage = (url: string) => {
+      setMeta("property", "og:image", url);
+      setMeta("name", "twitter:image", url);
+    };
+    let verifiedImage: string | undefined;
+    try {
+      const initialSchema = document.getElementById("swy-route-jsonld")?.textContent;
+      const snapshot = initialSchema ? JSON.parse(initialSchema) as { "@id"?: string; image?: string[] } : null;
+      if (snapshot?.["@id"] === canonical + "#product" && Array.isArray(snapshot.image)) {
+        verifiedImage = snapshot.image[0];
+      }
+    } catch { /* No server snapshot available for this navigation. */ }
+    applyImage(verifiedImage || DEFAULT_OG);
+    let cancelled = false;
+    if (product) {
+      fetch("/seo/product-images.json")
+        .then(response => response.ok ? response.json() : {})
+        .then((images: Record<string, unknown>) => {
+          if (cancelled) return;
+          const image = images[product.id];
+          if (typeof image !== "string" || !image.startsWith("https://")) return;
+          applyImage(image);
+          const script = document.getElementById("swy-route-jsonld");
+          if (script?.textContent) {
+            const data = JSON.parse(script.textContent) as Record<string, unknown>;
+            if (data["@id"] === canonical + "#product") {
+              data.image = [image];
+              script.textContent = JSON.stringify(data).replace(/</g, "\\u003c");
+            }
+          }
+        })
+        .catch(() => { /* Branded preview is a safe fallback. */ });
+    }
 
     const link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (link) link.href = canonical;
@@ -65,7 +98,7 @@ export function SiteSeo() {
         alternate.hreflang = lang;
         document.head.appendChild(alternate);
       }
-      alternate.href = canonical + (lang === "en" ? "?lang=en" : "");
+      alternate.href = baseUrl + (lang === "en" ? "?lang=en" : "");
     }
     let defaultAlternate = document.head.querySelector<HTMLLinkElement>('link[rel="alternate"][hreflang="x-default"]');
     if (!defaultAlternate) {
@@ -74,7 +107,7 @@ export function SiteSeo() {
       defaultAlternate.hreflang = "x-default";
       document.head.appendChild(defaultAlternate);
     }
-    defaultAlternate.href = canonical;
+    defaultAlternate.href = baseUrl;
 
     const seoScriptId = "swy-route-jsonld";
     let script = document.getElementById(seoScriptId) as HTMLScriptElement | null;
@@ -101,6 +134,7 @@ export function SiteSeo() {
     } else {
       script.textContent = "";
     }
+    return () => { cancelled = true; };
   }, [location.pathname, locale]);
 
   return null;
