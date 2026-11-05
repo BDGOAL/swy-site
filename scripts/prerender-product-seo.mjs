@@ -94,7 +94,7 @@ function renderProduct(p, locale) {
     metaName("twitter:title", title),
     metaName("twitter:description", description),
     metaName("twitter:image", image),
-    '<script type="application/ld+json" id="swy-prerender-product-jsonld">' + safeJson(schema) + '</script>',
+    '<script type="application/ld+json" id="swy-route-jsonld">' + safeJson(schema) + '</script>',
   ].join("\n    ");
 
   // Only remove the single-page home metadata, preserving organization data and Vite module scripts.
