@@ -48,6 +48,12 @@ export function CollectionBrowsePage() {
     return products.filter((p) => mood === "all" || p.mood === mood);
   }, [mood]);
 
+  const moodCounts = useMemo(() => ({
+    all: products.length,
+    light: products.filter(p => p.mood === "light").length,
+    dark: products.filter(p => p.mood === "dark").length,
+  }), []);
+
   return (
     <div className="relative w-full" style={{ backgroundColor: "#0A0E14" }}>
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
@@ -107,6 +113,7 @@ export function CollectionBrowsePage() {
                   type="button"
                   onClick={() => setMood(key)}
                   aria-pressed={mood === key}
+                  aria-controls="swy-collection-results"
                   className={`min-h-[44px] rounded-sm border px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F2F0ED]/35 ${
                     mood === key
                       ? "border-[#F2F0ED]/32 bg-[#F2F0ED]/[0.07] text-[#F2F0ED]"
@@ -119,6 +126,7 @@ export function CollectionBrowsePage() {
                     : key === "light"
                       ? t(siteCopy.collectionPage.filterLight)
                       : t(siteCopy.collectionPage.filterDark)}
+                  <span aria-hidden="true" className="ml-2 text-[10px] tabular-nums opacity-60">{moodCounts[key]}</span>
                 </button>
               ))}
             </div>
@@ -131,7 +139,10 @@ export function CollectionBrowsePage() {
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 min-[360px]:grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <p role="status" aria-live="polite" className="mt-8 text-[11px] tracking-[0.12em] text-[#F2F0ED]/48">
+          {locale === "zh" ? `顯示 ${filtered.length} 支香氣` : `Showing ${filtered.length} ${filtered.length === 1 ? "scent" : "scents"}`}
+        </p>
+        <div id="swy-collection-results" className="mt-4 grid grid-cols-1 min-[360px]:grid-cols-2 gap-3 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p) => {
             const pitch = getLocalizedElevatorPitch(p.id, locale);
             const teaser = pitch.trim() || productTagline(p, locale);
