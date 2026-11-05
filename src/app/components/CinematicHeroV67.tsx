@@ -11,6 +11,10 @@ const SCENES = [
   { code: "03", label: { en: "THE CONNECTION", zh: "相遇" },
     copy: { en: "Somewhere, someone will find a little of themselves in your story.", zh: "在世界某個角落，總有人會在你的故事裡，找到一點自己的影子。" } },
 ] as const;
+/** Split only at existing punctuation. Preserve every approved word and mark. */
+function punctuationClauses(copy: string): string[] {
+  return copy.split(/(?<=[，。！？；、,.!?;:])\s*/u).map(part => part.trim()).filter(Boolean);
+}
 const clamp = (x: number) => Math.min(1, Math.max(0, x));
 const ramp = (x: number, a: number, b: number) => { const v = clamp((x-a)/(b-a)); return v*v*(3-2*v); };
 
@@ -80,7 +84,7 @@ export function CinematicHeroV67() {
       {SCENES.map((item,i) => <div key={item.code} className={"swy-v67__text swy-v67__text--"+(i+1)}
         style={{opacity:textAlpha[i],visibility:textAlpha[i]<.004?"hidden":"visible",transform:reduceMotion?undefined:"translateY("+((1-textAlpha[i])*12)+"px)"}} aria-hidden={textAlpha[i]<.5}>
         <small>{item.code} / {item.label[lang]}</small>
-        <h2>{item.copy[lang]}</h2>
+        <h2 aria-label={item.copy[lang]}>{punctuationClauses(item.copy[lang]).map((clause, index) => <span key={index} className="swy-v67__punctuation-line" aria-hidden="true">{clause}</span>)}</h2>
         {i===2 && <div className="swy-v67__closing-signature"><span>Scent With You.</span><em>Tell Me Your Story.</em></div>}
       </div>)}
       <div className="swy-v67__footer"><span>{lang==="en" ? "SCENT WITH YOU / A STORY FINDS ITS SHORE" : "SCENT WITH YOU / 故事終有彼岸"}</span><span>{String(scene+1).padStart(2,"0")} / 03</span></div>
