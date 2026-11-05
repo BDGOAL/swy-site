@@ -57,7 +57,8 @@ if (domain && token && !domain.startsWith("YOUR_STORE") && !token.startsWith("<"
 }
 
 function renderProduct(p, locale) {
-  const canonical = ORIGIN + productPath(p);
+  const baseUrl = ORIGIN + productPath(p);
+  const canonical = baseUrl + (locale === "en" ? "?lang=en" : "");
   const title = p.name + " | SWY Parfums";
   const summary = String(p.shortStory[locale] || p.descriptor[locale]).trim();
   const description = (summary + " — " + p.name + ", a fragrance by SWY Parfums.").slice(0, 220);
@@ -78,9 +79,9 @@ function renderProduct(p, locale) {
   const head = [
     metaName("description", description),
     '<link rel="canonical" href="' + escapeHtml(canonical) + '" />',
-    alternate("zh-HK", canonical),
-    alternate("en", canonical + "?lang=en"),
-    alternate("x-default", canonical),
+    alternate("zh-HK", baseUrl),
+    alternate("en", baseUrl + "?lang=en"),
+    alternate("x-default", baseUrl),
     metaProperty("og:type", "product"),
     metaProperty("og:site_name", "SWY Parfums"),
     metaProperty("og:title", title),
