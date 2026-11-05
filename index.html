@@ -2,10 +2,19 @@
 <html lang="zh-HK">
   <head>
     <meta charset="UTF-8" />
-    <!-- First cinematic frame is the homepage LCP candidate. Each viewport fetches only its own source. -->
-    <link rel="preload" as="image" href="/hero/v67/m1.webp" media="(max-width: 767px)" fetchpriority="high" />
-    <link rel="preload" as="image" href="/hero/v67/d1.webp" media="(min-width: 768px)" fetchpriority="high" />
+    <!-- Warm the CDN for Shopify product media and the official SWY logo. -->
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
+    <!-- Hero image preloading must never burden product pages. -->
+    <script>
+      if (location.pathname === "/" || location.pathname === "/landing") {
+        var swyHeroPreload = document.createElement("link");
+        swyHeroPreload.rel = "preload";
+        swyHeroPreload.as = "image";
+        swyHeroPreload.href = matchMedia("(max-width: 767px)").matches ? "/hero/v67/m1.webp" : "/hero/v67/d1.webp";
+        swyHeroPreload.setAttribute("fetchpriority", "high");
+        document.head.appendChild(swyHeroPreload);
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="1JN2WZbn24o17wMrN73L4mEuvKidQg1DxFHLIHdigL4" />
 
