@@ -229,6 +229,7 @@ export function UnboxingExperience() {
   const { t, locale, localizePath } = useLanguage();
   const { addToCart, isConfigured } = useShopify();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [addToCartError, setAddToCartError] = useState<string | null>(null);
   const [shopifyProduct, setShopifyProduct] = useState<ShopifyProductPayload | null>(null);
   const [isLoadingShopifyProduct, setIsLoadingShopifyProduct] = useState(false);
   const [selectedVariantId, setSelectedVariantId] = useState<string>("");
@@ -900,7 +901,9 @@ export function UnboxingExperience() {
     let frame = 0;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setShowStickyAtc(!entry.isIntersecting);
+        // Only show after the purchase button has scrolled ABOVE the viewport.
+        // When the button is below the fold, the sticky bar must not obscure the story.
+        setShowStickyAtc(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
       },
       { root: null, threshold: 0, rootMargin: "0px" }
     );
@@ -923,12 +926,13 @@ export function UnboxingExperience() {
       return;
     }
 
+    setAddToCartError(null);
     setIsAddingToCart(true);
     try {
       await addToCart(cartVariantId, product.id, 1);
     } catch (error) {
       console.error("Failed to add to cart:", error);
-      alert(t(siteCopy.product.cartError));
+      setAddToCartError(t(siteCopy.product.cartError));
     } finally {
       setIsAddingToCart(false);
     }
@@ -1162,19 +1166,20 @@ export function UnboxingExperience() {
 
             {variants.length > 1 && (
               <div className="mt-6">
-                <p
-                  className="mb-2 text-[10px] uppercase tracking-[0.24em] text-[#F2F0ED]/50"
+                <label htmlFor="swy-pdp-variant"
+                  className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-[#F2F0ED]/50"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   {t(siteCopy.product.selectVariant)}
-                </p>
+                </label>
                 <select
+                  id="swy-pdp-variant"
                   value={selectedVariant?.id || ""}
                   onChange={(e) => setSelectedVariantId(e.target.value)}
                   className="min-h-[44px] w-full border border-white/15 bg-black/30 px-4 py-3 text-sm text-[#F2F0ED]"
                 >
                   {variants.map((variant) => (
-                    <option key={variant.id} value={variant.id}>
+                    <option key={variant.id} value={variant.id} disabled={!variant.availableForSale}>
                       {variant.title}{" "}
                       {variant.availableForSale ? "" : t(siteCopy.product.variantSoldOut)}
                     </option>
@@ -1198,6 +1203,12 @@ export function UnboxingExperience() {
                   ? t(siteCopy.product.addToCart)
                   : t(siteCopy.product.soldOut)}
             </button>
+
+            {addToCartError && (
+              <p role="alert" className="mt-3 text-[12px] leading-relaxed text-[#F2F0ED]/85">
+                {addToCartError}
+              </p>
+            )}
 
             {!isConfigured && (
               <p
