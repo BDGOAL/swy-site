@@ -8,6 +8,21 @@
       "destination": "/api/sitemap.xml"
     },
     {
+      "source": "/product/:id",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/seo/en/product/:id.html"
+    },
+    {
+      "source": "/product/:id",
+      "destination": "/seo/zh/product/:id.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
