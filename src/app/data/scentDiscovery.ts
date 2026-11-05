@@ -7,12 +7,10 @@ import type { Locale } from "../lib/i18n";
  * Each fragrance may belong to several story moods and scent families.
  */
 export const STORY_MOODS = [
-  { id: "first-love", en: "First Love", zh: "心動" },
-  { id: "new-beginnings", en: "New Beginnings", zh: "重啟" },
-  { id: "stillness", en: "Stillness", zh: "靜謐" },
-  { id: "belonging", en: "Belonging", zh: "歸屬" },
-  { id: "self-belief", en: "Self-Belief", zh: "自持" },
-  { id: "after-dark", en: "After Dark", zh: "夜色" },
+  { id: "love-belonging", en: "Love & Belonging", zh: "心動與歸屬" },
+  { id: "new-beginnings", en: "Letting Go & Beginning", zh: "告別與新生" },
+  { id: "quiet-moments", en: "Quiet Moments", zh: "獨處與沉澱" },
+  { id: "self-expression", en: "Being Yourself", zh: "自我與夜色" },
 ] as const;
 
 export const SCENT_FAMILIES = [
@@ -35,14 +33,14 @@ export const DISCOVERY_MEMBERSHIP: Record<string, {
   story: StoryMoodId[];
   families: ScentFamilyId[];
 }> = {
-  "the-last-snow": { story: ["new-beginnings", "stillness"], families: ["floral", "woody", "citrus"] },
-  "the-first-rose": { story: ["first-love"], families: ["floral", "woody", "musk", "citrus"] },
-  "no-worries": { story: ["belonging"], families: ["citrus", "aromatic", "spicy", "amber-resin"] },
-  "old-library": { story: ["stillness"], families: ["woody", "aromatic", "amber-resin", "citrus"] },
-  "mens-garage": { story: ["self-belief", "after-dark"], families: ["woody", "leather", "aromatic", "spicy"] },
-  "im-rich": { story: ["self-belief"], families: ["spicy", "floral", "musk", "woody"] },
-  "morning-after-quit": { story: ["new-beginnings", "stillness"], families: ["floral", "woody", "citrus"] },
-  "night-was-mine": { story: ["after-dark"], families: ["spicy", "amber-resin", "woody", "musk"] },
+  "the-last-snow": { story: ["new-beginnings", "quiet-moments"], families: ["floral", "woody", "citrus"] },
+  "the-first-rose": { story: ["love-belonging"], families: ["floral", "woody", "musk", "citrus"] },
+  "no-worries": { story: ["love-belonging"], families: ["citrus", "aromatic", "spicy", "amber-resin"] },
+  "old-library": { story: ["quiet-moments"], families: ["woody", "aromatic", "amber-resin", "citrus"] },
+  "mens-garage": { story: ["self-expression"], families: ["woody", "leather", "aromatic", "spicy"] },
+  "im-rich": { story: ["self-expression"], families: ["spicy", "floral", "musk", "woody"] },
+  "morning-after-quit": { story: ["new-beginnings", "quiet-moments"], families: ["floral", "woody", "citrus"] },
+  "night-was-mine": { story: ["self-expression"], families: ["spicy", "amber-resin", "woody", "musk"] },
 };
 
 export interface DiscoveryNote {
