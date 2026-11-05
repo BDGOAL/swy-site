@@ -1,14 +1,15 @@
-import { createServer } from "vite";
 import { readFile, access } from "node:fs/promises";
 import path from "node:path";
 
 /** Build gate for 8 product pages in both languages. */
 const base = "https://www.scentwithyou.com";
 const dist = path.resolve("dist");
-const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
-let products;
-try { ({ products } = await vite.ssrLoadModule("/src/app/data/products.ts")); }
-finally { await vite.close(); }
+// Read known catalog identifiers without starting a second Vite server, which can
+// race against dependency scanning when a Vite SSR server closes after prerender.
+const productSource = await readFile(path.resolve("src/app/data/products.ts"), "utf8");
+const products = [...productSource.matchAll(/^\s+id:\s*"([a-z0-9-]+)",\s*\n\s+slug:\s*"[a-z0-9-]+",\s*\n\s+name:\s*"([^"]+)",/gm)]
+  .map(match => ({ id: match[1], name: match[2] }));
+if (products.length !== 8) throw new Error("Expected eight products in static catalog");
 const failures = [];
 let verified = 0;
 const check = (ok, msg) => { if (!ok) failures.push(msg); };
