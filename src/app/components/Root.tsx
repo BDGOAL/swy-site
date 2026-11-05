@@ -12,15 +12,16 @@ function RootContent() {
   const { isCartOpen, closeCart } = useShopify();
   const location = useLocation();
 
-  /** Reset document scroll on real route changes; skip when navigating to a hash so in-page anchors still work. */
+  /** Reset scroll on route changes only. Locale query changes must preserve cinematic hero progress. */
   useLayoutEffect(() => {
     if (location.hash) return;
     window.scrollTo(0, 0);
-  }, [location.pathname, location.search, location.hash]);
+  }, [location.pathname]);
 
   return (
     <div 
-      className="min-h-screen w-full overflow-x-hidden relative" 
+      // overflow-x-hidden computes overflow-y:auto and breaks sticky descendants (cinematic hero).
+      className="min-h-screen w-full overflow-x-clip relative" 
       style={{ 
         position: 'relative',
         backgroundColor: '#0A0E14'

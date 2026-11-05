@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Chiron+Sung+HK:wght@400;500&display=swap');
+.swy-v67{height:340svh;min-height:1650px;position:relative;background:#080b10;color:#f0ebe3;isolation:isolate}
+.swy-v67 *{box-sizing:border-box}
+.swy-v67__stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#080b10;touch-action:pan-y;isolation:isolate}
+.swy-v67__shot,.swy-v67__picture,.swy-v67__image{position:absolute;inset:0;width:100%;height:100%}
+.swy-v67__shot{will-change:opacity;pointer-events:none}
+.swy-v67__image{display:block;object-fit:cover;object-position:center;will-change:transform}
+.swy-v67__transition,.swy-v67__vignette{position:absolute;inset:0;pointer-events:none}
+.swy-v67__transition{z-index:3;background:linear-gradient(100deg,transparent,rgba(218,208,197,.14) 48%,transparent);mix-blend-mode:screen}
+.swy-v67__vignette{z-index:4;background:linear-gradient(90deg,rgba(5,8,13,.35),transparent 74%),linear-gradient(0deg,rgba(5,7,10,.68),transparent 28%,rgba(5,7,10,.1) 90%)}
+.swy-v67__eyebrow{position:absolute;z-index:7;top:clamp(75px,8.5vh,115px);left:clamp(28px,6.4vw,110px);font:10px/1.6 Arial,sans-serif;letter-spacing:.26em;color:rgba(240,231,220,.68);pointer-events:none}
+.swy-v67__logo{position:absolute;z-index:8;top:27%;left:clamp(36px,6.4vw,110px);width:clamp(175px,19vw,280px);pointer-events:none}
+.swy-v67__logo img{width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 5px 20px rgba(0,0,0,.3))}
+.swy-v67__opening-signature{position:absolute;z-index:8;left:clamp(36px,6.4vw,110px);bottom:clamp(115px,15vh,175px);display:flex;flex-direction:column;gap:4px;pointer-events:none;text-shadow:0 2px 18px #000a}
+.swy-v67__opening-signature span{font:400 clamp(18px,1.5vw,25px)/1.4 Georgia,serif}
+.swy-v67__opening-signature em{font:italic 400 clamp(19px,1.85vw,29px)/1.35 Georgia,serif}
+.swy-v67__text{position:absolute;z-index:10;width:min(46vw,720px);pointer-events:none;text-shadow:0 3px 25px #0009;will-change:opacity,transform}
+.swy-v67__text small{display:block;margin-bottom:19px;font:400 10px/1.6 Arial,sans-serif;letter-spacing:.25em;color:rgba(242,234,225,.75)}
+.swy-v67__text h2{margin:0;font:italic 400 clamp(28px,3.15vw,53px)/1.27 Georgia,'Times New Roman',serif;letter-spacing:-.014em;text-wrap:pretty}
+.swy-v67__text--1{left:clamp(40px,8.8vw,162px);top:25%}
+.swy-v67__text--2{right:clamp(40px,6.2vw,118px);top:19%;text-align:right;width:min(43vw,650px)}
+.swy-v67__text--2 h2{font-size:clamp(27px,2.78vw,47px)}
+.swy-v67__text--3{left:clamp(40px,8.8vw,162px);bottom:17%;width:min(48vw,730px)}
+.swy-v67__text--3 h2{font-size:clamp(29px,3.35vw,57px);line-height:1.2}
+.swy-v67__closing-signature{display:flex;flex-direction:column;gap:2px;margin-top:26px;padding-top:17px;max-width:300px;border-top:1px solid rgba(240,230,217,.35)}
+.swy-v67__closing-signature span{font:400 13px/1.55 Georgia,serif}
+.swy-v67__closing-signature em{font:italic 400 15px/1.55 Georgia,serif}
+.swy-v67__footer{position:absolute;z-index:10;left:clamp(28px,5.4vw,110px);right:clamp(28px,5.4vw,110px);bottom:max(24px,env(safe-area-inset-bottom));display:flex;justify-content:space-between;gap:18px;font:9px/1.5 Arial,sans-serif;letter-spacing:.20em;color:rgba(236,229,220,.66);pointer-events:none}
+.swy-v67__scroll{position:absolute;z-index:10;left:50%;bottom:42px;transform:translateX(-50%);text-align:center;white-space:nowrap;font:9px/1.5 Arial,sans-serif;letter-spacing:.27em;color:rgba(242,236,229,.75);pointer-events:none}
+.swy-v67__scroll:after{content:"";display:block;width:1px;height:25px;margin:10px auto;background:linear-gradient(#f1e9df80,transparent)}
+.swy-v67--zh .swy-v67__text h2{font-family:"Chiron Sung HK","Songti TC","Noto Serif TC",serif;font-weight:400;font-style:normal;letter-spacing:.05em;line-height:1.64;word-break:normal;overflow-wrap:anywhere;text-wrap:pretty}
+.swy-v67--zh .swy-v67__text--1 h2,.swy-v67--zh .swy-v67__text--2 h2{font-size:clamp(27px,2.65vw,45px)}
+.swy-v67--zh .swy-v67__text--3 h2{font-size:clamp(29px,3vw,52px)}
+@media(max-width:767px){
+ .swy-v67{height:300svh;min-height:0}
+ .swy-v67__image{object-position:center}
+ .swy-v67__vignette{background:linear-gradient(180deg,rgba(6,9,14,.68),transparent 31%,transparent 52%,rgba(5,8,13,.72) 100%)}
+ .swy-v67__eyebrow{left:24px;top:max(82px,calc(68px + env(safe-area-inset-top)));font-size:8px}
+ .swy-v67__logo{left:24px;top:17%;width:clamp(150px,39vw,210px)}
+ .swy-v67__opening-signature{left:25px;bottom:clamp(95px,16svh,150px)}
+ .swy-v67__opening-signature span{font-size:clamp(18px,4.4vw,23px)}
+ .swy-v67__opening-signature em{font-size:clamp(20px,5vw,26px)}
+ .swy-v67__text{left:24px;right:24px;width:auto;max-width:calc(100vw - 48px)}
+ .swy-v67__text small{font-size:8px;margin-bottom:12px}
+ .swy-v67__text h2{font-size:clamp(24px,6.5vw,36px);line-height:1.26}
+ .swy-v67__text--1{top:18%;bottom:auto}
+ .swy-v67__text--2{left:auto;right:24px;top:16%;bottom:auto;width:min(82vw,360px);text-align:right}
+ .swy-v67__text--2 h2{font-size:clamp(24px,6.1vw,33px)}
+ .swy-v67__text--3{top:auto;bottom:clamp(88px,15svh,155px)}
+ .swy-v67__text--3 h2{font-size:clamp(26px,6.7vw,38px)}
+ .swy-v67__closing-signature{margin-top:15px;padding-top:11px;max-width:240px}
+ .swy-v67__closing-signature span{font-size:11px}
+ .swy-v67__closing-signature em{font-size:12px}
+ .swy-v67__footer{left:23px;right:23px;bottom:max(16px,env(safe-area-inset-bottom));font-size:7px}
+ .swy-v67__scroll{display:none}
+ .swy-v67--zh .swy-v67__text h2{letter-spacing:.04em;line-height:1.58}
+ .swy-v67--zh .swy-v67__text--1 h2,.swy-v67--zh .swy-v67__text--2 h2{font-size:clamp(23px,5.8vw,31px)}
+ .swy-v67--zh .swy-v67__text--3 h2{font-size:clamp(25px,6.1vw,34px)}
+}
+@media(prefers-reduced-motion:reduce){.swy-v67__image{transform:none!important}}
+
+
+/* Mobile: mask the partial, baked-in lettering on concept photos.
+   Scoped to the image layer: live HTML copy and official SWY logo remain untouched.
+   Replace concept art with clean portrait masters before production merge. */
+@media (max-width: 767px) {
+ .swy-v67__shot::after {
+   content:"";
+   position:absolute;
+   z-index:2;
+   pointer-events:none;
+   left:0;
+   top:39%;
+   width:54%;
+   height:19%;
+   background:radial-gradient(ellipse 100% 88% at 0% 50%,
+     rgba(8,12,17,.99) 0%,
+     rgba(8,12,17,.94) 43%,
+     rgba(8,12,17,.52) 72%,
+     transparent 100%);
+ }
+}
+
+
+/* Approved copy: punctuation defines the intentional editorial line breaks.
+   English long clauses may wrap as a narrow-screen accessibility fallback. */
+.swy-v67__punctuation-line { display:block; }
+.swy-v67--zh .swy-v67__punctuation-line { white-space:nowrap; }
+.swy-v67--en .swy-v67__punctuation-line { white-space:normal; text-wrap:pretty; }
+@media (max-width:767px) {
+  .swy-v67--zh .swy-v67__text--1 h2,
+  .swy-v67--zh .swy-v67__text--2 h2 { font-size:clamp(18px,5.3vw,23px); }
+  .swy-v67--zh .swy-v67__text--3 h2 { font-size:clamp(18px,5.6vw,24px); }
+}
+/* Tiny-width accessibility fallback: no horizontal overflow even on very narrow screens. */
+@media (max-width:359px) {
+  .swy-v67--zh .swy-v67__text h2 { font-size:17px; letter-spacing:.01em; }
+}
