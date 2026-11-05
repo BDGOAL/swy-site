@@ -10,7 +10,27 @@ const productSource = await readFile(path.resolve("src/app/data/products.ts"), "
 const products = [...productSource.matchAll(/^\s+id:\s*"([a-z0-9-]+)",\s*\n\s+slug:\s*"[a-z0-9-]+",\s*\n\s+name:\s*"([^"]+)",/gm)]
   .map(match => ({ id: match[1], name: match[2] }));
 if (products.length !== 8) throw new Error("Expected eight products in static catalog");
-const failures = [];
+// Validate Vercel routing invariants in the same build that creates the snapshots.
+// This verifies configuration and generated files, not the live HTTP response.
+const vercel = JSON.parse(await readFile(path.resolve("vercel.json"), "utf8"));
+const routes = vercel.rewrites || [];
+const en = routes.findIndex(route => route.source === "/product/:id" && route.has?.some(c => c.type === "query" && c.key === "lang" && c.value === "en"));
+const zh = routes.findIndex(route => route.source === "/product/:id" && !route.has?.length);
+const fallback = routes.findIndex(route => route.source === "/(.*)");
+const routeFailures = [];
+if (en < 0 || zh < 0 || fallback < 0 || !(en < zh && zh < fallback)) {
+  routeFailures.push("Product English route must precede Chinese default and SPA fallback");
+}
+if (routes[en]?.destination !== "/seo/en/product/:id.html") {
+  routeFailures.push("English product route has the wrong prerender target");
+}
+if (routes[zh]?.destination !== "/seo/zh/product/:id.html") {
+  routeFailures.push("Chinese product route has the wrong prerender target");
+}
+if (routes[fallback]?.destination !== "/index.html") {
+  routeFailures.push("SPA fallback target changed unexpectedly");
+}
+const failures = [...routeFailures];
 let verified = 0;
 const check = (ok, msg) => { if (!ok) failures.push(msg); };
 const attribute = (html, property) =>
