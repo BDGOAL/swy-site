@@ -114,8 +114,9 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
           return;
         }
         applyNormalizedCart(c as Parameters<typeof normalizeStorefrontCart>[0]);
-      } catch {
-        if (!cancelled) clearServerCartState();
+      } catch (error) {
+        // Transient network failure must not erase the persisted Shopify cart ID.
+        if (!cancelled) console.warn("Cart hydration failed; saved cart ID retained", error);
       }
     })();
 
@@ -133,7 +134,8 @@ export function ShopifyProvider({ children }: ShopifyProviderProps) {
 
   const getCheckoutUrl = async (): Promise<string> => {
     if (!isConfigured) throw new Error("Shopify is not configured");
-    // Revalidate against Shopify rather than relying on a stale checkout URL in memory.
+    // Use Shopify-issued URL when already present. Recover only when missing.
+    if (checkoutUrl && new URL(checkoutUrl).protocol === "https:") return checkoutUrl;
     const savedId = cartId || localStorage.getItem(CART_ID_STORAGE);
     if (!savedId) throw new Error("No Shopify cart is available");
     const query = `
