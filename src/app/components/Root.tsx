@@ -7,6 +7,7 @@ import { useShopify } from "../context/ShopifyContext";
 import { FilmGrainOverlay } from "./FilmGrainOverlay";
 import { NavigationArchive } from "./NavigationArchive";
 import { ShoppingCart } from "./ShoppingCart";
+import { SiteSeo } from "./SiteSeo";
 
 function RootContent() {
   const { isCartOpen, closeCart } = useShopify();
@@ -27,6 +28,7 @@ function RootContent() {
         backgroundColor: '#0A0E14'
       }}
     >
+      <SiteSeo />
       <ShoppingCart isOpen={isCartOpen} onClose={closeCart} />
 
       {/* Global Film Grain Overlay */}
