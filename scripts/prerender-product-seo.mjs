@@ -31,6 +31,12 @@ const productImages = {};
 // Only the actual official Shopify featuredImage is eligible as a product share image.
 const domain = process.env.VITE_SHOPIFY_STORE_DOMAIN;
 const token = process.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
+const SWY_SHOP = "swy-scent-with-you.myshopify.com";
+if (domain && domain.toLowerCase() !== SWY_SHOP) {
+  throw new Error("[SEO] Wrong Shopify store configured. Refusing non-SWY product image data.");
+}
+console.log("[SEO] Store domain:", domain === SWY_SHOP ? "SWY verified" : "not configured",
+  "| Storefront access:", token ? "configured" : "missing");
 if (domain && token && !domain.startsWith("YOUR_STORE") && !token.startsWith("<")) {
   try {
     const query = "query FeaturedProductImages { " + products.map((p, i) => 'p' + i + ': product(handle: ' + JSON.stringify(p.shopifyHandle || p.id) + ') { featuredImage { url altText } }').join(" ") + " }";
@@ -42,10 +48,11 @@ if (domain && token && !domain.startsWith("YOUR_STORE") && !token.startsWith("<"
     });
     if (!response.ok) throw new Error("Shopify Storefront HTTP " + response.status);
     const json = await response.json();
-    if (json.errors?.length) throw new Error("Shopify Storefront image query returned GraphQL errors");
+    if (json.errors?.length) throw new Error("Shopify Storefront image query returned GraphQL errors: " + json.errors.map(e => e.message).join("; "));
+    console.log("[SEO] Shopify product matches:", products.filter((p,i) => Boolean(json.data?.["p"+i])).length, "of", products.length);
     for (let i = 0; i < products.length; i++) {
       const url = json.data?.["p" + i]?.featuredImage?.url;
-      if (typeof url === "string" && new URL(url).protocol === "https:") {
+      if (typeof url === "string" && new URL(url).protocol === "https:" && new URL(url).hostname === "cdn.shopify.com") {
         productImages[products[i].id] = url;
       }
     }
