@@ -4,7 +4,6 @@ import { useShopify } from '../context/ShopifyContext';
 import { useLanguage } from '../context/LanguageContext';
 import { siteCopy } from '../content/siteCopy';
 import { formatShopifyMoney } from '../lib/productLocale';
-import { shopifyConfig } from '../config/shopify';
 import { useState, useEffect, useMemo } from 'react';
 
 interface ShoppingCartProps {
@@ -18,7 +17,6 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     cart,
     cartSubtotal,
     cartCount,
-    checkoutUrl,
     getCheckoutUrl,
     removeFromCart,
     updateQuantity,
@@ -58,8 +56,6 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     return formatShopifyMoney(String(sum), cur, locale);
   }, [cart, cartSubtotal, locale]);
 
-  const shopifyCheckoutHost = shopifyConfig.storeDomain.toLowerCase();
-
   const handleCheckout = async () => {
     if (isCreatingCheckout) return;
     if (!isConfigured) {
@@ -70,11 +66,9 @@ export function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
     setCheckoutError(null);
     try {
       const url = await getCheckoutUrl();
-      // Only redirect to a Shopify-owned HTTPS checkout, not an arbitrary URL.
+      // URL is supplied by Shopify Storefront API; custom Shopify checkout domains are supported.
       const destination = new URL(url);
-      if (destination.protocol !== 'https:' || !(destination.hostname === shopifyCheckoutHost || destination.hostname.endsWith('.myshopify.com'))) {
-        throw new Error('Untrusted checkout destination');
-      }
+      if (destination.protocol !== 'https:') throw new Error('Insecure checkout destination');
       window.location.assign(destination.href);
     } catch (error) {
       console.error('Checkout URL validation failed:', error);
