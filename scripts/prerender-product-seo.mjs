@@ -49,9 +49,39 @@ if (domain && token && !domain.startsWith("YOUR_STORE") && !token.startsWith("<"
     if (!response.ok) throw new Error("Shopify Storefront HTTP " + response.status);
     const json = await response.json();
     if (json.errors?.length) throw new Error("Shopify Storefront image query returned GraphQL errors: " + json.errors.map(e => e.message).join("; "));
-    console.log("[SEO] Shopify product matches:", products.filter((p,i) => Boolean(json.data?.["p"+i])).length, "of", products.length);
+    console.log("[SEO] Shopify product matches by handle:", products.filter((p,i) => Boolean(json.data?.["p"+i])).length, "of", products.length);
+    // Match products using the same actual variant IDs as the SWY storefront.
+    // The catalog's marketing handles may not match published Shopify handles.
+    const variantIds = products.map(p => p.shopifyVariantId).filter(Boolean);
+    const variantProductMap = new Map();
+    if (variantIds.length) {
+      const variantQuery = `query FeaturedByVariant($ids: [ID!]!) {
+        nodes(ids: $ids) {
+          ... on ProductVariant {
+            id
+            product { id handle featuredImage { url altText } }
+          }
+        }
+      }`;
+      const variantResponse = await fetch("https://" + domain + "/api/2026-01/graphql.json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": token },
+        body: JSON.stringify({ query: variantQuery, variables: { ids: variantIds } }),
+        signal: AbortSignal.timeout(12000),
+      });
+      if (!variantResponse.ok) throw new Error("SWY variant lookup HTTP " + variantResponse.status);
+      const variantJson = await variantResponse.json();
+      if (variantJson.errors?.length) throw new Error("SWY variant lookup: " + variantJson.errors.map(e => e.message).join("; "));
+      for (const node of variantJson.data?.nodes || []) {
+        if (node?.id && node?.product) variantProductMap.set(node.id, node.product);
+      }
+      console.log("[SEO] Shopify product matches by variant ID:", variantProductMap.size, "of", variantIds.length);
+    }
     for (let i = 0; i < products.length; i++) {
-      const url = json.data?.["p" + i]?.featuredImage?.url;
+      const byVariant = variantProductMap.get(products[i].shopifyVariantId);
+      const byHandle = json.data?.["p" + i];
+      const official = byVariant || byHandle;
+      const url = official?.featuredImage?.url;
       if (typeof url === "string" && new URL(url).protocol === "https:" && new URL(url).hostname === "cdn.shopify.com") {
         productImages[products[i].id] = url;
       }
